@@ -1,0 +1,254 @@
+{
+  "enterEmailToReceiveCode": "Enter your email to receive the verification code",
+  "verificationCodeWillBeSent": "A verification code will be sent to your email. Enter the email associated with your account.",
+  "enterYourEmail": "Enter your email",
+  "pleaseEnterEmail": "Please enter your email",
+  "enterValidEmail": "Enter a valid email",
+  "sendingCode": "Sending...",
+  "sendCode": "Send Code",
+  "language": "Language",
+  "resetPassword": "Reset Password",
+  "enterOtpCode": "Enter the OTP sent to your email",
+  "enterNewPassword": "Enter your new password",
+  "confirmPassword": "Confirm your password",
+  "choose_offer": "Choose Offer",
+  "failed_offers": "Failed Offers",
+  "choose_the_team": "Choose the team :",
+  "no_bookings_now": "No bookings at the moment",
+
+
+
+  "passwordResetSuccess": "Password reset successfully",
+  "homePage": "Home Page",
+  "welcome_back": "Welcome Back!",
+  "enter_email": "Enter your email",
+  "email_required": "Please enter your email",
+  "invalid_email": "Enter a valid email",
+  "password": "Password",
+  "password_required": "Password must be at least 8 characters",
+  "forgot_password": "Forgot password?",
+  "login": "Login",
+  "no_account": "Don't have an account?",
+  "create_account": "Create Account",
+  "logging_in": "Logging in...",
+  "login_failed": "Login failed",
+  "otp_verification_title": "Verify Your Identity",
+  "otp_verification_message": "We have sent a verification code of 4/6 digits to your email. Enter the code to complete the process.",
+  "verify_button": "Verify",
+  "resend_code": "Resend Code?",
+  "code_expires_in": "Code expires in: {time}",
+  "account_created_success": "Account Created Successfully",
+  "welcome_message": "Welcome to AlKashkha!",
+  "full_name": "Full Name",
+  "email": "Email",
+  "phone_number": "Phone Number",
+  "confirm_password": "Confirm Password",
+  "password_mismatch": "Passwords must match",
+  "password_short": "Password must be at least 8 characters",
+  "register": "Create Account",
+  "registering": "Registering...",
+  "already_have_account": "Already have an account?",
+  "our_services": "Our Services",
+  "offers": "Offers",
+  "packages": "Packages",
+  "reviews": "Reviews",
+  "see_more": "See More",
+  "our_products": "Our Products",
+  "no_data_available": "No data available",
+  "order_now": "Order Now",
+  "currency": "Dinar",
+  "edit_profile": "Edit Profile",
+  "notifications": "Notifications",
+  "my_bookings": "My Bookings",
+  "about_us": "About Us",
+  "contact_us": "Contact Us",
+  "privacy_policy": "Privacy Policy",
+  "loading_error": "Failed to load data.",
+  "hello": "Hello",
+  "your_rating": "Your Rating",
+  "write_your_review": "Write Your Review",
+  "choose_service": "Choose a Service",
+  "send": "Send",
+  "review_submitted_successfully": "Review submitted successfully",
+  "error_select_service": "Please select a service",
+  "error_select_rating": "Please select a rating",
+  "error_write_review": "Please write your review",
+  "error_submitting_review": "An error occurred while submitting the review",
+  "loading_services": "Loading services...",
+  "failed_loading_services": "Failed to load services",
+  "phone_number_hint": "Phone Number",
+  "update": "Update",
+  "error_occurred": "Error: {error}",
+  "add_review": "Add review",
+  "enter_your_time": "Enter Your Clock",
+  "add_note": "Add Note",
+  "select_date": "Select Date",
+  "search_now": "Search Now",
+  "customer_reviews" : "Customer Reviews",
+  "add_your_review" : "Add Your Review",
+  "title1": "Welcome! A haircut and grooming done right",
+  "booking_page": "Book a Service",
+  "new_booking": "New Booking",
+  "full_name": "Full Name",
+  "phone_number": "Phone Number",
+  "address": "Address",
+  "full_address": "Full Address",
+  "service": "Service",
+  "package": "Package",
+  "team": "Team",
+  "date": "Date",
+  "time": "Time",
+  "note": "Notes",
+  "not_selected": "Not Selected",
+  "choose_service": "Choose Service",
+  "choose_package": "Choose Package",
+  "choose_team": "Choose Team",
+  "enter_time": "Enter Time",
+  "book_now": "Book Now",
+
+  "add_note": "Add Note",
+  "send": "Send",
+  "booking_success": "Booking submitted successfully",
+  "error_whatsapp": "Error opening WhatsApp",
+  "error_date": "Please select a date",
+  "error_service_package_team": "Please select at least a service, package, or team",
+  "validate_name": "Please enter your full name",
+  "validate_phone": "Please enter your phone number",
+  "validate_time_empty": "This time slot is already booked for this specialist.",
+
+  "validate_time_invalid": "Please enter a valid time",
+  "validate_address": "Please enter the address",
+  "validate_full_address": "Please enter the full address",
+  "failed_services": "Failed to load services",
+  "failed_packages": "Failed to load packages",
+  "failed_team": "Failed to load teams",
+  "error_occurred": "An error occurred",
+  "my_booking": "My Booking",
+
+  "title2": "Ready for a refresh? Let’s get you styled!",
+  "title3": "A haircut your way… Booking made easy",
+  "desc1": "Take care of your look the easiest way, book your barber with one touch and stay stylish all the time.",
+  "desc2": "Haircut, skincare, full care… Everything you need in one place.",
+  "desc3": "Choose your service, pick a time that suits you, and relax… We’ll handle the rest!",
+  "login_out": "Login Out",
+  "delete_account": "Delete Account",
+  "delete_account_confirm": "Are you sure you want to delete your account?",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "latest_products": "Latest products",
+  "specialists": "our specialists",
+  "session_expired": "Session expired, please log in again",
+  "not_logged_in": "Not logged in",
+  "unknown_state": "Unknown",
+  "session_expired_message": "Please log in again to access your profile.",
+  "no_internet_title": "No Internet Connection",
+  "no_internet_message": "Please check your internet connection and try again.",
+  "retry": "Retry",
+  "close": "Close",
+  "booking_page": "Booking Page",
+  "gifts": "Gifts",
+  "account_type": "Account Type",
+  "points": "Points",
+  "available_gifts": "Available Gifts",
+  "gift": "Gift",
+  "points_required": "Points Required",
+  "redeem": "Redeem",
+  "redeemed": "Redeemed",
+  "giftTitle": "Your Gift!",
+  "@giftTitle": {
+    "description": "The title displayed above the gift description in the gift list item."
+  },
+  "claimGiftButton": "Claim Gift",
+  "@claimGiftButton": {
+    "description": "The text displayed on the button to claim a gift."
+  },
+  "error": "Error: {message}",
+  "@error": {
+    "description": "Error message displayed when fetching data fails.",
+    "placeholders": {"message": {}}
+  },
+  "noName": "No Name",
+  "@noName": {
+    "description": "Default text displayed when a team member's name is missing."
+  },
+  "noDescription": "No Description",
+  "@noDescription": {
+    "description": "Default text displayed when a description is missing."
+  },
+  "noSpecialties": "No Specialties",
+  "@noSpecialties": {
+    "description": "Default text displayed when a team member's specialties are missing."
+  },
+  "specialtiesTitle": "Specialties:",
+  "@specialtiesTitle": {
+    "description": "Title displayed above the specialties section in the team details page."
+  },
+  "projectsTitle": "Projects:",
+  "@projectsTitle": {
+    "description": "Title displayed above the projects section in the team details page."
+  },
+  "noProjects": "No Projects",
+  "@noProjects": {
+    "description": "Text displayed when there are no projects to show in the team details page."
+  },
+  "enter_your_name": "Please enter your name",
+  "enter_your_phone": "Please enter your phone number",
+  "@booking_page": {
+    "description": "Title of the booking page."
+  },
+  "@full_name": {
+    "description": "Hint for the full name input field."
+  },
+  "@phone_number": {
+    "description": "Hint for the phone number input field."
+  },
+  "@choose_service": {
+    "description": "Hint for service selection dropdown."
+  },
+  "@failed_loading_services": {
+    "description": "Error message when services fail to load."
+  },
+  "@enter_your_time": {
+    "description": "Hint for the time input field."
+  },
+  "@add_note": {
+    "description": "Hint for the note input field."
+  },
+  "@send": {
+    "description": "Text on the send button."
+  },
+  "@review_submitted_successfully": {
+    "description": "Success message after submitting a booking."
+  },
+  "@error_occurred": {
+    "description": "Prefix for error messages."
+  },
+  "@error_select_service": {
+    "description": "Error message when no service is selected."
+  },
+  "choose_package": "Choose Package",
+  "@choose_package": {
+    "description": "Hint for package selection dropdown."
+  },
+  "failed_loading_packages": "Failed to load packages",
+  "@failed_loading_packages": {
+    "description": "Error message when packages fail to load."
+  },
+  "choose_team": "Choose Team",
+  "@choose_team": {
+    "description": "Hint for team selection dropdown."
+  },
+  "failed_loading_teams": "Failed to load teams",
+  "@failed_loading_teams": {
+    "description": "Error message when teams fail to load."
+  },
+  "error_select_date": "Please select a date",
+  "@error_select_date": {
+    "description": "Error message when no date is selected."
+  },
+  "error_select_one_option": "Please select at least a service, package, or team",
+  "@error_select_one_option": {
+    "description": "Error message when no service, package, or team is selected."
+  }
+
+}

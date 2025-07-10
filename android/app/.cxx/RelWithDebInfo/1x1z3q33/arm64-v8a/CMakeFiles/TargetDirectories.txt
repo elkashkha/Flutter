@@ -1,0 +1,2 @@
+D:/StudioProjects/elkashkha/android/app/.cxx/RelWithDebInfo/1x1z3q33/arm64-v8a/CMakeFiles/edit_cache.dir
+D:/StudioProjects/elkashkha/android/app/.cxx/RelWithDebInfo/1x1z3q33/arm64-v8a/CMakeFiles/rebuild_cache.dir
