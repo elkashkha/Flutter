@@ -1,0 +1,265 @@
+{
+  "enterEmailToReceiveCode": "أدخل بريدك الإلكتروني لاستقبال رمز التأكيد",
+  "verificationCodeWillBeSent": "سيتم إرسال رمز التحقق إلى بريدك الإلكتروني. أدخل البريد الإلكتروني المرتبط بحسابك.",
+  "enterYourEmail": "أدخل بريدك الإلكتروني",
+  "pleaseEnterEmail": "الرجاء إدخال البريد الإلكتروني",
+  "enterValidEmail": "أدخل بريد إلكتروني صحيح",
+  "sendingCode": "جاري الإرسال...",
+  "sendCode": "إرسال الكود",
+  "book_now": "احجز الان",
+  "choose_the_team": "اختر الفريق:",
+  "no_bookings_now": "لا توجد حجوزات حالياً",
+
+
+
+
+  "language": "اللغة",
+  "resetPassword": "إعادة تعيين كلمة المرور",
+  "enterOtpCode": "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني",
+  "enterNewPassword": "أدخل كلمة المرور الجديدة",
+  "confirmPassword": "تأكيد كلمة المرور",
+  "passwordResetSuccess": "تم إعادة تعيين كلمة المرور بنجاح",
+  "homePage": "الصفحة الرئيسية",
+  "welcome_back": "مرحبًا بك من جديد!",
+  "enter_email": "البريد الإلكتروني",
+  "email_required": "الرجاء إدخال البريد الإلكتروني",
+  "invalid_email": "أدخل بريد إلكتروني صحيح",
+  "password": "كلمة المرور",
+  "password_required": "كلمة المرور يجب أن تكون على الأقل 8 أحرف",
+  "forgot_password": "نسيت كلمة المرور؟",
+  "login": "تسجيل الدخول",
+  "no_account": "ليس لديك حساب؟",
+  "create_account": "إنشاء حساب",
+  "logging_in": "جاري تسجيل الدخول...",
+  "login_failed": "فشل تسجيل الدخول",
+  "otp_verification_title": "تحقق من هويتك",
+  "otp_verification_message": "لقد أرسلنا رمز تحقق مكون من 4/6 أرقام إلى بريدك الألكتروني. أدخل الرمز لإكمال العملية.",
+  "verify_button": "تحقق",
+  "resend_code": "إعادة إرسال الرمز ؟",
+  "code_expires_in": "ينتهي الكود خلال: {time}",
+  "account_created_success": "تم إنشاء الحساب بنجاح",
+  "welcome_message": "مرحبًا بك في الكشخة!",
+  "full_name": "الاسم بالكامل",
+  "email": "البريد الإلكتروني",
+  "phone_number": "رقم الهاتف",
+  "confirm_password": "تأكيد كلمة المرور",
+  "password_mismatch": "كلمة المرور يجب أن تكون متطابقة",
+  "password_short": "كلمة المرور يجب أن تكون على الأقل 8 أحرف",
+  "register": "إنشاء حساب",
+  "registering": "جاري التسجيل...",
+  "already_have_account": "لديك حساب بالفعل؟",
+  "our_services": "خدماتنا",
+  "offers": "العروض",
+  "packages": "الباقات",
+  "reviews": "التعليقات",
+  "see_more": "عرض المزيد",
+  "our_products": "منتجاتنا",
+  "no_data_available": "لا توجد بيانات متاحة",
+  "order_now": "احجز الآن",
+  "currency": "دينار",
+  "contact_us": "اتصل بنا",
+  "message": "الرسالة",
+  "send_via_whatsapp": "إرسال عبر واتساب",
+  "open_map": "افتح الموقع على الخريطة",
+  "working_hours": "أوقات العمل",
+  "weekdays_hours": "أيام الأسبوع (من 11 صباحًا حتى 12 منتصف الليل)",
+  "weekend_hours": "الخميس - الجمعة - السبت (من 11 صباحًا حتى 12:30 بعد منتصف الليل)",
+  "enter_full_name": "الرجاء إدخال الاسم الكامل",
+  "enter_phone_number": "الرجاء إدخال رقم الهاتف",
+  "enter_message": "الرجاء إدخال الرسالة",
+  "edit_profile": "تعديل الملف الشخصي",
+  "notifications": "الإشعارات",
+  "my_bookings": "حجوزاتي",
+  "about_us": "من نحن",
+  "privacy_policy": "سياسة الخصوصية",
+  "loading_error": "لم يتم تحميل البيانات.",
+  "error_occurred": "خطأ: {error}",
+  "update": "تحديث",
+  "phone_number_hint": "رقم الهاتف",
+  "hello": "اهلا",
+  "your_rating": "تقييمك",
+  "write_your_review": "اكتب تقييمك",
+  "choose_service": "اختر الخدمة",
+  "send": "إرسال",
+  "review_submitted_successfully": "تم إرسال التقييم بنجاح",
+  "error_select_service": "يرجى اختيار الخدمة",
+  "error_select_rating": "يرجى تحديد عدد النجوم",
+  "error_write_review": "يرجى كتابة رأيك",
+  "error_submitting_review": "حدث خطأ أثناء إرسال التقييم",
+  "loading_services": "جاري تحميل الخدمات...",
+  "failed_loading_services": "تعذر تحميل الخدمات",
+  "add_review": "اضف تعليق",
+  "enter_your_time": "اكتب الساعه",
+  "add_note": "أضف ملاحظة",
+  "select_date": "اختر التاريخ",
+  "search_now": "ابحث الان",
+  "customer_reviews" : "آراء العملاء",
+  "add_your_review" : "قم بإضافة رأيك",
+  "title1": "حياك الله! حلاقة وضبط على أصوله",
+  "title2": "جاهز للتجديد؟ خلنا نضبطك!",
+  "title3": "حلاقة على كيفك… والحجز صار أسهل",
+  "desc1": "اهتم بشكلك بأسهل طريقة، احجز حلاقك بلمسة وحدة وخليك ستايل على طول.",
+  "desc2": "قصة شعر، تنظيف بشرة، عناية كاملة… كل اللي تبيه في مكان واحد.",
+  "desc3": "اختار خدمتك، حدّد الوقت اللي يناسبك، وخليك ريلاكس… احنا نجهز لك كل شي!",
+  "login_out": "تسجيل الخروج",
+  "delete_account": "مسح الحساب",
+  "delete_account_confirm": "هل أنت متأكد من أنك تريد مسح حسابك؟",
+  "choose_offer": "اختر العرض",
+  "failed_offers": "فشل تحميل العروض",
+
+  "cancel": "إلغاء",
+  "confirm": "تأكيد",
+  "latest_products": "أحدث المنتجات",
+  "specialists": "متخصصينا",
+  "session_expired": "انتهت صلاحية الجلسة، يرجى تسجيل الدخول مجددًا",
+  "not_logged_in": "غير مسجل",
+  "unknown_state": "غير معروف",
+  "session_expired_message": "يرجى تسجيل الدخول مرة أخرى للوصول إلى ملفك الشخصي و الخدمات .",
+  "no_internet_title": "لا يوجد اتصال بالإنترنت",
+  "no_internet_message": "يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.",
+  "retry": "إعادة المحاولة",
+  "close": "إغلاق",
+  "booking_page": "صفحة الحجز",
+  "gifts": "الهدايا",
+  "account_type": "نوع الحساب",
+  "points": "النقاط",
+  "available_gifts": "الهدايا المتاحة",
+  "gift": "هدية",
+  "points_required": "النقاط المطلوبة",
+  "redeem": "استبدال",
+  "redeemed": "تم استبدالها",
+  "giftTitle": "هديتك!",
+  "@giftTitle": {
+    "description": "The title displayed above the gift description in the gift list item."
+  },
+  "claimGiftButton": "المطالبة بالهدية",
+  "@claimGiftButton": {
+    "description": "The text displayed on the button to claim a gift."
+  },
+  "error": "خطأ: {message}",
+  "@error": {
+    "description": "Error message displayed when fetching data fails.",
+    "placeholders": {
+      "message": {
+        "type": "Object"
+      }
+    }
+  },
+  "noName": "غير متاح",
+  "@noName": {
+    "description": "Default text displayed when a team member's name is missing."
+  },
+  "noDescription": "لا يوجد وصف",
+  "@noDescription": {
+    "description": "Default text displayed when a description is missing."
+  },
+  "noSpecialties": "لا توجد تخصصات",
+  "@noSpecialties": {
+    "description": "Default text displayed when a team member's specialties are missing."
+  },
+  "specialtiesTitle": "التخصصات:",
+  "@specialtiesTitle": {
+    "description": "Title displayed above the specialties section in the team details page."
+  },
+  "projectsTitle": "المشاريع:",
+  "@projectsTitle": {
+    "description": "Title displayed above the projects section in the team details page."
+  },
+  "noProjects": "لا توجد مشاريع",
+  "@noProjects": {
+    "description": "Text displayed when there are no projects to show in the team details page."
+  },
+  "@booking_page": {
+    "description": "Title of the booking page."
+  },
+  "@full_name": {
+    "description": "Hint for the full name input field."
+  },
+  "@phone_number": {
+    "description": "Hint for the phone number input field."
+  },
+  "@choose_service": {
+    "description": "Hint for service selection dropdown."
+  },
+  "@failed_loading_services": {
+    "description": "Error message when services fail to load."
+  },
+  "@enter_your_time": {
+    "description": "Hint for the time input field."
+  },
+  "@add_note": {
+    "description": "Hint for the note input field."
+  },
+  "@send": {
+    "description": "Text on the send button."
+  },
+  "@review_submitted_successfully": {
+    "description": "Success message after submitting a booking."
+  },
+  "@error_occurred": {
+    "description": "Prefix for error messages."
+  },
+  "@error_select_service": {
+    "description": "Error message when no service is selected."
+  },
+  "enter_your_name": "يرجى إدخال اسمك",
+  "booking_page": "حجز الخدمة",
+  "new_booking": "حجز جديد",
+  "full_name": "الاسم الكامل",
+  "phone_number": "رقم الهاتف",
+  "address": "العنوان",
+  "full_address": "العنوان الكامل",
+  "service": "الخدمة",
+  "package": "الباقة",
+  "team": "الفريق",
+  "date": "التاريخ",
+  "time": "الوقت",
+  "note": "الملاحظات",
+  "not_selected": "غير محدد",
+  "choose_service": "اختر الخدمة",
+  "choose_package": "اختر الباقة",
+  "choose_team": "اختر الفريق",
+  "enter_time": "أدخل الوقت",
+  "add_note": "أضف ملاحظة",
+  "send": "إرسال",
+  "booking_success": "تم إرسال الحجز بنجاح",
+  "error_whatsapp": "حدث خطأ أثناء فتح واتساب",
+  "error_date": "يرجى اختيار التاريخ",
+  "error_service_package_team": "يرجى اختيار خدمة أو باقة أو فريق على الأقل",
+  "validate_name": "يرجى إدخال الاسم الكامل",
+  "validate_phone": "يرجى إدخال رقم الهاتف",
+  "validate_time_empty": "هذا التوقيت محجوز لهذا المتخصص.",
+  "validate_time_invalid": "يرجى إدخال وقت صحيح",
+  "validate_address": "يرجى إدخال العنوان",
+  "validate_full_address": "يرجى إدخال العنوان الكامل",
+  "failed_services": "فشل تحميل الخدمات",
+  "failed_packages": "فشل تحميل الباقات",
+  "failed_team": "فشل تحميل الفرق",
+  "my_booking": "حجوزاتي",
+  "error_occurred": "حدث خطأ",
+  "enter_your_phone": "يرجى إدخال رقم هاتفك",
+  "choose_package": "اختر باقة",
+  "@choose_package": {
+    "description": "Hint for package selection dropdown."
+  },
+  "failed_loading_packages": "فشل في تحميل الباقات",
+  "@failed_loading_packages": {
+    "description": "Error message when packages fail to load."
+  },
+  "choose_team": "اختر فريق",
+  "@choose_team": {
+    "description": "Hint for team selection dropdown."
+  },
+  "failed_loading_teams": "فشل في تحميل الفرق",
+  "@failed_loading_teams": {
+    "description": "Error message when teams fail to load."
+  },
+  "error_select_date": "يرجى اختيار تاريخ",
+  "@error_select_date": {
+    "description": "Error message when no date is selected."
+  },
+  "error_select_one_option": "يرجى اختيار خدمة أو باقة أو فريق على الأقل",
+  "@error_select_one_option": {
+    "description": "Error message when no service, package, or team is selected."
+  }
+}
