@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:easy_date_timeline/easy_date_timeline.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../../core/app_theme.dart';
-import '../../core/change_language_cubit/change_language_cubit.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomDatePicker extends StatefulWidget {
   final Function(DateTime?)? onDateSelected;
@@ -17,13 +13,12 @@ class CustomDatePicker extends StatefulWidget {
 }
 
 class _CustomDatePickerState extends State<CustomDatePicker> {
-  DateTime selectedDate = DateTime.now();
+  DateTime _focusedDay = DateTime.now();
+  DateTime? _selectedDay;
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
-
-    final languageCode = context.watch<LanguageCubit>().state.languageCode;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -42,81 +37,55 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
         ),
         const SizedBox(height: 10),
         Container(
-            height: 170,
-            width: 343,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(16),
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: TableCalendar(
+            firstDay: DateTime.utc(2020, 1, 1),
+            lastDay: DateTime.utc(2050, 12, 31),
+            focusedDay: _focusedDay,
+            selectedDayPredicate: (day) {
+              return isSameDay(_selectedDay, day);
+            },
+            calendarStyle: CalendarStyle(
+              todayDecoration: BoxDecoration(
+                color: Colors.grey.shade700,
+                shape: BoxShape.circle,
+              ),
+              selectedDecoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              selectedTextStyle: const TextStyle(color: Colors.black),
+              weekendTextStyle: const TextStyle(color: Colors.grey),
+              defaultTextStyle: const TextStyle(color: Colors.white),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: EasyDateTimeLine(
-              initialDate: selectedDate,
-              onDateChange: (newDate) {
-                setState(() {
-                  selectedDate = newDate;
-                });
-                if (widget.onDateSelected != null) {
-                  widget.onDateSelected!(newDate);
-                }
-              },
-              headerProps: EasyHeaderProps(
-                monthPickerType: MonthPickerType.switcher,
-                selectedDateFormat: SelectedDateFormat.fullDateDMY,
-                showSelectedDate: true,
-                selectedDateStyle: GoogleFonts.tajawal(
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                monthStyle: GoogleFonts.tajawal(
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+            headerStyle: HeaderStyle(
+              titleTextStyle: GoogleFonts.tajawal(
+                textStyle: const TextStyle(color: Colors.white, fontSize: 16),
               ),
-              dayProps: const EasyDayProps(
-                height: 60,
-                width: 46,
-                todayHighlightStyle: TodayHighlightStyle.none,
-                todayStyle: DayStyle(
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                  dayStrStyle: TextStyle(
-                    color: Colors.grey,
-                  ),
-                  monthStrStyle: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-                inactiveDayStyle: DayStyle(
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                  dayStrStyle: TextStyle(color: Colors.grey),
-                  monthStrStyle: TextStyle(color: Colors.grey),
-                ),
-                activeDayStyle: DayStyle(
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                  dayStrStyle: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  monthStrStyle: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              activeColor: Colors.white,
-              locale: languageCode,
-            )),
+              formatButtonVisible: false,
+              titleCentered: true,
+              leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.white),
+              rightChevronIcon: const Icon(Icons.chevron_right, color: Colors.white),
+            ),
+            daysOfWeekStyle: const DaysOfWeekStyle(
+              weekendStyle: TextStyle(color: Colors.grey),
+              weekdayStyle: TextStyle(color: Colors.white),
+            ),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
+              if (widget.onDateSelected != null) {
+                widget.onDateSelected!(selectedDay);
+              }
+            },
+          ),
+        ),
       ],
     );
   }

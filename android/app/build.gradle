@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    namespace = "com.ahdafweb1.elkashkha"
+    namespace = "com.ahdafweb2.elkashkha"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     defaultConfig {
-        applicationId = "com.ahdafweb1.elkashkha"
+        applicationId = "com.ahdafweb2.elkashkha"
         minSdk =21
         targetSdk = 36
         versionCode = flutter.versionCode
@@ -20,9 +20,9 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("my-release-key.keystore")
+            storeFile file("your_new_key.jks")
             storePassword "sayed142002"
-            keyAlias "my-key-alias"
+            keyAlias "your_alias"
             keyPassword "sayed142002"
         }
     }

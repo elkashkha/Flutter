@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.ahdafweb1.elkashkha.app-mergeReleaseResources-46:/values-es-rUS/values-es-rUS.xml",
+            "outputFile": "com.ahdafweb2.elkashkha.app-mergeReleaseResources-46:/values-es-rUS/values-es-rUS.xml",
             "map": [
                 {
                     "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\24eeed58524108752b7e3a642cdaac4b\\transformed\\browser-1.8.0\\res\\values-es-rUS\\values-es-rUS.xml",

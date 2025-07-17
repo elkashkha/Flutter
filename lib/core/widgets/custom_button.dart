@@ -4,8 +4,10 @@ import '../../../../../../core/app_theme.dart';
 class MyCustomButton extends StatelessWidget {
   const MyCustomButton({
     super.key,
-    required this.text,
+    this.text,
+    this.child,
     required this.voidCallback,
+    this.isLoading = false,
     this.backgroundColor,
     this.textColor = Colors.white,
     this.borderColor,
@@ -14,8 +16,10 @@ class MyCustomButton extends StatelessWidget {
     this.fontSize,
   });
 
-  final String text;
+  final String? text;
+  final Widget? child;
   final VoidCallback? voidCallback;
+  final bool isLoading;
   final Color? backgroundColor;
   final Color textColor;
   final Color? borderColor;
@@ -34,8 +38,11 @@ class MyCustomButton extends StatelessWidget {
       width: buttonWidth,
       height: buttonHeight,
       child: ElevatedButton(
-
-        onPressed: voidCallback,
+        onPressed: () {
+          if (!isLoading) {
+            voidCallback?.call();
+          }
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor ?? AppTheme.primary,
           shape: RoundedRectangleBorder(
@@ -45,13 +52,25 @@ class MyCustomButton extends StatelessWidget {
                 : BorderSide.none,
           ),
         ),
-        child: Text(
-          text,
+        child: isLoading
+            ? const SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: Colors.white,
+          ),
+        )
+            : DefaultTextStyle(
           style: TextStyle(
+            color: Colors.white,
             fontSize: textFontSize,
             fontWeight: FontWeight.w500,
-            color: textColor,
           ),
+          child: child ??
+              Text(
+                text ?? '',
+              ),
         ),
       ),
     );

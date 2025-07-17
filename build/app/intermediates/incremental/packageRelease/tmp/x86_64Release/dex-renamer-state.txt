@@ -1,4 +1,4 @@
-#Wed Jul 02 09:44:04 GMT+02:00 2025
+#Thu Jul 17 15:17:51 GMT+02:00 2025
 base.0=D\:\\StudioProjects\\elkashkha\\build\\app\\intermediates\\dex\\release\\mergeDexRelease\\classes.dex
 base.1=D\:\\StudioProjects\\elkashkha\\build\\app\\intermediates\\dex\\release\\mergeDexRelease\\classes2.dex
 path.0=classes.dex

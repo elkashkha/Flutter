@@ -4,14 +4,14 @@
   ],
   "cleanCommandsComponents": [
     [
-      "C:\\Users\\sm467\\AppData\\Local\\Android\\sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "C:\\Users\\sm467\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
       "-C",
       "D:\\StudioProjects\\elkashkha\\android\\app\\.cxx\\RelWithDebInfo\\1x1z3q33\\armeabi-v7a",
       "clean"
     ]
   ],
   "buildTargetsCommandComponents": [
-    "C:\\Users\\sm467\\AppData\\Local\\Android\\sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "C:\\Users\\sm467\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
     "-C",
     "D:\\StudioProjects\\elkashkha\\android\\app\\.cxx\\RelWithDebInfo\\1x1z3q33\\armeabi-v7a",
     "{LIST_OF_TARGETS_TO_BUILD}"

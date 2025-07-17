@@ -110,17 +110,13 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
                                     return null;
                                   },
                                 ),
-                                SizedBox(height: screenHeight * 0.03),
-                                PhoneNumberField(
-                                  controller: phoneController,
-                                  onChanged: (number) {
-                                    if (number.phoneNumber != null) {
-                                      setState(() {
-                                        phoneNumber = number.phoneNumber!;
-                                        phoneCode = number.dialCode!;
-                                      });
-                                    }
-                                  },
+                                SizedBox(height: screenHeight * 0.01),
+                                CustomTextField(
+                                  taskController: phoneController,
+                                  hint: localization.phone_number_hint,
+                                  icon: Icons.phone,
+                                  ispassword: false,
+
                                 ),
                                 SizedBox(height: screenHeight * 0.01),
                                 CustomTextField(
@@ -133,6 +129,7 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
                                       : null,
                                 ),
                                 SizedBox(height: screenHeight * 0.01),
+
                                 CustomTextField(
                                   taskController: confirmPasswordController,
                                   hint: localization.confirmPassword,

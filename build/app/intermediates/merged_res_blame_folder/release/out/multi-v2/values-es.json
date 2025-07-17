@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.ahdafweb1.elkashkha.app-mergeReleaseResources-46:/values-es/values-es.xml",
+            "outputFile": "com.ahdafweb2.elkashkha.app-mergeReleaseResources-46:/values-es/values-es.xml",
             "map": [
                 {
                     "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\c9b29d6d4f419455c205c53a9f2c9829\\transformed\\jetified-media3-exoplayer-1.4.1\\res\\values-es\\values-es.xml",
