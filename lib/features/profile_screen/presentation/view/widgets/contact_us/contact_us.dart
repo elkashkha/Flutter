@@ -431,10 +431,20 @@ class _ContactUsState extends State<ContactUs> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const Text('أيام الأسبوع (11 ص - 12 منتصف الليل)'),
-            const Text('الخميس - الجمعة - السبت (11 ص - 12:30 ص)'),
-
+            const Text('من الأحد إلى الأربعاء ( من الساعة 10 صباحاً حتي الساعه 10:30 مساءً)'),
+            const Text(' من  الخميس الي السبت (10من الساعة صباحاً حتي الساعه 11:30 مساءً)'),
+            const SizedBox(height: 10),
+            Text(
+              'ساعات العمل رمضان :',
+              style: TextStyle(
+                fontSize: screenWidth * 0.04,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const Text('من 1 ظهراً حتي الساعة 4 عصراً'),
+            const Text('ومن 8 مساءً حتي الساعة 2 فجراً'),
             const SizedBox(height: 20),
+
 
             // نموذج التواصل
             EmailField(

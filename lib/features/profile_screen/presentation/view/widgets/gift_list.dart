@@ -15,16 +15,16 @@ class GiftsListScreen extends StatelessWidget {
 
 
   Future<void> _openWhatsApp(String giftName, String giftDescription) async {
-    // const phoneNumber = '+96555156388';
-    // final message = 'لقد قمت بمطالبة الهدية:\nالاسم: $giftName\nالوصف: $giftDescription';
-    // final encodedMessage = Uri.encodeComponent(message);
-    // final whatsappUrl = 'https://wa.me/$phoneNumber?text=$encodedMessage';
-    //
-    // if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
-    //   await launchUrl(Uri.parse(whatsappUrl), mode: LaunchMode.externalApplication);
-    // } else {
-    //   throw 'لا يمكن فتح WhatsApp';
-    // }
+    const phoneNumber = '+96555156388';
+    final message = 'لقد قمت بمطالبة الهدية:\nالاسم: $giftName\nالوصف: $giftDescription';
+    final encodedMessage = Uri.encodeComponent(message);
+    final whatsappUrl = 'https://wa.me/$phoneNumber?text=$encodedMessage';
+
+    if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
+      await launchUrl(Uri.parse(whatsappUrl), mode: LaunchMode.externalApplication);
+    } else {
+      throw 'لا يمكن فتح WhatsApp';
+    }
   }
 
   @override
@@ -36,7 +36,7 @@ class GiftsListScreen extends StatelessWidget {
           if (state is PlatinumGiftLoading) {
             return const Center(child: CustomDotsTriangleLoader());
           } else if (state is PlatinumGiftError) {
-            return Center(child: Text(''));
+            return const Center(child: Text(''));
           } else if (state is PlatinumGiftSuccess) {
             final giftData = state.gift;
 

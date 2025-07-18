@@ -32,7 +32,7 @@ class GiftListItem extends StatelessWidget {
           width: 343,
           height: 100,
           decoration: BoxDecoration(
-            color: AppTheme.white,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: AppTheme.gray),
           ),
@@ -73,9 +73,21 @@ class GiftListItem extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 25),
-        MyCustomButton(
-          text: l10n.claimGiftButton,
-          voidCallback: canClaim ? onClaimPressed : null,
+        Tooltip(
+          message: canClaim ? '' : 'ليس لديك نقاط كافية لاستلام الهدية.',
+          child: MyCustomButton(
+            text: l10n.claimGiftButton,
+            backgroundColor: canClaim ? null : Colors.grey.shade300,
+            voidCallback: canClaim
+                ? onClaimPressed
+                : () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('ليس لديك نقاط كافية لاستلام الهدية.'),
+                      ),
+                    );
+                  },
+          ),
         ),
       ],
     );

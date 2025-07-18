@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../core/widgets/custom_button.dart';
 import '../../../../../core/widgets/loading.dart';
@@ -14,41 +13,41 @@ class CartList extends StatelessWidget {
 
   const CartList({super.key, this.isArabic = true});
 
-  void _showSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-              'assets/images/undraw_celebrating_2aox 1.png',
-              height: 80,
-              width: 80,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              isArabic ? 'تم حجز الطلب' : 'Order Placed Successfully',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(isArabic ? 'موافق' : 'OK'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // void _showSuccessDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+  //       content: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: [
+  //           Image.asset(
+  //             'assets/images/undraw_celebrating_2aox 1.png',
+  //             height: 80,
+  //             width: 80,
+  //           ),
+  //           const SizedBox(height: 12),
+  //           Text(
+  //             isArabic ? 'تم حجز الطلب' : 'Order Placed Successfully',
+  //             style: const TextStyle(
+  //               fontSize: 16,
+  //               fontWeight: FontWeight.bold,
+  //               color: Colors.green,
+  //             ),
+  //             textAlign: TextAlign.center,
+  //           ),
+  //           const SizedBox(height: 12),
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pop(context);
+  //             },
+  //             child: Text(isArabic ? 'موافق' : 'OK'),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Future<void> _openWhatsAppWithCartData(
       BuildContext context, CartCubit cubit) async {
@@ -92,7 +91,7 @@ class CartList extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content:
-                Text(isArabic ? 'لا يمكن فتح واتساب' : 'Cannot open WhatsApp')),
+            Text(isArabic ? 'لا يمكن فتح واتساب' : 'Cannot open WhatsApp')),
       );
     }
   }
@@ -104,18 +103,18 @@ class CartList extends StatelessWidget {
     return BlocConsumer<CartCubit, CartState>(
       listener: (context, state) {
         if (state is CheckoutSuccess) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => BookingWebViewScreen(url: state.InvoiceURL),
-              )
-          );
-          _showSuccessDialog(context);
+          Navigator.push<bool>(
+            context,
+            MaterialPageRoute(
+              builder: (_) => BookingWebViewScreen(url: state.InvoiceURL),
+            ),
+          ).then((_) async {
+            await _openWhatsAppWithCartData(context, context.read<CartCubit>());
+            // _showSuccessDialog(context);
+          });
         } else if (state is CartError) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(
-                    isArabic ? 'يرجى التسجيل أولاً' : 'Please register first')),
+            SnackBar(content: Text(isArabic ? 'يرجى التسجيل أولاً' : 'Please register first')),
           );
         }
       },
@@ -142,7 +141,7 @@ class CartList extends StatelessWidget {
               Container(
                 width: double.infinity,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
@@ -171,9 +170,8 @@ class CartList extends StatelessWidget {
                     const SizedBox(height: 12),
                     MyCustomButton(
                       text: isArabic ? 'إتمام الشراء' : 'Checkout',
-                      voidCallback: () async {
+                      voidCallback: () {
                         final cubit = context.read<CartCubit>();
-                        await _openWhatsAppWithCartData(context, cubit);
                         cubit.checkout(context);
                       },
                     ),
