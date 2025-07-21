@@ -79,10 +79,10 @@ class Booking {
       status: json['status'] ?? '',
       createdAt: json['created_at'] ?? '',
       updatedAt: json['updated_at'] ?? '',
-      // إصلاح parsing للكائنات المعقدة
+
       user: json['user'] != null && json['user'] is Map<String, dynamic>
           ? User.fromJson(json['user'])
-          : User.empty(), // إنشاء user فارغ في حالة عدم وجود بيانات
+          : User.empty(),
       team: json['team'] != null &&
           json['team'] != 'لا يوجد' &&
           json['team'] is Map<String, dynamic>
@@ -148,7 +148,7 @@ class User {
     required this.payments,
   });
 
-  // إنشاء constructor لـ user فارغ
+
   factory User.empty() {
     return User(
       id: 0,
@@ -171,7 +171,7 @@ class User {
       accountType: json['account_type'] ?? '',
       payments: json['payments'] != null && json['payments'] is List
           ? (json['payments'] as List<dynamic>)
-          .where((payment) => payment is Map<String, dynamic>) // تأكد من أن العنصر map
+          .where((payment) => payment is Map<String, dynamic>)
           .map((payment) => Payment.fromJson(payment))
           .toList()
           : [],

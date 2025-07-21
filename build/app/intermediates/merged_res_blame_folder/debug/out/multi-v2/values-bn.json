@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.ahdafweb2.elkashkha.app-mergeDebugResources-46:/values-bn/values-bn.xml",
+            "outputFile": "com.ahdafweb.elkashkha.app-mergeDebugResources-46:/values-bn/values-bn.xml",
             "map": [
                 {
                     "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\24eeed58524108752b7e3a642cdaac4b\\transformed\\browser-1.8.0\\res\\values-bn\\values-bn.xml",

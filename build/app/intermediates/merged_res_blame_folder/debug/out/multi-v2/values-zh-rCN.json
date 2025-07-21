@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.ahdafweb2.elkashkha.app-mergeDebugResources-46:/values-zh-rCN/values-zh-rCN.xml",
+            "outputFile": "com.ahdafweb.elkashkha.app-mergeDebugResources-46:/values-zh-rCN/values-zh-rCN.xml",
             "map": [
                 {
                     "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\c9b29d6d4f419455c205c53a9f2c9829\\transformed\\jetified-media3-exoplayer-1.4.1\\res\\values-zh-rCN\\values-zh-rCN.xml",
