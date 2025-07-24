@@ -100,9 +100,9 @@ class HomeScreenViewBody extends StatelessWidget {
                                           if (state is UnreadNotificationsLoaded && state.count > 0) {
                                             return Positioned(
                                               right: 0,
-                                              top: 0,
+                                              top: 1,
                                               child: Container(
-                                                padding: const EdgeInsets.all(3),
+                                                padding: const EdgeInsets.all(4),
                                                 decoration: const BoxDecoration(
                                                   color: Colors.red,
                                                   shape: BoxShape.circle,

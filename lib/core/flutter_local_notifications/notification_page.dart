@@ -261,8 +261,8 @@ class NotificationsScreen extends StatelessWidget {
                                         Row(
                                           children: [
                                             Container(
-                                              width: 40,
-                                              height: 40,
+                                              width: double.infinity,
+                                              height: 180,
                                               decoration: BoxDecoration(
                                                 color: Colors.grey[100],
                                                 borderRadius:

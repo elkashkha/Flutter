@@ -2,8 +2,12 @@ import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../main.dart';
+import '../app_router.dart';  
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -20,10 +24,8 @@ class NotificationService {
     await _initFirebaseMessaging();
   }
 
-  /// إعداد الإشعارات المحلية (لازم عشان نعرض إشعار لما ييجي من FCM)
   static Future<void> _initLocalNotifications() async {
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
-
     const iOSInit = DarwinInitializationSettings();
 
     const initSettings = InitializationSettings(
@@ -39,22 +41,18 @@ class NotificationService {
     );
   }
 
-
   static Future<void> _initFirebaseMessaging() async {
-
     String? fcmToken = await _firebaseMessaging.getToken();
     print("📲 FCM Token: $fcmToken");
-
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       _showNotification(message);
     });
 
-
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print("🔔 Notification Clicked: ${message.data}");
+      _handleNotificationClick(message.data.toString());
     });
-
 
     RemoteMessage? initialMessage = await _firebaseMessaging.getInitialMessage();
     if (initialMessage != null) {
@@ -63,11 +61,18 @@ class NotificationService {
   }
 
   static void _handleNotificationClick(String? payload) {
-    if (payload != null) {
-      print("📬 Notification clicked: $payload");
+    print("📬 Notification clicked: $payload");
+    void tryNavigate() {
+      final context = navigatorKey.currentContext;
+      if (context != null) {
+        GoRouter.of(context).go('/NotificationsScreen');
+      } else {
+        print("❌ context is null, retrying...");
+        Future.delayed(const Duration(milliseconds: 100), tryNavigate);
+      }
     }
+    tryNavigate();
   }
-
 
   static Future<void> _showNotification(RemoteMessage message) async {
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(

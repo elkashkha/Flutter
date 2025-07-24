@@ -14,7 +14,7 @@ class UnreadNotificationsCubit extends Cubit<UnreadNotificationsState> {
     final token = prefs.getString('access_token');
     try {
       final response = await dio.get(
-        'https://apitest.alkashkhaa.com/public/api/notifications/unread-count',
+        'https://api.alkashkhaa.com/public/api/notifications/unread-count',
         options: Options(headers: {
           'Authorization': 'Bearer $token',
         }),

@@ -84,7 +84,6 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  /// ✅ إرسال FCM Token بعد تسجيل الدخول
   Future<void> sendFcmTokenToServer() async {
     try {
       final String? token = await getToken();
@@ -97,16 +96,16 @@ class LoginCubit extends Cubit<LoginState> {
       }
 
       final response = await Dio().post(
-        'https://apitest.alkashkhaa.com/public/api/notifications/save-token',
+        'https://api.alkashkhaa.com/public/api/notifications/save-token',
         data: {
           "fcm_token": fcmToken,
         },
         options: Options(
           headers: {
             "Authorization": "Bearer $token",
-            "Accept": "application/json", // ضروري علشان الـ API ما يرجعش HTML أو Redirect
+            "Accept": "application/json",
           },
-          followRedirects: false, // يمنع Dio من تنفيذ redirect تلقائي
+          followRedirects: false,
           validateStatus: (status) => status != null && status < 500,
         ),
       );

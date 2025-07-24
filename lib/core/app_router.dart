@@ -1,5 +1,6 @@
 import 'package:elkashkha/core/widgets/nav_bar/view/nav_bar.dart';
 import 'package:elkashkha/features/home_screen/presentation/views/widgts/offers_list/offers_details.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import '../features/authentication/forget_password/views/forget_password_view.dart';
 import '../features/authentication/forget_password/views/rest_password.dart';
@@ -31,9 +32,11 @@ import '../features/rate_screen/presentation/view/rate_list.dart';
 import '../features/service_details/presentation/view/service_details.dart';
 import '../features/splash/view/splash_view.dart';
 import 'flutter_local_notifications/notification_page.dart';
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 abstract class Approuter {
   static final router = GoRouter(
+    navigatorKey: navigatorKey,
     routes: [
 
       GoRoute(
