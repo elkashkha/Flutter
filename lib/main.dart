@@ -105,6 +105,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp.router(
       routerConfig: Approuter.router,
+
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

@@ -33,8 +33,6 @@ class _BookingServiceState extends State<BookingService> {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController fullAddressController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
 
@@ -66,8 +64,6 @@ class _BookingServiceState extends State<BookingService> {
   void dispose() {
     nameController.dispose();
     phoneController.dispose();
-    addressController.dispose();
-    fullAddressController.dispose();
     noteController.dispose();
     emailController.dispose();
     super.dispose();
@@ -76,8 +72,6 @@ class _BookingServiceState extends State<BookingService> {
   void clearFields() {
     nameController.clear();
     phoneController.clear();
-    addressController.clear();
-    fullAddressController.clear();
     noteController.clear();
     emailController.clear();
     setState(() {
@@ -365,17 +359,8 @@ class _BookingServiceState extends State<BookingService> {
                     hint: localizations.email,
                   ),
                   const SizedBox(height: spacing),
-                  EmailField(
-                    taskController: addressController,
-                    icon: Icons.location_on,
-                    hint: localizations.address,
-                  ),
-                  const SizedBox(height: spacing),
-                  EmailField(
-                    taskController: fullAddressController,
-                    icon: Icons.location_city,
-                    hint: localizations.full_address,
-                  ),
+
+
                   const SizedBox(height: spacing),
                   BlocBuilder<ServicesCubit, ServicesState>(
                     builder: (context, state) {

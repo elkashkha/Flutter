@@ -122,13 +122,13 @@ class NotificationsScreen extends StatelessWidget {
                         boxShadow: isRead
                             ? []
                             : [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.1),
-                                  spreadRadius: 1,
-                                  blurRadius: 6,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
                       ),
                       child: Stack(
                         children: [
@@ -162,9 +162,7 @@ class NotificationsScreen extends StatelessWidget {
                                     ? Colors.grey[200]
                                     : Colors.grey[100],
                                 backgroundImage: AssetImage(
-                                  isRead
-                                      ? 'assets/images/dbd2d9a2-a476-4033-b51f-b25215eccb42.jpg'
-                                      : 'assets/images/dbd2d9a2-a476-4033-b51f-b25215eccb42.jpg',
+                                  'assets/images/dbd2d9a2-a476-4033-b51f-b25215eccb42.jpg',
                                 ),
                               ),
                             ),
@@ -172,10 +170,10 @@ class NotificationsScreen extends StatelessWidget {
                               notification.title,
                               style: TextStyle(
                                 fontWeight:
-                                    isRead ? FontWeight.w500 : FontWeight.bold,
+                                isRead ? FontWeight.w500 : FontWeight.bold,
                                 fontSize: 16,
                                 color:
-                                    isRead ? Colors.grey[600] : Colors.black87,
+                                isRead ? Colors.grey[600] : Colors.black87,
                               ),
                             ),
                             subtitle: Column(
@@ -204,7 +202,7 @@ class NotificationsScreen extends StatelessWidget {
                                         decoration: BoxDecoration(
                                           color: Colors.grey[400],
                                           borderRadius:
-                                              BorderRadius.circular(8),
+                                          BorderRadius.circular(8),
                                         ),
                                         child: const Text(
                                           'مقروء',
@@ -233,110 +231,217 @@ class NotificationsScreen extends StatelessWidget {
                             onTap: () {
                               showDialog(
                                 context: context,
-                                builder: (_) => Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  elevation: 8,
+                                barrierDismissible: true,
+                                builder: (dialogContext) => Dialog.fullscreen(
                                   backgroundColor: Colors.white,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.white,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.2),
-                                          spreadRadius: 2,
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 4),
+                                  child: Scaffold(
+                                    backgroundColor: Colors.white,
+                                    appBar: AppBar(
+                                      backgroundColor: Colors.white,
+                                      elevation: 0,
+                                      leading: IconButton(
+                                        icon: const Icon(
+                                          Icons.close,
+                                          color: Colors.black,
+                                          size: 28,
                                         ),
-                                      ],
+                                        onPressed: () {
+                                          if (!isRead) {
+                                            context
+                                                .read<NotificationsCubit>()
+                                                .markNotificationAsRead(
+                                                notification.id);
+                                          }
+                                          Navigator.of(dialogContext).pop();
+                                        },
+                                      ),
+                                      title: const Text(
+                                        'تفاصيل الإشعار',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      centerTitle: true,
                                     ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: double.infinity,
-                                              height: 180,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[100],
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
+                                    body: Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          // صورة المستخدم والعنوان
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: 60,
+                                                height: 60,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(30),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey.withOpacity(0.3),
+                                                      spreadRadius: 2,
+                                                      blurRadius: 8,
+                                                      offset: const Offset(0, 4),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: CircleAvatar(
+                                                  radius: 30,
+                                                  backgroundImage: const AssetImage(
+                                                    'assets/images/dbd2d9a2-a476-4033-b51f-b25215eccb42.jpg',
+                                                  ),
+                                                ),
                                               ),
-                                              child: const Icon(
-                                                Icons.notifications,
-                                                color: Colors.black54,
-                                                size: 20,
+                                              const SizedBox(width: 16),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      notification.title,
+                                                      style: const TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.black87,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    Text(
+                                                      notification.createdAt,
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey[600],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          const SizedBox(height: 30),
+
+                                          // الخط الفاصل
+                                          Container(
+                                            height: 1,
+                                            width: double.infinity,
+                                            color: Colors.grey[200],
+                                          ),
+
+                                          const SizedBox(height: 30),
+
+                                          // محتوى الإشعار
+                                          Text(
+                                            'محتوى الإشعار',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.grey[700],
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 16),
+
+                                          Container(
+                                            width: double.infinity,
+                                            constraints: BoxConstraints(
+                                              minHeight: 100,
+                                              maxHeight: MediaQuery.of(dialogContext).size.height * 0.6,
+                                            ),
+                                            padding: const EdgeInsets.all(20),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[50],
+                                              borderRadius: BorderRadius.circular(16),
+                                              border: Border.all(
+                                                color: Colors.grey[200]!,
+                                                width: 1,
                                               ),
                                             ),
-                                            const SizedBox(width: 12),
-                                            Expanded(
-                                              child: Text(
-                                                notification.title,
+                                            child: SingleChildScrollView(
+                                              child: SelectableText(
+                                                notification.body,
                                                 style: const TextStyle(
                                                   fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
                                                   color: Colors.black87,
+                                                  height: 1.6,
                                                 ),
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 16),
-                                        Container(
-                                          padding: const EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[50],
-                                            borderRadius:
-                                                BorderRadius.circular(12),
                                           ),
-                                          child: Text(
-                                            notification.body,
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black87,
-                                              height: 1.5,
+
+                                          const SizedBox(height: 30),
+
+                                          // حالة القراءة
+                                          if (!isRead)
+                                            Container(
+                                              width: double.infinity,
+                                              padding: const EdgeInsets.all(16),
+                                              decoration: BoxDecoration(
+                                                color: Colors.blue[50],
+                                                borderRadius: BorderRadius.circular(12),
+                                                border: Border.all(
+                                                  color: Colors.blue[200]!,
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.info_outline,
+                                                    color: Colors.blue[600],
+                                                    size: 20,
+                                                  ),
+                                                  const SizedBox(width: 12),
+                                                  Text(
+                                                    'إشعار جديد - لم يتم قراءته بعد',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.blue[700],
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 16),
-                                        Text(
-                                          notification.createdAt,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey[500],
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Align(
-                                          alignment: Alignment.centerRight,
-                                          child: TextButton(
-                                            onPressed: () {
-                                              if (!isRead) {
-                                                context
-                                                    .read<NotificationsCubit>()
-                                                    .markNotificationAsRead(
-                                                        notification.id);
-                                              }
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text(
-                                              'إغلاق',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.blue,
-                                                fontWeight: FontWeight.w600,
+
+                                          const SizedBox(height: 40),
+
+                                          // زر الإغلاق
+                                          SizedBox(
+                                            width: double.infinity,
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                if (!isRead) {
+                                                  context
+                                                      .read<NotificationsCubit>()
+                                                      .markNotificationAsRead(
+                                                      notification.id);
+                                                }
+                                                Navigator.of(dialogContext).pop();
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.black,
+                                                foregroundColor: Colors.white,
+                                                padding: const EdgeInsets.symmetric(
+                                                    vertical: 16),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(12),
+                                                ),
+                                                elevation: 2,
+                                              ),
+                                              child: Text(
+                                                isRead ? 'إغلاق' : 'تم القراءة - إغلاق',
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
