@@ -10,13 +10,18 @@ class BookingCubitApi extends Cubit<BookingApiState> {
   BookingCubitApi() : super(BookingInitial());
 
   Future<void> createBooking({
-    required String phone,
-    required String email,
+    required String bookingDate,
+    required String bookingTime,
     required String name,
-    required String currency,
-    required String amount,
+    required String email,
+    required String phone,
+    int? teamId,
+    List<int>? services,
+    List<int>? packages,
+    List<int>? offers,
   }) async {
     emit(BookingLoading());
+
     try {
       final token = await _getToken();
 
@@ -25,17 +30,21 @@ class BookingCubitApi extends Cubit<BookingApiState> {
       }
 
       final requestData = {
-        "phone": phone,
-        "email": email,
+        if (teamId != null) "team_id": teamId,
+        "booking_date": bookingDate,
+        "booking_time": bookingTime,
         "name": name,
-        "currency": currency,
-        "amount": amount,
+        "email": email,
+        "phone": phone,
+        if (services != null && services.isNotEmpty) "services": services,
+        if (packages != null && packages.isNotEmpty) "packages": packages,
+        if (offers != null && offers.isNotEmpty) "offers": offers,
       };
 
       print("📤 Booking Data Before Sending: $requestData");
 
       final response = await _dio.post(
-        'https://api.alkashkhaa.com/public/api/sadad/create-invoice',
+        'https://api.alkashkhaa.com/public/api/bookings',
         data: requestData,
         options: Options(headers: {
           'Authorization': 'Bearer $token',
@@ -47,9 +56,14 @@ class BookingCubitApi extends Cubit<BookingApiState> {
       print("📥 Booking Response Data: ${response.data}");
 
       if (response.statusCode == 200) {
-        final data = response.data;
-        final invoiceUrl = data["sadad_response"]?["sadad_response"]?["InvoiceURL"];
-        emit(BookingSuccess(data, invoiceUrl));
+        final paymentUrl = response.data['payment_url'] as String?;
+
+        if (paymentUrl == null || paymentUrl.isEmpty) {
+          emit(BookingFailure("❌ لم يتم استلام رابط الدفع من السيرفر."));
+          return;
+        }
+
+        emit(BookingSuccess(paymentUrl));
       } else {
         print("❌ Booking failed with status: ${response.statusCode}");
         throw Exception("❌ فشل في إنشاء الحجز.");
@@ -64,6 +78,7 @@ class BookingCubitApi extends Cubit<BookingApiState> {
       emit(BookingFailure("❌ حدث خطأ غير متوقع: ${e.toString()}"));
     }
   }
+
 
   Future<String?> _getToken() async {
     try {

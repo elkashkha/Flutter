@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:elkashkha/core/app_theme.dart';
@@ -6,6 +8,7 @@ import 'package:elkashkha/features/home_screen/presentation/views/widgts/search_
 import 'package:elkashkha/features/home_screen/presentation/views/widgts/services/services_list.dart';
 import 'package:elkashkha/features/home_screen/presentation/views/widgts/slider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../../core/flutter_local_notifications/view_model/unread_notifications_cubit.dart';
 import '../../../../product_categories/presentation/view/widgets/products/product_home_list.dart';
 import '../../../../profile_screen/presentation/view/widgets/about_us/view_model/teams_view.dart';
 import '../../views_model/user_greeting_widget.dart';
@@ -65,25 +68,61 @@ class HomeScreenViewBody extends StatelessWidget {
                                     },
                                   ),
                                 ),
-                                const SizedBox(width: 5,),
-                                Container(
-                                  width: 35,
-                                  height: 35,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color(0xFF292828),
+                                const SizedBox(width: 10,),
+                                BlocProvider(
+                                  create: (_) => UnreadNotificationsCubit(Dio())..getUnreadCount(),
+                                  child: Stack(
+                                    alignment: Alignment.topRight,
+                                    children: [
+                                      Container(
+                                        width: 40,
+                                        height: 40,
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xFF292828),
+                                        ),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.notifications_active_outlined,
+                                            color: Colors.white,
+                                            size: 24,
+                                          ),
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () {
+                                            context.push('/NotificationsScreen');
+                                          },
+                                        ),
+                                      ),
+
+
+                                      BlocBuilder<UnreadNotificationsCubit, UnreadNotificationsState>(
+                                        builder: (context, state) {
+                                          if (state is UnreadNotificationsLoaded && state.count > 0) {
+                                            return Positioned(
+                                              right: 0,
+                                              top: 0,
+                                              child: Container(
+                                                padding: const EdgeInsets.all(3),
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.red,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Text(
+                                                  '${state.count}',
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                          return const SizedBox();
+                                        },
+                                      ),
+                                    ],
                                   ),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                        Icons.notifications_active_outlined,
-                                        color: Colors.white,
-                                        size: 20),
-                                    padding: EdgeInsets.zero,
-                                    onPressed: () {
-                                      context.push('/NotificationsScreen');
-                                    },
-                                  ),
-                                ),
+                                )
 
 
                               ],

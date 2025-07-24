@@ -4,24 +4,7 @@
             "outputFile": "io.flutter.plugins.videoplayer.video_player_android-merged_res-26:/values-eu/values-eu.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\74c1895ee15d4a639000e095e1132bc7\\transformed\\core-1.13.1\\res\\values-eu\\values-eu.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,153,256,356,459,564,667,786",
-                        "endColumns": "97,102,99,102,104,102,118,100",
-                        "endOffsets": "148,251,351,454,559,662,781,882"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7,8,18",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,153,256,356,459,564,667,1484",
-                        "endColumns": "97,102,99,102,104,102,118,100",
-                        "endOffsets": "148,251,351,454,559,662,781,1580"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\c9b29d6d4f419455c205c53a9f2c9829\\transformed\\jetified-media3-exoplayer-1.4.1\\res\\values-eu\\values-eu.xml",
+                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\422fbd63377e6a789fc3ec699cca6ee2\\transformed\\jetified-media3-exoplayer-1.4.1\\res\\values-eu\\values-eu.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",
@@ -35,6 +18,23 @@
                         "startOffsets": "786,855,918,984,1056,1133,1207,1318,1416",
                         "endColumns": "68,62,65,71,76,73,110,97,67",
                         "endOffsets": "850,913,979,1051,1128,1202,1313,1411,1479"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\8c3a60464e224ca66551d9bf95411280\\transformed\\core-1.13.1\\res\\values-eu\\values-eu.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,153,256,356,459,564,667,786",
+                        "endColumns": "97,102,99,102,104,102,118,100",
+                        "endOffsets": "148,251,351,454,559,662,781,882"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,18",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,153,256,356,459,564,667,1484",
+                        "endColumns": "97,102,99,102,104,102,118,100",
+                        "endOffsets": "148,251,351,454,559,662,781,1580"
                     }
                 }
             ]
@@ -43,24 +43,7 @@
             "outputFile": "io.flutter.plugins.videoplayer.video_player_android-mergeReleaseResources-24:/values-eu/values-eu.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\74c1895ee15d4a639000e095e1132bc7\\transformed\\core-1.13.1\\res\\values-eu\\values-eu.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,153,256,356,459,564,667,786",
-                        "endColumns": "97,102,99,102,104,102,118,100",
-                        "endOffsets": "148,251,351,454,559,662,781,882"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7,8,18",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,153,256,356,459,564,667,1484",
-                        "endColumns": "97,102,99,102,104,102,118,100",
-                        "endOffsets": "148,251,351,454,559,662,781,1580"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\c9b29d6d4f419455c205c53a9f2c9829\\transformed\\jetified-media3-exoplayer-1.4.1\\res\\values-eu\\values-eu.xml",
+                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\422fbd63377e6a789fc3ec699cca6ee2\\transformed\\jetified-media3-exoplayer-1.4.1\\res\\values-eu\\values-eu.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",
@@ -74,6 +57,23 @@
                         "startOffsets": "786,855,918,984,1056,1133,1207,1318,1416",
                         "endColumns": "68,62,65,71,76,73,110,97,67",
                         "endOffsets": "850,913,979,1051,1128,1202,1313,1411,1479"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\8c3a60464e224ca66551d9bf95411280\\transformed\\core-1.13.1\\res\\values-eu\\values-eu.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,153,256,356,459,564,667,786",
+                        "endColumns": "97,102,99,102,104,102,118,100",
+                        "endOffsets": "148,251,351,454,559,662,781,882"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,18",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,153,256,356,459,564,667,1484",
+                        "endColumns": "97,102,99,102,104,102,118,100",
+                        "endOffsets": "148,251,351,454,559,662,781,1580"
                     }
                 }
             ]

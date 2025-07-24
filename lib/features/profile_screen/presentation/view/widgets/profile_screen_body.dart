@@ -1,6 +1,7 @@
 import 'package:elkashkha/core/app_theme.dart';
 import 'package:elkashkha/core/widgets/custom_button.dart';
 import 'package:elkashkha/core/widgets/loading.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -431,6 +432,8 @@ class ProfileScreenBody extends StatelessWidget {
           onTap: () async {
             final prefs = await SharedPreferences.getInstance();
             await prefs.remove('access_token');
+            await prefs.remove('fcm_token');
+            await FirebaseMessaging.instance.deleteToken();
 
             if (context.mounted) {
               context.go('/LoginScreenView');

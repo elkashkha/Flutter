@@ -31,9 +31,11 @@ class _CustomTimePickerState extends State<CustomTimePicker> {
   String formatTimeOfDay(TimeOfDay time) {
     final now = DateTime.now();
     final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    final format = DateFormat.jm(); // 12-hour with AM/PM
+    final format = DateFormat('HH:mm'); // ✅ صيغة مقبولة من الـ API
     return format.format(dt);
   }
+
+
 
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay? picked = await showTimePicker(

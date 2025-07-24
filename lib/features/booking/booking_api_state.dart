@@ -5,10 +5,9 @@ class BookingInitial extends BookingApiState {}
 class BookingLoading extends BookingApiState {}
 
 class BookingSuccess extends BookingApiState {
-  final Map<String, dynamic> data;
-  final String InvoiceURL;
+  final String paymentUrl;
 
-  BookingSuccess(this.data, this.InvoiceURL);
+  BookingSuccess( this.paymentUrl);
 }
 
 class BookingFailure extends BookingApiState {

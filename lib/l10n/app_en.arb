@@ -105,6 +105,9 @@
   "choose_team": "Choose Team",
   "enter_time": "Enter Time",
   "book_now": "Book Now",
+  "total_amount": "Total Amount",
+  "delete": "Delete",
+
 
   "add_note": "Add Note",
   "send": "Send",

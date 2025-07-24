@@ -32,8 +32,12 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context).languageCode;
-    final screenWidth = MediaQuery.of(context).size.width>600?MediaQuery.of(context).size.width*.75:MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width > 600
+        ? MediaQuery.of(context).size.width * .75
+        : MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    final languageCode = Localizations.localeOf(context).languageCode;
+    final isArabic = languageCode == 'ar';
 
     return GestureDetector(
       onTap: () {
@@ -44,7 +48,9 @@ class ProductItem extends StatelessWidget {
       },
       child: Container(
         width: screenWidth * 0.45,
-        height:MediaQuery.of(context).size.width>600? screenHeight * 0.65:screenHeight * 0.5,
+        height: MediaQuery.of(context).size.width > 600
+            ? screenHeight * 0.65
+            : screenHeight * 0.5,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           gradient: const LinearGradient(
@@ -121,7 +127,6 @@ class ProductItem extends StatelessWidget {
               ],
             ),
             SizedBox(height: screenHeight * 0.007),
-
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
               child: Text(
@@ -130,18 +135,13 @@ class ProductItem extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.tajawal(
-
-
-
-                  fontSize: screenWidth * 0.020,
+                  fontSize: screenWidth * 0.030,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
               ),
             ),
-
             SizedBox(height: screenHeight * 0.002),
-
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
               child: Text(
@@ -152,16 +152,13 @@ class ProductItem extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.tajawal(
-                  fontSize: screenWidth * 0.020,
+                  fontSize: screenWidth * 0.030,
                   color: Colors.black87,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-
             SizedBox(height: screenHeight * 0.05),
-
-
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.02),
               child: Row(
@@ -186,10 +183,7 @@ class ProductItem extends StatelessWidget {
                 ],
               ),
             ),
-
             const Spacer(),
-
-
             Container(
               height: screenHeight * 0.05,
               width: double.infinity,
@@ -212,7 +206,7 @@ class ProductItem extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  localization.order_now,
+                  isArabic ? 'أضف إلى العربة' : 'Add to Cart',
                   style: GoogleFonts.tajawal(
                     fontSize: screenWidth * 0.04,
                     fontWeight: FontWeight.bold,

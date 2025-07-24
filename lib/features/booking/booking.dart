@@ -1,12 +1,10 @@
 import 'package:elkashkha/features/booking/paymet_wepView.dart';
 import 'package:elkashkha/features/booking/view_model/booking_cubit.dart';
 import 'package:elkashkha/features/booking/view_model/booking_state.dart';
-import 'package:elkashkha/features/booking/view_model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../../core/app_theme.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../core/widgets/emali_fild.dart';
@@ -123,106 +121,6 @@ class _BookingServiceState extends State<BookingService> {
     return '$hour:$minute:00';
   }
 
-
-  String formatTimeForDisplay(TimeOfDay time) {
-    final hour = time.hour.toString().padLeft(2, '0');
-    final minute = time.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
-  }
-  Future<void> sendWhatsAppMessage(BuildContext context, Map<String, dynamic> bookingData) async {
-    print("📤 Starting sendWhatsAppMessage...");
-    final localizations = AppLocalizations.of(context)!;
-
-    String bookingDate = bookingData['booking_date']?.toString() ?? selectedDate?.toString() ?? 'غير محدد';
-    String bookingTime = bookingData['booking_time']?.toString() ??
-        (selectedTime != null ? formatTimeForDisplay(selectedTime!) : 'غير محدد');
-    String name = bookingData['name']?.toString() ?? nameController.text;
-    String phone = bookingData['phone']?.toString() ?? phoneController.text;
-    String address = addressController.text.isNotEmpty ? addressController.text : 'غير محدد';
-    String fullAddress = fullAddressController.text.isNotEmpty ? fullAddressController.text : 'غير محدد';
-    String note = noteController.text.isNotEmpty ? noteController.text : 'لا توجد ملاحظات';
-    String bookingId = bookingData['id']?.toString() ?? 'غير معروف';
-    String totalAmount = calculateTotalAmount().toString();
-
-    /// 📝 خدمات
-    String servicesDetails = '';
-    for (int i = 0; i < selectedServiceNames.length; i++) {
-      servicesDetails += '- ${selectedServiceNames[i]}: ${selectedServicePrices.length > i ? selectedServicePrices[i] : '---'} د.ك\n';
-    }
-    if (servicesDetails.isEmpty) servicesDetails = 'لا يوجد';
-
-    /// 📝 باقات
-    String packagesDetails = '';
-    for (int i = 0; i < selectedPackageNames.length; i++) {
-      packagesDetails += '- ${selectedPackageNames[i]}: ${selectedPackageDiscountedPrices.length > i ? selectedPackageDiscountedPrices[i] : '---'} د.ك\n';
-    }
-    if (packagesDetails.isEmpty) packagesDetails = 'لا يوجد';
-
-    /// 📝 عروض
-    String offersDetails = '';
-    for (int i = 0; i < selectedOfferNames.length; i++) {
-      offersDetails += '- ${selectedOfferNames[i]}: ${selectedOfferDiscountedPrices.length > i ? selectedOfferDiscountedPrices[i] : '---'} د.ك\n';
-    }
-    if (offersDetails.isEmpty) offersDetails = 'لا يوجد';
-
-    /// ✅ الرسالة النهائية
-    String message = '''
-📋 رقم الحجز: $bookingId
-👤 الاسم: $name
-📞 رقم الهاتف: $phone
-🏠 العنوان: $address
-📍 العنوان التفصيلي: $fullAddress
-📝 الملاحظات: $note
-
-🔧 الخدمات:
-$servicesDetails
-
-📦 الباقات:
-$packagesDetails
-
-🎁 العروض:
-$offersDetails
-
-👥 الفريق: ${selectedTeamName ?? 'غير محدد'}
-📅 التاريخ: $bookingDate
-⏰ الوقت: $bookingTime
-
-💰 المبلغ الإجمالي: $totalAmount د.ك
-
----
-تم إرسال هذا الحجز تلقائياً من التطبيق
-''';
-
-    print("📤 Constructed WhatsApp message:\n$message");
-
-    /// رقم الواتساب
-    String phoneNumber = "+96555156388".replaceAll(RegExp(r'\s+'), '');
-    String encodedMessage = Uri.encodeComponent(message);
-    String url = "https://wa.me/$phoneNumber?text=$encodedMessage";
-
-    try {
-      Uri whatsappUri = Uri.parse(url);
-      bool canLaunchApp = await canLaunchUrl(whatsappUri);
-      if (canLaunchApp) {
-        await launchUrl(
-          whatsappUri,
-          mode: LaunchMode.externalApplication,
-        );
-      } else {
-        throw Exception('WhatsApp is not available');
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("خطأ في فتح واتساب: $e"),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
-
   void showSelectionBottomSheet({
     required BuildContext context,
     required String title,
@@ -299,12 +197,11 @@ $offersDetails
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     final double padding = MediaQuery.of(context).size.width * 0.05;
     const double spacing = 16.0;
-    final localizations = AppLocalizations.of(context);
+    final localizations = AppLocalizations.of(context)!;
 
     return MultiBlocProvider(
       providers: [
@@ -320,16 +217,13 @@ $offersDetails
         BlocProvider<BookingCubitApi>(
           create: (context) => BookingCubitApi(),
         ),
-        BlocProvider<BookingApi>(
-          create: (context) => BookingApi(),
-        ),
         BlocProvider(create: (context) => OffersCubit()..fetchOffers()),
       ],
       child: Scaffold(
         backgroundColor: const Color(0xfffcfcfc),
         appBar: AppBar(
           scrolledUnderElevation: 0,
-          title: Text(localizations!.booking_page),
+          title: Text(localizations.booking_page),
           backgroundColor: AppTheme.white,
           elevation: 0,
         ),
@@ -439,7 +333,7 @@ $offersDetails
                       } else if (state is TeamLoading) {
                         return const Center(child: CircularProgressIndicator());
                       } else {
-                        return Text(localizations!.failed_team);
+                        return Text(localizations.failed_team);
                       }
                     },
                   ),
@@ -448,27 +342,39 @@ $offersDetails
                     taskController: nameController,
                     icon: Icons.person,
                     validate: (value) => value!.trim().isEmpty
-                        ? localizations!.validate_name
+                        ? localizations.validate_name
                         : null,
-                    hint: localizations!.full_name,
+                    hint: localizations.full_name,
                   ),
                   const SizedBox(height: spacing),
                   EmailField(
                     taskController: phoneController,
                     icon: Icons.phone,
                     validate: (value) => value!.trim().isEmpty
-                        ? localizations!.validate_phone
+                        ? localizations.validate_phone
                         : null,
-                    hint: localizations!.phone_number,
+                    hint: localizations.phone_number,
                   ),
                   const SizedBox(height: spacing),
                   EmailField(
                     taskController: emailController,
                     icon: Icons.email,
                     validate: (value) => value!.trim().isEmpty
-                        ? localizations!.enterYourEmail
+                        ? localizations.enterYourEmail
                         : null,
-                    hint: localizations!.email,
+                    hint: localizations.email,
+                  ),
+                  const SizedBox(height: spacing),
+                  EmailField(
+                    taskController: addressController,
+                    icon: Icons.location_on,
+                    hint: localizations.address,
+                  ),
+                  const SizedBox(height: spacing),
+                  EmailField(
+                    taskController: fullAddressController,
+                    icon: Icons.location_city,
+                    hint: localizations.full_address,
                   ),
                   const SizedBox(height: spacing),
                   BlocBuilder<ServicesCubit, ServicesState>(
@@ -478,7 +384,7 @@ $offersDetails
                           onTap: () {
                             showSelectionBottomSheet(
                               context: context,
-                              title: localizations!.choose_service,
+                              title: localizations.choose_service,
                               items: state.services,
                               selectedIds: selectedServiceIds,
                               selectedNames: selectedServiceNames,
@@ -513,7 +419,7 @@ $offersDetails
                                 Expanded(
                                   child: Text(
                                     selectedServiceNames.isEmpty
-                                        ? localizations!.choose_service
+                                        ? localizations.choose_service
                                         : selectedServiceNames.join(', '),
                                     style: TextStyle(
                                       color: selectedServiceNames.isEmpty
@@ -527,7 +433,7 @@ $offersDetails
                           ),
                         );
                       }
-                      return Text(localizations!.failed_services);
+                      return Text(localizations.failed_services);
                     },
                   ),
                   const SizedBox(height: spacing),
@@ -538,7 +444,7 @@ $offersDetails
                           onTap: () {
                             showSelectionBottomSheet(
                               context: context,
-                              title: localizations!.choose_offer,
+                              title: localizations.choose_offer,
                               items: state.offers,
                               selectedIds: selectedOfferIds,
                               selectedNames: selectedOfferNames,
@@ -574,7 +480,7 @@ $offersDetails
                                 Expanded(
                                   child: Text(
                                     selectedOfferNames.isEmpty
-                                        ? localizations!.choose_offer
+                                        ? localizations.choose_offer
                                         : selectedOfferNames.join(', '),
                                     style: TextStyle(
                                       color: selectedOfferNames.isEmpty
@@ -588,7 +494,7 @@ $offersDetails
                           ),
                         );
                       }
-                      return Text(localizations!.failed_offers);
+                      return Text(localizations.failed_offers);
                     },
                   ),
                   const SizedBox(height: spacing),
@@ -599,7 +505,7 @@ $offersDetails
                           onTap: () {
                             showSelectionBottomSheet(
                               context: context,
-                              title: localizations!.choose_package,
+                              title: localizations.choose_package,
                               items: state.packages,
                               selectedIds: selectedPackageIds,
                               selectedNames: selectedPackageNames,
@@ -635,7 +541,7 @@ $offersDetails
                                 Expanded(
                                   child: Text(
                                     selectedPackageNames.isEmpty
-                                        ? localizations!.choose_package
+                                        ? localizations.choose_package
                                         : selectedPackageNames.join(', '),
                                     style: TextStyle(
                                       color: selectedPackageNames.isEmpty
@@ -649,7 +555,7 @@ $offersDetails
                           ),
                         );
                       }
-                      return Text(localizations!.failed_packages);
+                      return Text(localizations.failed_packages);
                     },
                   ),
                   const SizedBox(height: spacing),
@@ -659,14 +565,14 @@ $offersDetails
                         selectedTime = time;
                       });
                     },
-                    hintText: localizations!.enter_time,
+                    hintText: localizations.enter_time,
                   ),
                   const SizedBox(height: spacing),
                   EmailField(
                     taskController: noteController,
                     icon: Icons.note,
                     maxLines: 5,
-                    hint: localizations!.add_note,
+                    hint: localizations.add_note,
                   ),
                   const SizedBox(height: spacing),
                   Container(
@@ -679,9 +585,9 @@ $offersDetails
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'المبلغ الإجمالي',
-                          style: TextStyle(
+                        Text(
+                          localizations.total_amount,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -698,89 +604,44 @@ $offersDetails
                     ),
                   ),
                   const SizedBox(height: spacing * 1.5),
-                  MultiBlocListener(
-                    listeners: [
-                      BlocListener<BookingCubitApi, BookingApiState>(
-                        listener: (context, state) async {
-                          print(
-                              "📱 BookingCubitApi Listener triggered with state: ${state.runtimeType}");
+                  BlocListener<BookingCubitApi, BookingApiState>(
+                    listener: (context, state) {
+                      print(
+                          "📱 BookingCubitApi Listener triggered with state: ${state.runtimeType}");
 
-                          if (state is BookingSuccess) {
-                            try {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(localizations!.booking_success),
-                                  backgroundColor: Colors.green,
-                                ),
-                              );
+                      if (state is BookingSuccess) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(localizations.booking_success),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
 
-                              if (state.InvoiceURL != null &&
-                                  state.InvoiceURL!.isNotEmpty) {
-                                final String url = state.InvoiceURL!;
+                        if (state.paymentUrl != null &&
+                            state.paymentUrl!.isNotEmpty) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  BookingWebViewScreen(url: state.paymentUrl!),
+                            ),
+                          );
+                        }
 
-                                if (mounted) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          BookingWebViewScreen(url: url),
-                                    ),
-                                  );
-                                }
-                              }
-
-                              clearFields();
-                            } catch (e) {
-                              print(
-                                  "❌ Error in BookingCubitApi success handling: $e");
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("خطأ أثناء معالجة الحجز: $e"),
-                                  backgroundColor: Colors.orange,
-                                ),
-                              );
-                            }
-                          } else if (state is BookingFailure) {
-                            print("❌ BookingCubitApi failed: ${state.message}");
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    "${localizations!.error_occurred}: ${state.message}"),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          } else if (state is BookingLoading) {
-                            print("⏳ BookingCubitApi in progress...");
-                          }
-                        },
-                      ),
-                      BlocListener<BookingApi, BookingApi2State>(
-                        listener: (context, state) async {
-                          print(
-                              "📱 BookingApi Listener triggered with state: ${state.runtimeType}");
-
-                          if (state is BookingApiSuccess) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(localizations!.booking_success),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          } else if (state is BookingApiError) {
-                            print("❌ BookingApi failed: ${state.message}");
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    "${localizations!.error_occurred}: ${state.message}"),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          } else if (state is BookingApiLoading) {
-                            print("⏳ BookingApi in progress...");
-                          }
-                        },
-                      ),
-                    ],
+                        clearFields();
+                      } else if (state is BookingFailure) {
+                        print("❌ BookingCubitApi failed: ${state.message}");
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                "${localizations.error_occurred}: ${state.message}"),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      } else if (state is BookingLoading) {
+                        print("⏳ BookingCubitApi in progress...");
+                      }
+                    },
                     child: BlocBuilder<BookingCubitApi, BookingApiState>(
                       builder: (context, state) {
                         bool isLoading = state is BookingLoading;
@@ -789,99 +650,112 @@ $offersDetails
                           voidCallback: isLoading
                               ? null
                               : () async {
-                            if (_formKey.currentState!.validate()) {
-                              if (selectedDate == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(localizations!.error_date)),
-                                );
-                                return;
-                              }
+                                  if (_formKey.currentState!.validate()) {
+                                    if (selectedDate == null) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                Text(localizations.error_date)),
+                                      );
+                                      return;
+                                    }
 
-                              if (selectedTime == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(localizations!.validate_time_empty)),
-                                );
-                                return;
-                              }
+                                    if (selectedTime == null) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(localizations
+                                                .validate_time_empty)),
+                                      );
+                                      return;
+                                    }
 
-                              if (selectedTeamId == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('')),
-                                );
-                                return;
-                              }
+                                    if (selectedServiceIds.isEmpty &&
+                                        selectedPackageIds.isEmpty &&
+                                        selectedOfferIds.isEmpty) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(localizations
+                                                .error_service_package_team)),
+                                      );
+                                      return;
+                                    }
 
-                              if (selectedServiceIds.isEmpty &&
-                                  selectedPackageIds.isEmpty &&
-                                  selectedOfferIds.isEmpty) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(localizations!.error_service_package_team)),
-                                );
-                                return;
-                              }
+                                    double totalAmount = calculateTotalAmount();
 
-                              double totalAmount = calculateTotalAmount();
+                                    if (totalAmount <= 0) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(content: Text('')),
+                                      );
+                                      return;
+                                    }
 
-                              if (totalAmount <= 0) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('يرجى اختيار خدمة أو باقة أو عرض صحيح'),
-                                  ),
-                                );
-                                return;
-                              }
+                                    print(
+                                        "📤 Validation passed, sending booking...");
+                                    print("💰 Total Amount: $totalAmount");
+                                    print(
+                                        "👥 Team ID: $selectedTeamId, Team Name: $selectedTeamName");
 
-                              print("📤 Validation passed, sending bookings...");
-                              print("💰 Total Amount: $totalAmount");
+                                    final List<int> serviceIds =
+                                        selectedServiceIds
+                                            .map((id) => int.parse(id))
+                                            .toList();
+                                    final List<int> packageIds =
+                                        selectedPackageIds
+                                            .map((id) => int.parse(id))
+                                            .toList();
+                                    final List<int> offerIds = selectedOfferIds
+                                        .map((id) => int.parse(id))
+                                        .toList();
 
-                              final List<int> serviceIds =
-                              selectedServiceIds.map((id) => int.parse(id)).toList();
-                              final List<int> packageIds =
-                              selectedPackageIds.map((id) => int.parse(id)).toList();
-                              final List<int> offerIds =
-                              selectedOfferIds.map((id) => int.parse(id)).toList();
-
-                              final bookingRequest = BookingRequestModel(
-                                teamId: int.parse(selectedTeamId!),
-                                bookingDate: DateFormat('yyyy-MM-dd').format(selectedDate!),
-                                bookingTime: formatTimeForApi(selectedTime!),
-                                name: nameController.text.trim(),
-                                email: emailController.text.trim(),
-                                phone: phoneController.text.trim(),
-                                services: serviceIds,
-                                packages: packageIds,
-                                offers: offerIds,
-                              );
-
-                              final bookingCubitApi = context.read<BookingCubitApi>();
-                              final bookingApi = context.read<BookingApi>();
-
-                              await Future.wait([
-                                bookingCubitApi.createBooking(
-                                  phone: phoneController.text.trim(),
-                                  email: emailController.text.trim(),
-                                  name: nameController.text.trim(),
-                                  currency: 'KWD',
-                                  amount: totalAmount.toString(),
-                                ),
-                                bookingApi.makeBooking(bookingRequest),
-                              ]);
-                            }
-                          },
+                                    await context
+                                        .read<BookingCubitApi>()
+                                        .createBooking(
+                                          teamId: selectedTeamId != null
+                                              ? int.parse(selectedTeamId!)
+                                              : null,
+                                          bookingDate: DateFormat('yyyy-MM-dd')
+                                              .format(selectedDate!),
+                                          bookingTime:
+                                              DateFormat('HH:mm').format(
+                                            DateTime(
+                                                0,
+                                                0,
+                                                0,
+                                                selectedTime!.hour,
+                                                selectedTime!.minute),
+                                          ),
+                                          name: nameController.text.trim(),
+                                          email: emailController.text.trim(),
+                                          phone: phoneController.text.trim(),
+                                          services: serviceIds.isNotEmpty
+                                              ? serviceIds
+                                              : null,
+                                          packages: packageIds.isNotEmpty
+                                              ? packageIds
+                                              : null,
+                                          offers: offerIds.isNotEmpty
+                                              ? offerIds
+                                              : null,
+                                        );
+                                  }
+                                },
                           child: isLoading
                               ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                              : Text(localizations!.send),
-                        )              ;
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(localizations.send),
+                        );
                       },
                     ),
-
                   ),
                 ],
               ),

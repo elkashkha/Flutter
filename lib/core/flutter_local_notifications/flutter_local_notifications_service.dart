@@ -1,100 +1,96 @@
 import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
-import 'dart:async';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
-  static Timer? _timer;
+  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   static Future<void> initialization() async {
     if (Platform.isAndroid) {
-      bool granted = await _requestNotificationPermission();
-      if (!granted) {
-        print("❌ الإذن مرفوض، لن يتم إرسال الإشعارات");
-        return;
-      }
+      await _requestNotificationPermission();
     }
 
-    await localNotificationInitialization();
-    scheduleMinutelyNotification();
+    await _initLocalNotifications();
+    await _initFirebaseMessaging();
   }
 
-  static Future<void> localNotificationInitialization() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+  /// إعداد الإشعارات المحلية (لازم عشان نعرض إشعار لما ييجي من FCM)
+  static Future<void> _initLocalNotifications() async {
+    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const DarwinInitializationSettings initializationSettingsDarwin =
-    DarwinInitializationSettings(
-      requestSoundPermission: false,
-      requestBadgePermission: false,
-      requestAlertPermission: false,
-    );
+    const iOSInit = DarwinInitializationSettings();
 
-    final InitializationSettings initializationSettings = const InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsDarwin,
+    const initSettings = InitializationSettings(
+      android: androidInit,
+      iOS: iOSInit,
     );
 
     await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
+      initSettings,
+      onDidReceiveNotificationResponse: (response) {
         _handleNotificationClick(response.payload);
       },
     );
   }
 
+
+  static Future<void> _initFirebaseMessaging() async {
+
+    String? fcmToken = await _firebaseMessaging.getToken();
+    print("📲 FCM Token: $fcmToken");
+
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      _showNotification(message);
+    });
+
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("🔔 Notification Clicked: ${message.data}");
+    });
+
+
+    RemoteMessage? initialMessage = await _firebaseMessaging.getInitialMessage();
+    if (initialMessage != null) {
+      _handleNotificationClick(initialMessage.data.toString());
+    }
+  }
+
   static void _handleNotificationClick(String? payload) {
     if (payload != null) {
-
-      print("Notification clicked: $payload");
+      print("📬 Notification clicked: $payload");
     }
   }
 
 
-  static Future<void> scheduleMinutelyNotification() async {
-    tz.initializeTimeZones();
-
-    await flutterLocalNotificationsPlugin.cancelAll();
-    _sendNotification();
-
-    _timer = Timer.periodic(const Duration(minutes: 10080), (timer) {
-      _sendNotification();
-    });
-  }
-
-  static Future<void> _sendNotification() async {
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-    AndroidNotificationDetails(
-      'minute_channel',
-      'Minutely Notifications',
-      channelDescription: 'Notification every minute',
+  static Future<void> _showNotification(RemoteMessage message) async {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'fcm_channel',
+      'Firebase Notifications',
+      channelDescription: 'Channel for FCM',
       importance: Importance.max,
       priority: Priority.high,
     );
 
-    const NotificationDetails platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
-
-    String notificationText = "📢 عروض جديدة متاحة الآن!";
-    await _saveNotification(notificationText);
-
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      1,
-      'عروض وخصومات',
-      notificationText,
-      now.add(const Duration(minutes  : 5)),
-      platformChannelSpecifics,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidDetails,
     );
+
+    await flutterLocalNotificationsPlugin.show(
+      DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      message.notification?.title ?? "إشعار",
+      message.notification?.body ?? "تفاصيل الإشعار",
+      notificationDetails,
+      payload: message.data.toString(),
+    );
+
+    await _saveNotification(message.notification?.body ?? '');
   }
 
   static Future<bool> _requestNotificationPermission() async {
@@ -106,15 +102,12 @@ class NotificationService {
 
     if (status.isDenied) {
       status = await Permission.notification.request();
-      if (status.isGranted) {
-        return true;
-      }
+      return status.isGranted;
     }
 
     if (status.isPermanentlyDenied) {
-      print("⚠️ الإذن مرفوض نهائيًا! يجب فتح الإعدادات يدويًا.");
+      print("⚠️ الإذن مرفوض نهائيًا! افتح الإعدادات يدويًا.");
       await openAppSettings();
-      return false;
     }
 
     return false;

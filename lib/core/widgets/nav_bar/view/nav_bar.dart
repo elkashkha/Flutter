@@ -173,7 +173,7 @@ class _NavBarViewState extends State<NavBarView> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BottomNavCubit(),
+      create: (_) => BottomNavCubit(),
       child: BlocBuilder<BottomNavCubit, int>(
         builder: (context, currentIndex) {
           return Scaffold(
@@ -243,7 +243,7 @@ class _NavBarViewState extends State<NavBarView> {
   }) {
     return GestureDetector(
       onTap: () {
-        context.read<BottomNavCubit>().changeTab(index, context);
+        context.read<BottomNavCubit>().changeTab(index);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),

@@ -4,7 +4,7 @@
             "outputFile": "io.flutter.plugins.videoplayer.video_player_android-mergeReleaseResources-24:/values-zh-rCN/values-zh-rCN.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\c9b29d6d4f419455c205c53a9f2c9829\\transformed\\jetified-media3-exoplayer-1.4.1\\res\\values-zh-rCN\\values-zh-rCN.xml",
+                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\422fbd63377e6a789fc3ec699cca6ee2\\transformed\\jetified-media3-exoplayer-1.4.1\\res\\values-zh-rCN\\values-zh-rCN.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\74c1895ee15d4a639000e095e1132bc7\\transformed\\core-1.13.1\\res\\values-zh-rCN\\values-zh-rCN.xml",
+                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\8c3a60464e224ca66551d9bf95411280\\transformed\\core-1.13.1\\res\\values-zh-rCN\\values-zh-rCN.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -43,7 +43,7 @@
             "outputFile": "io.flutter.plugins.videoplayer.video_player_android-merged_res-26:/values-zh-rCN/values-zh-rCN.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\c9b29d6d4f419455c205c53a9f2c9829\\transformed\\jetified-media3-exoplayer-1.4.1\\res\\values-zh-rCN\\values-zh-rCN.xml",
+                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\422fbd63377e6a789fc3ec699cca6ee2\\transformed\\jetified-media3-exoplayer-1.4.1\\res\\values-zh-rCN\\values-zh-rCN.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",
@@ -60,7 +60,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\74c1895ee15d4a639000e095e1132bc7\\transformed\\core-1.13.1\\res\\values-zh-rCN\\values-zh-rCN.xml",
+                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\8c3a60464e224ca66551d9bf95411280\\transformed\\core-1.13.1\\res\\values-zh-rCN\\values-zh-rCN.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",

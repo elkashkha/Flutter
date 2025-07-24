@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
@@ -32,12 +34,14 @@ class LoginCubit extends Cubit<LoginState> {
         int userId = response.data['user']['id'];
         await _saveAuthData(token, userId);
         emit(LoginSuccess(token, userId));
+
+        // ✅ بعد تسجيل الدخول: ابعت FCM Token
+        await sendFcmTokenToServer();
       } else {
         emit(LoginFailure("فشل تسجيل الدخول، تحقق من البيانات."));
       }
     } on DioException catch (e) {
       if (e.response != null && e.response!.statusCode == 403) {
-        // التحقق من رسالة البريد غير المفعل
         if (e.response!.data != null &&
             e.response!.data['message'] == "Email not verified. OTP sent to email for verification.") {
           emit(OtpRequired(email));
@@ -50,32 +54,6 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  // Future<void> deleteUser(BuildContext context) async {
-  //   emit(LoginLoading());
-  //   try {
-  //     String? token = await getToken();
-  //     if (token == null) throw Exception("المستخدم غير مسجل.");
-  //
-  //     Response response = await _dio.delete(
-  //       'user/delete',
-  //       options: Options(
-  //         headers: {
-  //           'Authorization': 'Bearer $token',
-  //         },
-  //       ),
-  //     );
-  //
-  //     if (response.statusCode == 200) {
-  //       await _clearAuthData();
-  //       context.goNamed('login');
-  //       emit(LoginSuccess("", 0));
-  //     } else {
-  //       emit(LoginFailure("فشل في حذف المستخدم."));
-  //     }
-  //   } on DioException catch (e) {
-  //     emit(LoginFailure(_handleDioError(e)));
-  //   }
-  // }
   Future<void> deleteUser(BuildContext context) async {
     emit(LoginLoading());
 
@@ -89,17 +67,16 @@ class LoginCubit extends Cubit<LoginState> {
 
       String url = 'user/$userId';
 
-      Response response = await _dio.delete(url); // بدون Authorization headers
+      Response response = await _dio.delete(url);
 
       if (response.statusCode == 200) {
         await _clearAuthData();
         if (context.mounted) {
-          context.go('/LoginScreenView'); // التنقل بعد الحذف
+          context.go('/LoginScreenView');
         }
       } else {
         emit(LoginFailure("فشل في حذف المستخدم."));
       }
-
     } on DioException catch (e) {
       emit(LoginFailure(_handleDioError(e)));
     } catch (e) {
@@ -107,6 +84,46 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
+  /// ✅ إرسال FCM Token بعد تسجيل الدخول
+  Future<void> sendFcmTokenToServer() async {
+    try {
+      final String? token = await getToken();
+      final int? userId = await getUserId();
+      final String? fcmToken = await FirebaseMessaging.instance.getToken();
+
+      if (token == null || userId == null || fcmToken == null) {
+        print("❌ البيانات ناقصة، مش هينفع نكمل إرسال التوكن");
+        return;
+      }
+
+      final response = await Dio().post(
+        'https://apitest.alkashkhaa.com/public/api/notifications/save-token',
+        data: {
+          "fcm_token": fcmToken,
+        },
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+            "Accept": "application/json", // ضروري علشان الـ API ما يرجعش HTML أو Redirect
+          },
+          followRedirects: false, // يمنع Dio من تنفيذ redirect تلقائي
+          validateStatus: (status) => status != null && status < 500,
+        ),
+      );
+
+      print("Status Code: ${response.statusCode}");
+      print("Response: ${response.data}");
+
+
+      if (response.statusCode == 200) {
+        print("✅ تم إرسال FCM Token بنجاح");
+      } else {
+        print("⚠️ فشل إرسال FCM Token: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("🚨 خطأ أثناء إرسال FCM Token: $e");
+    }
+  }
 
   Future<void> _saveAuthData(String token, int userId) async {
     final prefs = await SharedPreferences.getInstance();

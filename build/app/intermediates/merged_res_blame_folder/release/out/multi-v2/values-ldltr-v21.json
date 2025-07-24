@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.ahdafweb.elkashkha.app-mergeReleaseResources-46:/values-ldltr-v21/values-ldltr-v21.xml",
+            "outputFile": "com.ahdafweb.elkashkha.app-mergeReleaseResources-56:/values-ldltr-v21/values-ldltr-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\69dc6337af0c3e87c788c0a4d5f74948\\transformed\\appcompat-1.6.1\\res\\values-ldltr-v21\\values-ldltr-v21.xml",
+                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\c078e837e0fd7b9fb9b56de30681099f\\transformed\\appcompat-1.6.1\\res\\values-ldltr-v21\\values-ldltr-v21.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

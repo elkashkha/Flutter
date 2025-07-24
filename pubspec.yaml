@@ -74,6 +74,8 @@ dependencies:
   webview_flutter_android: ^4.7.0
   webview_flutter_wkwebview: ^3.22.0
   table_calendar: ^3.1.3
+  firebase_core: ^3.15.2
+  firebase_messaging: ^15.2.10
 
 
 
@@ -147,8 +149,8 @@ flutter_intl:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/lol.png"  # المسار إلى الأيقونة
+  image_path: "assets/images/dbd2d9a2-a476-4033-b51f-b25215eccb42.jpg"  # المسار إلى الأيقونة
   adaptive_icon_background: "#FCFCFC"  # لون الخلفية للأيقونة المتكيفة
-  adaptive_icon_foreground: "assets/images/lol.png"  # مسار الأيقونة الأمامية للأيقونة المتكيفة
+  adaptive_icon_foreground: "assets/images/dbd2d9a2-a476-4033-b51f-b25215eccb42.jpg"  # مسار الأيقونة الأمامية للأيقونة المتكيفة
   min_sdk_android: 21  # الحد الأدنى لـ SDK الخاص بـ Android
   remove_alpha_ios: true  # إزالة القنوات الشفافة في iOS  هكذا

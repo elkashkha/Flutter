@@ -1,4 +1,4 @@
-package com.ahdafweb2.elkashkha
+package com.ahdafweb.elkashkha
 
 import io.flutter.embedding.android.FlutterActivity
 

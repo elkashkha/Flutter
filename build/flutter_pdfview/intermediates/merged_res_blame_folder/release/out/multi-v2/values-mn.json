@@ -4,7 +4,7 @@
             "outputFile": "io.endigo.plugins.pdfviewflutter.flutter_pdfview-mergeReleaseResources-24:/values-mn/values-mn.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\74c1895ee15d4a639000e095e1132bc7\\transformed\\core-1.13.1\\res\\values-mn\\values-mn.xml",
+                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\8c3a60464e224ca66551d9bf95411280\\transformed\\core-1.13.1\\res\\values-mn\\values-mn.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -19,7 +19,7 @@
             "outputFile": "io.endigo.plugins.pdfviewflutter.flutter_pdfview-merged_res-26:/values-mn/values-mn.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\74c1895ee15d4a639000e095e1132bc7\\transformed\\core-1.13.1\\res\\values-mn\\values-mn.xml",
+                    "source": "C:\\Users\\sm467\\.gradle\\caches\\transforms-3\\8c3a60464e224ca66551d9bf95411280\\transformed\\core-1.13.1\\res\\values-mn\\values-mn.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
