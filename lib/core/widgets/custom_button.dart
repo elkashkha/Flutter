@@ -61,17 +61,15 @@ class MyCustomButton extends StatelessWidget {
             color: Colors.white,
           ),
         )
-            : DefaultTextStyle(
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: textFontSize,
-            fontWeight: FontWeight.w500,
-          ),
-          child: child ??
-              Text(
-                text ?? '',
+            : child ??
+            Text(
+              text ?? '',
+              style: TextStyle(
+                color: textColor, // 👈 دلوقتي هيتغير فعليًا
+                fontSize: textFontSize,
+                fontWeight: FontWeight.w500,
               ),
-        ),
+            ),
       ),
     );
   }

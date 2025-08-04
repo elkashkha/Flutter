@@ -183,7 +183,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                     voidCallback: () => context.push('/ForgetPasswordBody'),
                     text: AppLocalizations.of(context)!.forgot_password,
                     backgroundColor: AppTheme.white,
-                    textColor: AppTheme.primary,
+                    textColor: Colors.black,
                     borderColor: AppTheme.primary,
                   ),
                 ],

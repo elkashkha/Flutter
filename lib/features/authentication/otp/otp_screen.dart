@@ -155,28 +155,31 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: screenWidth * 0.1),
-                          child: PinCodeTextField(
-                            cursorColor: AppTheme.primary,
-                            appContext: context,
-                            length: 6,
-                            controller: otpController,
-                            keyboardType: TextInputType.number,
-                            animationType: AnimationType.fade,
-                            pinTheme: PinTheme(
-                              shape: PinCodeFieldShape.box,
-                              borderRadius: BorderRadius.circular(8),
-                              fieldHeight: screenHeight * 0.06,
-                              fieldWidth: screenWidth * 0.10,
-                              activeFillColor: Colors.white,
-                              inactiveFillColor: Colors.grey[200]!,
-                              activeColor: AppTheme.primary,
-                              selectedFillColor:
-                                  AppTheme.primary.withOpacity(0.2),
-                              selectedColor: AppTheme.primary,
-                              inactiveColor: Colors.grey,
+                          child: Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: PinCodeTextField(
+                              cursorColor: AppTheme.primary,
+                              appContext: context,
+                              length: 6,
+                              controller: otpController,
+                              keyboardType: TextInputType.number,
+                              animationType: AnimationType.fade,
+                              pinTheme: PinTheme(
+                                shape: PinCodeFieldShape.box,
+                                borderRadius: BorderRadius.circular(8),
+                                fieldHeight: screenHeight * 0.06,
+                                fieldWidth: screenWidth * 0.10,
+                                activeFillColor: Colors.white,
+                                inactiveFillColor: Colors.grey[200]!,
+                                activeColor: AppTheme.primary,
+                                selectedFillColor: AppTheme.primary.withOpacity(0.2),
+                                selectedColor: AppTheme.primary,
+                                inactiveColor: Colors.grey,
+                              ),
+                              onChanged: (value) {},
                             ),
-                            onChanged: (value) {},
                           ),
+
                         ),
                         SizedBox(height: screenHeight * 0.04),
                         MyCustomButton(
