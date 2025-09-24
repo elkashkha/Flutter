@@ -1,4 +1,5 @@
 import 'package:elkashkha/core/app_router.dart';
+import 'package:elkashkha/features/home_screen/presentation/views/widgts/teams_list_home.dart';
 import 'package:elkashkha/features/profile_screen/presentation/view/widgets/about_us/view_model/about_us_cubit.dart';
 import 'package:elkashkha/features/profile_screen/presentation/view/widgets/about_us/view_model/about_us_state.dart';
 import 'package:elkashkha/features/profile_screen/presentation/view/widgets/about_us/view_model/teams_view.dart';
@@ -25,9 +26,8 @@ class AboutUs extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: AppTheme.white,
-        title:  CustomAppBar(
+        title: CustomAppBar(
           title: AppLocalizations.of(context)!.about_us,
-
         ),
       ),
       body: Padding(
@@ -46,7 +46,6 @@ class AboutUs extends StatelessWidget {
               const SizedBox(height: 20),
               const AboutUsContent(),
               const SizedBox(height: 20),
-          
               const Text(
                 'لقطات حية من خدماتنا وأجواء الصالون. شاهد كيف نهتم بأدق التفاصيل لضمان تجربة استثنائية لك!',
                 style: TextStyle(
@@ -55,8 +54,6 @@ class AboutUs extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-          
-          
               BlocBuilder<AboutUsCubit, AboutUsState>(
                 builder: (context, state) {
                   if (state is AboutUsLoading) {
@@ -81,10 +78,15 @@ class AboutUs extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              const TeamsView(),
+              const SpecialistsView(),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: MyCustomButton(text: 'احجز موعدك الان', voidCallback: () { context.push('/BookingService'); },),
+                child: MyCustomButton(
+                  text: 'احجز موعدك الان',
+                  voidCallback: () {
+                    context.push('/BookingService');
+                  },
+                ),
               )
             ],
           ),

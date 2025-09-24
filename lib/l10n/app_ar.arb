@@ -10,6 +10,29 @@
   "choose_the_team": "اختر الفريق:",
   "no_bookings_now": "لا توجد حجوزات حالياً",
 
+  "experience": "الخبرة",
+  "years": "سنوات",
+  "servicesTitle": "الخدمات",
+  "noServices": "لا توجد خدمات متاحة",
+  "workScheduleTitle": "جدول العمل",
+  "noWorkDays": "لا يوجد جدول عمل",
+  "projectsTitle": "الأعمال (Portfolio)",
+  "noProjects": "لا توجد أعمال متاحة",
+  "book_now": "احجز الآن",
+
+  "noName": "بدون اسم",
+  "noDescription": "لا يوجد وصف",
+  "noSpecialties": "لا توجد تخصصات متاحة",
+    "sessions": "عدد العملاء الذي تم التعامل معهم :",
+
+  "specialtiesTitle": "التخصصات",
+  "projectsTitle": "الأعمال",
+  "workScheduleTitle": "جدول العمل",
+  "experience": "الخبرة",
+  "years": "سنوات",
+  "servicesTitle": "الخدمات",
+  "book_now": "احجز الآن",
+  "noProjects": "لا توجد مشاريع متاحة",
 
 
 
@@ -111,7 +134,17 @@
   "delete_account_confirm": "هل أنت متأكد من أنك تريد مسح حسابك؟",
   "choose_offer": "اختر العرض",
   "failed_offers": "فشل تحميل العروض",
-
+  
+  "specialist_fee": "سيتم إضافة {price} د.ك رسوم للمتخصص",
+  "@specialist_fee": {
+    "description": "نص بيظهر للمستخدم لما يختار متخصص، مع رسوم إضافية",
+    "placeholders": {
+      "price": {
+        "type": "String",
+        "example": "1"
+      }
+    }
+  },
   "cancel": "إلغاء",
   "confirm": "تأكيد",
   "latest_products": "أحدث المنتجات",

@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'add_rate_state.dart';
 
-
-
 class ReviewCubit extends Cubit<ReviewState> {
   ReviewCubit() : super(ReviewInitial());
 
@@ -24,7 +22,9 @@ class ReviewCubit extends Cubit<ReviewState> {
   }
 
   Future<void> submitReview() async {
-    if (selectedStars == 0 || reviewController.text.isEmpty || selectedServiceId == null) {
+    if (selectedStars == 0 ||
+        reviewController.text.isEmpty ||
+        selectedServiceId == null) {
       emit(ReviewError('يرجى اختيار الخدمة، تحديد عدد النجوم، وكتابة رأيك'));
       return;
     }
@@ -40,7 +40,7 @@ class ReviewCubit extends Cubit<ReviewState> {
       }
 
       final response = await Dio().post(
-        'https://api.alkashkhaa.com/public/api/reviews',
+        'https://apitest.alkashkhaa.com/public/api/reviews',
         data: {
           'user_id': userId,
           'service_id': selectedServiceId,

@@ -1,25 +1,26 @@
 import 'package:elkashkha/features/profile_screen/presentation/view/widgets/about_us/view_model/teams_model.dart';
 
-abstract class TeamState  {
-  @override
+abstract class SpecialistsState {
   List<Object> get props => [];
 }
 
-class TeamInitial extends TeamState {}
+class SpecialistsInitial extends SpecialistsState {}
 
-class TeamLoading extends TeamState {}
+class SpecialistsLoading extends SpecialistsState {}
 
-class TeamLoaded extends TeamState {
-  final List<TeamMember> teamMembers;
-  TeamLoaded(this.teamMembers);
+class SpecialistsLoaded extends SpecialistsState {
+  final List<Specialist> specialists;
+
+  SpecialistsLoaded(this.specialists);
 
   @override
-  List<Object> get props => [teamMembers];
+  List<Object> get props => [specialists];
 }
 
-class TeamError extends TeamState {
+class SpecialistsError extends SpecialistsState {
   final String message;
-  TeamError(this.message);
+
+  SpecialistsError(this.message);
 
   @override
   List<Object> get props => [message];

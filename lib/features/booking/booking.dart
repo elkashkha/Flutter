@@ -1,22 +1,23 @@
+import 'package:elkashkha/core/widgets/loading.dart';
 import 'package:elkashkha/features/booking/paymet_wepView.dart';
 import 'package:elkashkha/features/booking/view_model/booking_cubit.dart';
 import 'package:elkashkha/features/booking/view_model/booking_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import '../../../../../core/app_theme.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../core/widgets/emali_fild.dart';
-import '../home_screen/presentation/views_model/offers/offers_cubit.dart';
-import '../home_screen/presentation/views_model/offers/offers_state.dart';
-import '../home_screen/presentation/views_model/services/service_cubit.dart';
-import '../home_screen/presentation/views_model/services/service_state.dart';
 import 'booking_api_cubit.dart';
 import 'booking_api_state.dart';
 import 'custom_date_picker.dart';
+import '../home_screen/presentation/views_model/offers/offers_cubit.dart';
+import '../home_screen/presentation/views_model/offers/offers_state.dart';
 import '../home_screen/presentation/views_model/packages/packages_cubit.dart';
 import '../home_screen/presentation/views_model/packages/packages_state.dart';
+import '../home_screen/presentation/views_model/services/service_cubit.dart';
+import '../home_screen/presentation/views_model/services/service_state.dart';
 import '../profile_screen/presentation/view/widgets/about_us/view_model/teams_cubit.dart';
 import '../profile_screen/presentation/view/widgets/about_us/view_model/teams_state.dart';
 import 'custom_time_piker.dart';
@@ -42,6 +43,7 @@ class _BookingServiceState extends State<BookingService> {
   List<String> selectedPackageNames = [];
   String? selectedTeamId;
   String? selectedTeamName;
+  String? selectedOverprice; // جديد: لتخزين overprice الخاص بالـ specialist
   List<String> selectedOfferIds = [];
   List<String> selectedOfferNames = [];
   List<String> selectedServicePrices = [];
@@ -54,9 +56,10 @@ class _BookingServiceState extends State<BookingService> {
   @override
   void initState() {
     super.initState();
+    selectedOverprice = null; // تهيئة إلى null
     context.read<ServicesCubit>().fetchServices();
     context.read<PackagesCubit>().fetchPackages();
-    context.read<TeamCubit>().fetchTeamMembers();
+    // context.read<SpecialistsCubit>().fetchSpecialists();
     context.read<OffersCubit>().fetchOffers();
   }
 
@@ -81,6 +84,7 @@ class _BookingServiceState extends State<BookingService> {
       selectedPackageNames = [];
       selectedTeamId = null;
       selectedTeamName = null;
+      selectedOverprice = null; // إعادة تهيئة إلى null
       selectedOfferIds = [];
       selectedOfferNames = [];
       selectedServicePrices = [];
@@ -105,6 +109,9 @@ class _BookingServiceState extends State<BookingService> {
     for (var price in selectedOfferDiscountedPrices) {
       total += double.tryParse(price) ?? 0.0;
     }
+
+    // جديد: إضافة overprice إلى الإجمالي
+    total += double.tryParse(selectedOverprice ?? '0') ?? 0.0;
 
     return total;
   }
@@ -205,8 +212,8 @@ class _BookingServiceState extends State<BookingService> {
         BlocProvider<PackagesCubit>(
           create: (context) => PackagesCubit()..fetchPackages(),
         ),
-        BlocProvider<TeamCubit>(
-          create: (context) => TeamCubit()..fetchTeamMembers(),
+        BlocProvider<SpecialistsCubit>(
+          create: (context) => SpecialistsCubit()..fetchSpecialists(),
         ),
         BlocProvider<BookingCubitApi>(
           create: (context) => BookingCubitApi(),
@@ -237,9 +244,13 @@ class _BookingServiceState extends State<BookingService> {
                     },
                   ),
                   const SizedBox(height: spacing),
-                  BlocBuilder<TeamCubit, TeamState>(
+                  BlocBuilder<SpecialistsCubit, SpecialistsState>(
                     builder: (context, state) {
-                      if (state is TeamLoaded) {
+                      if (state is SpecialistsLoading) {
+                        return const Center(child: CustomDotsTriangleLoader());
+                      } else if (state is SpecialistsLoaded) {
+                        final specialists = state.specialists;
+
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -253,24 +264,27 @@ class _BookingServiceState extends State<BookingService> {
                               height: 100,
                               child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: state.teamMembers.length,
+                                itemCount: specialists.length,
                                 separatorBuilder: (_, __) =>
                                     const SizedBox(width: 12),
                                 itemBuilder: (context, index) {
-                                  final team = state.teamMembers[index];
-                                  final isSelected =
-                                      selectedTeamId == team.id.toString();
+                                  final specialist = specialists[index];
+                                  final isSelected = selectedTeamId ==
+                                      specialist.id.toString();
 
                                   return GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        selectedTeamId = team.id.toString();
+                                        selectedTeamId =
+                                            specialist.id.toString();
                                         selectedTeamName =
                                             Localizations.localeOf(context)
                                                         .languageCode ==
                                                     'ar'
-                                                ? team.nameAr
-                                                : team.nameEn;
+                                                ? specialist.name
+                                                : specialist.name;
+                                        selectedOverprice =
+                                            specialist.overprice;
                                       });
                                     },
                                     child: Column(
@@ -290,7 +304,7 @@ class _BookingServiceState extends State<BookingService> {
                                           ),
                                           child: ClipOval(
                                             child: Image.network(
-                                              team.image,
+                                              specialist.profilePicture,
                                               width: 64,
                                               height: 50,
                                               fit: BoxFit.contain,
@@ -301,20 +315,22 @@ class _BookingServiceState extends State<BookingService> {
                                           ),
                                         ),
                                         const SizedBox(height: 4),
-                                        Text(
-                                          Localizations.localeOf(context)
-                                                      .languageCode ==
-                                                  'ar'
-                                              ? team.nameAr
-                                              : team.nameEn,
-                                          style: TextStyle(
-                                            color: isSelected
-                                                ? Colors.black
-                                                : Colors.grey[600],
-                                            fontWeight: isSelected
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                          ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              specialist.name,
+                                              style: TextStyle(
+                                                color: isSelected
+                                                    ? Colors.black
+                                                    : Colors.grey[600],
+                                                fontWeight: isSelected
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 4),
+                                          ],
                                         ),
                                       ],
                                     ),
@@ -322,12 +338,45 @@ class _BookingServiceState extends State<BookingService> {
                                 },
                               ),
                             ),
+                            const SizedBox(height: 8),
+                            if (selectedOverprice != null &&
+                                selectedOverprice!.isNotEmpty &&
+                                selectedOverprice != "0" &&
+                                selectedOverprice != "0.00")
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: AppLocalizations.of(context)!
+                                          .specialist_fee(selectedOverprice!),
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const TextSpan(text: " "), // مسافة
+                                    TextSpan(
+                                      text: selectedTeamId != null
+                                          ? specialists
+                                              .firstWhere((s) =>
+                                                  s.id.toString() ==
+                                                  selectedTeamId)
+                                              .level
+                                          : "",
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
                           ],
                         );
-                      } else if (state is TeamLoading) {
-                        return const Center(child: CircularProgressIndicator());
+                      } else if (state is SpecialistsError) {
+                        return Text(state.message);
                       } else {
-                        return Text(localizations.failed_team);
+                        return const SizedBox();
                       }
                     },
                   ),
@@ -359,8 +408,6 @@ class _BookingServiceState extends State<BookingService> {
                     hint: localizations.email,
                   ),
                   const SizedBox(height: spacing),
-
-
                   const SizedBox(height: spacing),
                   BlocBuilder<ServicesCubit, ServicesState>(
                     builder: (context, state) {
@@ -632,6 +679,7 @@ class _BookingServiceState extends State<BookingService> {
                         bool isLoading = state is BookingLoading;
 
                         return MyCustomButton(
+                          textColor: AppTheme.white,
                           voidCallback: isLoading
                               ? null
                               : () async {
@@ -737,7 +785,10 @@ class _BookingServiceState extends State<BookingService> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : Text(localizations.send),
+                              : Text(
+                                  localizations.send,
+                                  style: const TextStyle(color: AppTheme.white),
+                                ),
                         );
                       },
                     ),

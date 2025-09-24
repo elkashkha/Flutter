@@ -14,7 +14,7 @@ android {
         applicationId = "com.ahdafweb.elkashkha"
         minSdk = 23
         targetSdk = 36
-        versionCode = 5
+        versionCode = 6
         versionName = flutter.versionName
     }
 

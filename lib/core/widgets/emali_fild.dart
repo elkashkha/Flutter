@@ -20,6 +20,7 @@ class EmailField extends StatefulWidget {
   final Widget? suffixIcon;
 
   @override
+  // ignore: library_private_types_in_public_api
   _EmailFieldState createState() => _EmailFieldState();
 }
 

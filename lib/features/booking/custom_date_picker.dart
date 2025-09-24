@@ -54,7 +54,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
                 color: Colors.grey.shade700,
                 shape: BoxShape.circle,
               ),
-              selectedDecoration: BoxDecoration(
+              selectedDecoration: const BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
               ),

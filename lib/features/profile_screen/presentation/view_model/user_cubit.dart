@@ -8,7 +8,7 @@ class UserCubit extends Cubit<UserState> {
   UserCubit() : super(UserInitial());
 
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'https://api.alkashkhaa.com/public/api/',
+    baseUrl: 'https://apitest.alkashkhaa.com/public/api/',
     contentType: 'application/json',
   ));
 
@@ -56,7 +56,8 @@ class UserCubit extends Cubit<UserState> {
         "name": name,
         "email": email,
         if (profilePicture != null)
-          "profile_picture": await MultipartFile.fromFile(profilePicture, filename: "profile.jpg"),
+          "profile_picture": await MultipartFile.fromFile(profilePicture,
+              filename: "profile.jpg"),
       });
 
       Response response = await _dio.post(
@@ -84,22 +85,17 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
-
-
-
-
-
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('access_token');
   }
 
-
   String _handleDioError(DioException e) {
     if (e.response != null) {
       if (e.response!.statusCode == 401) {
         return "انتهت صلاحية الجلسة، يرجى تسجيل الدخول مجددًا.";
-      } else if (e.response!.data != null && e.response!.data['message'] != null) {
+      } else if (e.response!.data != null &&
+          e.response!.data['message'] != null) {
         return e.response!.data['message'];
       }
     }

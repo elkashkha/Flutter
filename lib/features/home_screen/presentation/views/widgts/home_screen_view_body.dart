@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:elkashkha/features/home_screen/presentation/views/widgts/teams_list_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -22,7 +23,9 @@ class HomeScreenViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var localization = AppLocalizations.of(context)!;
-    final screenWidth = MediaQuery.of(context).size.width>600?MediaQuery.of(context).size.width*.75:MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width > 600
+        ? MediaQuery.of(context).size.width * .75
+        : MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Padding(
@@ -58,19 +61,20 @@ class HomeScreenViewBody extends StatelessWidget {
                                     color: Color(0xFF292828),
                                   ),
                                   child: IconButton(
-                                    icon: const Icon(
-                                        Icons.shopping_cart_sharp,
-                                        color: Colors.white,
-                                        size: 20),
+                                    icon: const Icon(Icons.shopping_cart_sharp,
+                                        color: Colors.white, size: 20),
                                     padding: EdgeInsets.zero,
                                     onPressed: () {
                                       context.push('/CartScreen');
                                     },
                                   ),
                                 ),
-                                const SizedBox(width: 10,),
+                                const SizedBox(
+                                  width: 10,
+                                ),
                                 BlocProvider(
-                                  create: (_) => UnreadNotificationsCubit(Dio())..getUnreadCount(),
+                                  create: (_) => UnreadNotificationsCubit(Dio())
+                                    ..getUnreadCount(),
                                   child: Stack(
                                     alignment: Alignment.topRight,
                                     children: [
@@ -89,20 +93,23 @@ class HomeScreenViewBody extends StatelessWidget {
                                           ),
                                           padding: EdgeInsets.zero,
                                           onPressed: () {
-                                            context.push('/NotificationsScreen');
+                                            context
+                                                .push('/NotificationsScreen');
                                           },
                                         ),
                                       ),
-
-
-                                      BlocBuilder<UnreadNotificationsCubit, UnreadNotificationsState>(
+                                      BlocBuilder<UnreadNotificationsCubit,
+                                          UnreadNotificationsState>(
                                         builder: (context, state) {
-                                          if (state is UnreadNotificationsLoaded && state.count > 0) {
+                                          if (state
+                                                  is UnreadNotificationsLoaded &&
+                                              state.count > 0) {
                                             return Positioned(
                                               right: 0,
                                               top: 1,
                                               child: Container(
-                                                padding: const EdgeInsets.all(4),
+                                                padding:
+                                                    const EdgeInsets.all(4),
                                                 decoration: const BoxDecoration(
                                                   color: Colors.red,
                                                   shape: BoxShape.circle,
@@ -123,12 +130,8 @@ class HomeScreenViewBody extends StatelessWidget {
                                     ],
                                   ),
                                 )
-
-
                               ],
                             ),
-
-
                           ],
                         ),
                       ),
@@ -213,6 +216,7 @@ class HomeScreenViewBody extends StatelessWidget {
             ),
             Padding(
               padding: EdgeInsets.only(
+                  bottom: screenHeight * 0.02,
                   top: screenHeight * 0.01,
                   left: screenWidth * 0.04,
                   right: screenWidth * 0.04),
@@ -222,7 +226,7 @@ class HomeScreenViewBody extends StatelessWidget {
                   _buildSectionHeader(context, localization.specialists, () {
                     context.push('/TeamsListHome');
                   }),
-                  const TeamsView(),
+                  const SpecialistsView(),
                 ],
               ),
             ),
@@ -235,7 +239,9 @@ class HomeScreenViewBody extends StatelessWidget {
   Widget _buildSectionHeader(
       BuildContext context, String title, VoidCallback onMorePressed) {
     var localization = AppLocalizations.of(context)!;
-    final screenWidth = MediaQuery.of(context).size.width>600?MediaQuery.of(context).size.width*.75:MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width > 600
+        ? MediaQuery.of(context).size.width * .75
+        : MediaQuery.of(context).size.width;
     final locale = Localizations.localeOf(context).languageCode;
 
     return Padding(
@@ -252,7 +258,7 @@ class HomeScreenViewBody extends StatelessWidget {
             onPressed: onMorePressed,
             child: Text(
               localization.see_more,
-              style:  GoogleFonts.notoNaskhArabic(
+              style: GoogleFonts.notoNaskhArabic(
                 fontSize: 20,
                 color: AppTheme.primary,
                 fontWeight: FontWeight.bold,

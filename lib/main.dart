@@ -7,12 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
-
 import 'core/app_router.dart';
 import 'core/app_theme.dart';
 import 'core/change_language_cubit/change_language_cubit.dart';
 import 'core/flutter_local_notifications/flutter_local_notifications_service.dart';
-
 import 'features/authentication/forget_password/view_model/forget_password_cubit.dart';
 import 'features/authentication/login/presentation/view_model/login_cubit.dart';
 import 'features/authentication/register/presentation/view_model/register_cubit.dart';
@@ -27,13 +25,10 @@ import 'features/profile_screen/presentation/view_model/user_cubit.dart';
 import 'features/rate_screen/presentation/view_model/reviews_cubit.dart';
 import 'features/booking/booking_api_cubit.dart';
 import 'features/booking/booking_cubit.dart';
-
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
-
 import 'core/app_router.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,8 +45,8 @@ void main() async {
   final languageCubit = LanguageCubit();
   await languageCubit.loadSavedLanguage();
 
-  // استلام رسالة الفتح الأولية
-  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+  RemoteMessage? initialMessage =
+      await FirebaseMessaging.instance.getInitialMessage();
 
   runApp(
     MultiBlocProvider(
@@ -66,10 +61,11 @@ void main() async {
         BlocProvider(create: (context) => AboutUsCubit()..fetchAboutUs()),
         BlocProvider(create: (context) => OffersCubit()..fetchOffers()),
         BlocProvider(create: (context) => PackagesCubit()..fetchPackages()),
-        BlocProvider(create: (context) => ProductCategoriesCubit()..fetchProductCategories()),
+        BlocProvider(
+            create: (context) =>
+                ProductCategoriesCubit()..fetchProductCategories()),
         BlocProvider(create: (context) => UserCubit()..fetchUserProfile()),
         BlocProvider(create: (context) => ReviewsCubit()..fetchReviews()),
-        BlocProvider(create: (context) => TeamCubit()..fetchTeamMembers()),
       ],
       child: MyApp(initialMessage: initialMessage),
     ),
@@ -105,7 +101,6 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp.router(
       routerConfig: Approuter.router,
-
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

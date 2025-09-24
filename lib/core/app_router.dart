@@ -1,5 +1,11 @@
 import 'package:elkashkha/core/widgets/nav_bar/view/nav_bar.dart';
+import 'package:elkashkha/features/booking/booking_specialist.dart';
 import 'package:elkashkha/features/home_screen/presentation/views/widgts/offers_list/offers_details.dart';
+import 'package:elkashkha/features/profile_screen/presentation/view/widgets/about_us/view_model/teams_list_home.dart';
+import 'package:elkashkha/features/specialist_nav_bar/features/booking_tab/view/screens/booking_tab.dart'
+    show BookingSpecialistScreen;
+import 'package:elkashkha/features/specialist_nav_bar/features/home_screen_specialist/view/widgets/portfolio_screen.dart';
+import 'package:elkashkha/features/specialist_nav_bar/features/profile_specialist/view/screen/update_profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import '../features/authentication/forget_password/views/forget_password_view.dart';
@@ -15,7 +21,6 @@ import '../features/home_screen/presentation/views/widgts/package/package_detail
 import '../features/home_screen/presentation/views/widgts/search_screen.dart';
 import '../features/home_screen/presentation/views/widgts/services/services_screen.dart';
 import '../features/home_screen/presentation/views/widgts/teams_details.dart';
-import '../features/home_screen/presentation/views/widgts/teams_list_home.dart';
 import '../features/on_bording/view/on_board_view.dart';
 import '../features/product_categories/presentation/view/product_categories_view.dart';
 import '../features/product_categories/presentation/view/widgets/products/products_view.dart';
@@ -30,15 +35,16 @@ import '../features/profile_screen/presentation/view/widgets/update_profile.dart
 import '../features/rate_screen/presentation/view/add_rate/view/add_rate_view.dart';
 import '../features/rate_screen/presentation/view/rate_list.dart';
 import '../features/service_details/presentation/view/service_details.dart';
+import '../features/specialist_nav_bar/features/nav_bar_specialist/nav_bar_specialist.dart';
 import '../features/splash/view/splash_view.dart';
 import 'flutter_local_notifications/notification_page.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 abstract class Approuter {
   static final router = GoRouter(
     navigatorKey: navigatorKey,
     routes: [
-
       GoRoute(
         path: '/',
         builder: (context, state) => const SplashView(),
@@ -50,6 +56,18 @@ abstract class Approuter {
       GoRoute(
         path: '/NavBarView',
         builder: (context, state) => const NavBarView(),
+      ),
+      GoRoute(
+        path: '/SpecialistNavBarView',
+        builder: (context, state) => const SpecialistNavBarView(),
+      ),
+      GoRoute(
+        path: '/PortfolioScreen',
+        builder: (context, state) => const PortfolioScreen(),
+      ),
+      GoRoute(
+        path: '/UpdateProfileScreen',
+        builder: (context, state) => const UpdateProfileScreen(),
       ),
       GoRoute(
         path: '/RegisterScreen',
@@ -68,11 +86,17 @@ abstract class Approuter {
         builder: (context, state) => const BookingsScreen(),
       ),
       GoRoute(
-        path: '/team-details',
-        name: 'teamDetails',
+        path: '/BookingSpecialistScreen',
+        builder: (context, state) => const BookingSpecialistScreen(),
+      ),
+      GoRoute(
+        path: '/specialist-details',
+        name: 'SpecialistDetailsPage',
         builder: (context, state) {
-          final member = state.extra as TeamMember;
-          return TeamDetailsPage(member: member);
+          final specialist = state.extra as Specialist;
+          return SpecialistDetailsPage(
+            specialist: specialist,
+          );
         },
       ),
       GoRoute(
@@ -108,6 +132,17 @@ abstract class Approuter {
         builder: (context, state) => const ServiceDetails(),
       ),
       GoRoute(
+        path: '/BookingSpecialist',
+        builder: (context, state) {
+          final data = state.extra as Map<String, dynamic>;
+          return BookingSpecialist(
+            specialistId: data["id"] as int,
+            level: data["level"] as String,
+            overprice: data["overprice"] as String,
+          );
+        },
+      ),
+      GoRoute(
         path: '/TeamsListHome',
         builder: (context, state) => const TeamsListHome(),
       ),
@@ -119,8 +154,6 @@ abstract class Approuter {
           return ProductList(categoryId: categoryId);
         },
       ),
-
-
       GoRoute(
         path: '/OffersDetails',
         builder: (context, state) => const OffersDetails(),
@@ -135,7 +168,7 @@ abstract class Approuter {
       ),
       GoRoute(
         path: '/BookingService',
-        builder: (context, state) =>  const BookingService(),
+        builder: (context, state) => const BookingService(),
       ),
       GoRoute(
         path: '/AboutUs',
@@ -143,19 +176,19 @@ abstract class Approuter {
       ),
       GoRoute(
         path: '/ContactUs',
-        builder: (context, state) =>     const ContactUs(),
+        builder: (context, state) => const ContactUs(),
       ),
       GoRoute(
         path: '/ForgetPasswordBody',
-        builder: (context, state) =>      const ForgetPasswordView(),
+        builder: (context, state) => const ForgetPasswordView(),
       ),
       GoRoute(
         path: '/RestPassword',
-        builder: (context, state) =>      const RestPassword(),
+        builder: (context, state) => const RestPassword(),
       ),
       GoRoute(
         path: '/RateList',
-        builder: (context, state) =>     const RateList(),
+        builder: (context, state) => const RateList(),
       ),
       GoRoute(
         path: '/productDetails',
@@ -176,13 +209,6 @@ abstract class Approuter {
           return OtpVerificationScreen(email: email);
         },
       ),
-
-
-
-
-
-
-
     ],
   );
 }

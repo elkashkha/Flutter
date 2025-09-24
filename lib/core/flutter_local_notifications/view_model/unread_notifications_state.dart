@@ -4,6 +4,9 @@ abstract class UnreadNotificationsState {}
 
 class UnreadNotificationsInitial extends UnreadNotificationsState {}
 
+class UnreadNotificationsLoading
+    extends UnreadNotificationsState {} // 👈 ضيف دي
+
 class UnreadNotificationsLoaded extends UnreadNotificationsState {
   final int count;
   UnreadNotificationsLoaded(this.count);

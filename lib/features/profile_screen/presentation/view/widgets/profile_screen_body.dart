@@ -285,6 +285,8 @@ class ProfileScreenBody extends StatelessWidget {
                     Navigator.pop(context);
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.remove('access_token');
+                    await prefs.remove('user_type');
+
                     if (context.mounted) {
                       context.go('/LoginScreenView');
                     }
@@ -433,6 +435,8 @@ class ProfileScreenBody extends StatelessWidget {
             final prefs = await SharedPreferences.getInstance();
             await prefs.remove('access_token');
             await prefs.remove('fcm_token');
+            await prefs.remove('user_type');
+
             await FirebaseMessaging.instance.deleteToken();
 
             if (context.mounted) {

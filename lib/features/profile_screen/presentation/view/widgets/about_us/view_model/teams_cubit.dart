@@ -1,24 +1,32 @@
 import 'package:dio/dio.dart';
 import 'package:elkashkha/features/profile_screen/presentation/view/widgets/about_us/view_model/teams_model.dart';
-import 'package:elkashkha/features/profile_screen/presentation/view/widgets/about_us/view_model/teams_state.dart';
+import 'package:elkashkha/features/profile_screen/presentation/view/widgets/about_us/view_model/teams_state.dart'
+    show
+        SpecialistsError,
+        SpecialistsInitial,
+        SpecialistsLoaded,
+        SpecialistsLoading,
+        SpecialistsState;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class TeamCubit extends Cubit<TeamState> {
-  TeamCubit() : super(TeamInitial());
+class SpecialistsCubit extends Cubit<SpecialistsState> {
+  SpecialistsCubit() : super(SpecialistsInitial());
 
   final Dio _dio = Dio();
 
-  Future<void> fetchTeamMembers() async {
-    emit(TeamLoading());
+  Future<void> fetchSpecialists() async {
+    emit(SpecialistsLoading());
 
     try {
-      final response = await _dio.get('https://api.alkashkhaa.com/public/api/teams');
-      final List<dynamic> data = response.data['data'];
-      final List<TeamMember> teamMembers = data.map((json) => TeamMember.fromJson(json)).toList();
+      final response = await _dio
+          .get('https://apitest.alkashkhaa.com/public/api/specialists');
 
-      emit(TeamLoaded(teamMembers));
+      final specialistsResponse = SpecialistsResponse.fromJson(response.data);
+      final specialists = specialistsResponse.data;
+
+      emit(SpecialistsLoaded(specialists));
     } catch (e) {
-      emit(TeamError("Failed to load team members: $e"));
+      emit(SpecialistsError("Failed to load specialists: $e"));
     }
   }
 }

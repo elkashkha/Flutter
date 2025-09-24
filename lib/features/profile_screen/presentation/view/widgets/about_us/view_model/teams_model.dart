@@ -1,92 +1,154 @@
-class TeamResponse {
-  final List<TeamMember> data;
+import 'dart:convert';
 
-  TeamResponse({required this.data});
+class SpecialistsResponse {
+  final List<Specialist> data;
 
-  factory TeamResponse.fromJson(Map<String, dynamic> json) {
-    return TeamResponse(
+  SpecialistsResponse({required this.data});
+
+  factory SpecialistsResponse.fromJson(Map<String, dynamic> json) {
+    return SpecialistsResponse(
       data: (json['data'] as List<dynamic>)
-          .map((e) => TeamMember.fromJson(e as Map<String, dynamic>))
+          .map((e) => Specialist.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
   }
 }
 
-class TeamMember {
+class Specialist {
   final int id;
-  final String nameAr; // تغيير من Name إلى nameAr وnameEn مباشرة
-  final String nameEn;
-  final String titleAr;
-  final String titleEn;
-  final String? descriptionAr; // nullable لأنه قد يكون null
-  final String? descriptionEn; // nullable لأنه قد يكون null
-  final List<String> specialtiesAr;
-  final List<String> specialtiesEn;
-  final String image;
-  final List<Project> projects;
-  final List<dynamic> reviews; // يمكن استبداله بنموذج Review إذا كان له هيكلية محددة
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String name;
+  final String email;
+  final String status;
+  final int sessionsCount;
+  final DateTime experienceStartDate;
+  final int experienceYears;
+  final List<String> workDays;
+  final List<String> workHours;
+  final String profilePicture;
+  final String level;
+  final String overprice;
+  final double rating;
+  final List<Service> services;
+  final List<Portfolio> portfolio;
+  final List<dynamic> reviews;
 
-  TeamMember({
+  Specialist({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.status,
+    required this.sessionsCount,
+    required this.experienceStartDate,
+    required this.experienceYears,
+    required this.workDays,
+    required this.workHours,
+    required this.profilePicture,
+    required this.level,
+    required this.overprice,
+    required this.rating,
+    required this.services,
+    required this.portfolio,
+    required this.reviews,
+  });
+
+  factory Specialist.fromJson(Map<String, dynamic> json) {
+    return Specialist(
+      id: json['id'] as int,
+      name: json['name'] as String? ?? '',
+      email: json['email'] as String? ?? '',
+      status: json['status'] as String? ?? '',
+      sessionsCount: json['sessions_count'] as int? ?? 0,
+      experienceStartDate:
+          DateTime.tryParse(json['experience_start_date'] ?? '') ??
+              DateTime.now(),
+      experienceYears: json['experience_years'] as int? ?? 0,
+      workDays: _parseStringOrList(json['work_days']),
+      workHours: _parseStringOrList(json['work_hours']),
+      profilePicture: json['profile_picture'] as String? ?? '',
+      level: json['level'] as String? ?? '',
+      overprice: json['overprice']?.toString() ?? '',
+      rating: (json['rating'] is int)
+          ? (json['rating'] as int).toDouble()
+          : (json['rating'] as num?)?.toDouble() ?? 0.0,
+      services: (json['services'] as List<dynamic>?)
+              ?.map((e) => Service.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      portfolio: (json['portfolio'] as List<dynamic>?)
+              ?.map((e) => Portfolio.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      reviews: json['reviews'] as List<dynamic>? ?? [],
+    );
+  }
+
+  /// Helper function to handle String or List cases
+  static List<String> _parseStringOrList(dynamic value) {
+    if (value == null) return <String>[];
+    if (value is String && value.isNotEmpty) {
+      try {
+        return List<String>.from(jsonDecode(value));
+      } catch (_) {
+        return <String>[];
+      }
+    } else if (value is List) {
+      return List<String>.from(value.map((e) => e.toString()));
+    }
+    return <String>[];
+  }
+}
+
+class Service {
+  final int id;
+  final String nameAr;
+  final String nameEn;
+
+  Service({
     required this.id,
     required this.nameAr,
     required this.nameEn,
-    required this.titleAr,
-    required this.titleEn,
-    this.descriptionAr,
-    this.descriptionEn,
-    required this.specialtiesAr,
-    required this.specialtiesEn,
-    required this.image,
-    required this.projects,
-    required this.reviews,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
-  factory TeamMember.fromJson(Map<String, dynamic> json) {
-    return TeamMember(
+  factory Service.fromJson(Map<String, dynamic> json) {
+    return Service(
       id: json['id'] as int,
       nameAr: json['name_ar'] as String? ?? '',
       nameEn: json['name_en'] as String? ?? '',
-      titleAr: json['title_ar'] as String? ?? '',
-      titleEn: json['title_en'] as String? ?? '',
-      descriptionAr: json['description_ar'] as String?,
-      descriptionEn: json['description_en'] as String?,
-      specialtiesAr: (json['specialties_ar'] as List<dynamic>?)?.cast<String>() ?? [],
-      specialtiesEn: (json['specialties_en'] as List<dynamic>?)?.cast<String>() ?? [],
-      image: json['image'] as String? ?? '',
-      projects: (json['projects'] as List<dynamic>?)
-          ?.map((e) => Project.fromJson(e as Map<String, dynamic>))
-          .toList() ??
-          [],
-      reviews: json['reviews'] as List<dynamic>? ?? [],
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
     );
   }
 }
 
-class Project {
+class Portfolio {
   final int id;
-  final int teamId;
-  final List<String> images;
-  final DateTime createdAt;
+  final String nameAr;
+  final String nameEn;
+  final String descriptionAr;
+  final String descriptionEn;
+  final String beforeImage;
+  final String afterImage;
+  final Service service;
 
-  Project({
+  Portfolio({
     required this.id,
-    required this.teamId,
-    required this.images,
-    required this.createdAt,
+    required this.nameAr,
+    required this.nameEn,
+    required this.descriptionAr,
+    required this.descriptionEn,
+    required this.beforeImage,
+    required this.afterImage,
+    required this.service,
   });
 
-  factory Project.fromJson(Map<String, dynamic> json) {
-    return Project(
+  factory Portfolio.fromJson(Map<String, dynamic> json) {
+    return Portfolio(
       id: json['id'] as int,
-      teamId: json['team_id'] as int,
-      images: (json['images'] as List<dynamic>?)?.cast<String>() ?? [],
-      createdAt: DateTime.parse(json['created_at'] as String),
+      nameAr: json['name_ar'] as String? ?? '',
+      nameEn: json['name_en'] as String? ?? '',
+      descriptionAr: json['description_ar'] as String? ?? '',
+      descriptionEn: json['description_en'] as String? ?? '',
+      beforeImage: json['before_image'] as String? ?? '',
+      afterImage: json['after_image'] as String? ?? '',
+      service: Service.fromJson(json['service'] as Map<String, dynamic>),
     );
   }
 }

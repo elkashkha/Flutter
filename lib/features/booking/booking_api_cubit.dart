@@ -30,13 +30,13 @@ class BookingCubitApi extends Cubit<BookingApiState> {
       }
 
       final requestData = {
-        if (teamId != null) "team_id": teamId,
+        if (teamId != null) "specialist_id": teamId,
         "booking_date": bookingDate,
         "booking_time": bookingTime,
         "name": name,
         "email": email,
         "phone": phone,
-        if (services != null && services.isNotEmpty) "services": services,
+        if (services != null && services.isNotEmpty) "service": services,
         if (packages != null && packages.isNotEmpty) "packages": packages,
         if (offers != null && offers.isNotEmpty) "offers": offers,
       };
@@ -44,7 +44,7 @@ class BookingCubitApi extends Cubit<BookingApiState> {
       print("📤 Booking Data Before Sending: $requestData");
 
       final response = await _dio.post(
-        'https://api.alkashkhaa.com/public/api/bookings',
+        'https://apitest.alkashkhaa.com/public/api/bookings',
         data: requestData,
         options: Options(headers: {
           'Authorization': 'Bearer $token',
@@ -78,7 +78,6 @@ class BookingCubitApi extends Cubit<BookingApiState> {
       emit(BookingFailure("❌ حدث خطأ غير متوقع: ${e.toString()}"));
     }
   }
-
 
   Future<String?> _getToken() async {
     try {

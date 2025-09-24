@@ -12,7 +12,7 @@ class SplashViewBody extends StatefulWidget {
 }
 
 class _SplashViewBodyState extends State<SplashViewBody>
-    with TickerProviderStateMixin { // تغيير من SingleTickerProviderStateMixin إلى TickerProviderStateMixin
+    with TickerProviderStateMixin {
   late AnimationController fadeController;
   late Animation<double> fadeAnimation;
   late Animation<Offset> slideAnimation;
@@ -68,15 +68,18 @@ class _SplashViewBodyState extends State<SplashViewBody>
 
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
+    final type = prefs.getString('user_type');
     final seenOnBoarding = prefs.getBool('seenOnBoarding') ?? false;
 
     if (mounted) {
-      if (token != null) {
-        context.go('/NavBarView');
-      }
-      else if (seenOnBoarding) {
+      if (token != null && type != null) {
+        if (type == "user") {
+          context.go('/NavBarView');
+        } else {
+          context.go('/SpecialistNavBarView');
+        }
+      } else if (seenOnBoarding) {
         context.go('/LoginScreenView');
-        // context.go('/NavBarView');
       } else {
         context.go('/OnBoardingView');
       }
@@ -86,7 +89,9 @@ class _SplashViewBodyState extends State<SplashViewBody>
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
-    final screenWidth = MediaQuery.of(context).size.width>600?MediaQuery.of(context).size.width*.75:MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width > 600
+        ? MediaQuery.of(context).size.width * .75
+        : MediaQuery.of(context).size.width;
 
     return Center(
       child: Row(
@@ -111,12 +116,13 @@ class _SplashViewBodyState extends State<SplashViewBody>
             position: Tween<Offset>(
               begin: const Offset(-1, 0),
               end: Offset.zero,
-            ).animate(CurvedAnimation(parent: fadeController, curve: Curves.easeInOut)),
+            ).animate(CurvedAnimation(
+                parent: fadeController, curve: Curves.easeInOut)),
             child: FadeTransition(
               opacity: fadeAnimation,
               child: Image.asset(
                 'assets/images/الكشخة_page-0001 1.png',
-              width: screenWidth * 0.4,
+                width: screenWidth * 0.4,
                 height: 200,
                 fit: BoxFit.cover,
               ),

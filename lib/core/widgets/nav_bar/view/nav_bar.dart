@@ -80,7 +80,6 @@ class _NavBarViewState extends State<NavBarView> {
     final screenSize = MediaQuery.of(context).size;
     final localization = AppLocalizations.of(context)!;
 
-
     if (mounted && ModalRoute.of(context)?.isCurrent == true) {
       showDialog(
         context: context,
@@ -115,9 +114,10 @@ class _NavBarViewState extends State<NavBarView> {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 10),
-                       Text(
+                      Text(
                         localization.no_internet_message,
-                        style: const TextStyle(fontSize: 14, color: Colors.black87),
+                        style: const TextStyle(
+                            fontSize: 14, color: Colors.black87),
                         textAlign: TextAlign.center,
                       ),
                     ],
@@ -176,23 +176,25 @@ class _NavBarViewState extends State<NavBarView> {
       create: (_) => BottomNavCubit(),
       child: BlocBuilder<BottomNavCubit, int>(
         builder: (context, currentIndex) {
-          return Scaffold(
-            body: SafeArea(
-
-              child: IndexedStack(
-                index: currentIndex,
-                children: const [
-                  HomeScreenView(),
-                  ProductCategoriesView(),
-                  ServicesScreen(),
-                  ProfileScreen(),
-                ],
+          return PopScope(
+            canPop: false,
+            child: Scaffold(
+              body: SafeArea(
+                child: IndexedStack(
+                  index: currentIndex,
+                  children: const [
+                    HomeScreenView(),
+                    ProductCategoriesView(),
+                    ServicesScreen(),
+                    ProfileScreen(),
+                  ],
+                ),
               ),
+              floatingActionButton:
+                  _buildFloatingNavigationBar(context, currentIndex),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
             ),
-            floatingActionButton:
-                _buildFloatingNavigationBar(context, currentIndex),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
           );
         },
       ),

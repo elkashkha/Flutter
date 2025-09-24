@@ -11,7 +11,7 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitial());
 
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'https://api.alkashkhaa.com/public/api/',
+    baseUrl: 'https://apitest.alkashkhaa.com/public/api/',
     contentType: 'application/json',
   ));
 
@@ -32,10 +32,11 @@ class LoginCubit extends Cubit<LoginState> {
       if (response.statusCode == 200 && response.data['access_token'] != null) {
         String token = response.data['access_token'];
         int userId = response.data['user']['id'];
-        await _saveAuthData(token, userId);
-        emit(LoginSuccess(token, userId));
+        String type = response.data['type'];
 
-        // ✅ بعد تسجيل الدخول: ابعت FCM Token
+        await _saveAuthData(token, userId, type);
+        emit(LoginSuccess(token, userId, type));
+
         await sendFcmTokenToServer();
       } else {
         emit(LoginFailure("فشل تسجيل الدخول، تحقق من البيانات."));
@@ -43,7 +44,8 @@ class LoginCubit extends Cubit<LoginState> {
     } on DioException catch (e) {
       if (e.response != null && e.response!.statusCode == 403) {
         if (e.response!.data != null &&
-            e.response!.data['message'] == "Email not verified. OTP sent to email for verification.") {
+            e.response!.data['message'] ==
+                "Email not verified. OTP sent to email for verification.") {
           emit(OtpRequired(email));
         } else {
           emit(LoginFailure(_handleDioError(e)));
@@ -87,7 +89,10 @@ class LoginCubit extends Cubit<LoginState> {
   Future<void> sendFcmTokenToServer() async {
     try {
       final String? token = await getToken();
+      final String? type = await getType();
+
       final int? userId = await getUserId();
+
       final String? fcmToken = await FirebaseMessaging.instance.getToken();
 
       if (token == null || userId == null || fcmToken == null) {
@@ -96,9 +101,11 @@ class LoginCubit extends Cubit<LoginState> {
       }
 
       final response = await Dio().post(
-        'https://api.alkashkhaa.com/public/api/notifications/save-token',
+        'https://apitest.alkashkhaa.com/public/api/notifications/save-token',
         data: {
           "fcm_token": fcmToken,
+          "type": type,
+          "id": userId,
         },
         options: Options(
           headers: {
@@ -113,7 +120,6 @@ class LoginCubit extends Cubit<LoginState> {
       print("Status Code: ${response.statusCode}");
       print("Response: ${response.data}");
 
-
       if (response.statusCode == 200) {
         print("✅ تم إرسال FCM Token بنجاح");
       } else {
@@ -124,10 +130,11 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  Future<void> _saveAuthData(String token, int userId) async {
+  Future<void> _saveAuthData(String token, int userId, String type) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('access_token', token);
     await prefs.setInt('user_id', userId);
+    await prefs.setString('user_type', type);
   }
 
   Future<String?> getToken() async {
@@ -144,13 +151,20 @@ class LoginCubit extends Cubit<LoginState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('access_token');
     await prefs.remove('user_id');
+    await prefs.remove('user_type');
+  }
+
+  Future<String?> getType() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_type');
   }
 
   String _handleDioError(DioException e) {
     if (e.response != null) {
       if (e.response!.statusCode == 401) {
         return "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-      } else if (e.response!.data != null && e.response!.data['message'] != null) {
+      } else if (e.response!.data != null &&
+          e.response!.data['message'] != null) {
         return e.response!.data['message'];
       }
     }

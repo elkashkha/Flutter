@@ -31,7 +31,9 @@ class ServicesCubit extends Cubit<ServicesState> {
     } on DioException catch (dioError) {
       emit(ServicesError("حدث خطأ أثناء الاتصال بالسيرفر"));
     } catch (e) {
-      log('Unexpected error: ', );
+      log(
+        'Unexpected error: ',
+      );
       emit(ServicesError("حدث خطأ غير متوقع"));
     }
   }

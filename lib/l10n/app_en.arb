@@ -15,7 +15,27 @@
   "failed_offers": "Failed Offers",
   "choose_the_team": "Choose the team :",
   "no_bookings_now": "No bookings at the moment",
-
+  "noName": "No Name",
+  "noDescription": "No Description",
+  "noSpecialties": "No specialties available",
+  "specialtiesTitle": "Specialties",
+  "projectsTitle": "Projects",
+  "workScheduleTitle": "Work Schedule",
+  "experience": "Experience",
+  "years": "Years",
+  "servicesTitle": "Services",
+  "book_now": "Book Now",
+  "noProjects": "No projects available",
+    "experience": "Experience",
+  "years": "Years",
+  "servicesTitle": "Services",
+  "noServices": "No services available",
+  "workScheduleTitle": "Work Schedule",
+  "noWorkDays": "No work schedule available",
+  "projectsTitle": "Portfolio",
+  "noProjects": "No projects available",
+  "book_now": "Book Now",
+  "sessions": "Sessions",
 
 
   "passwordResetSuccess": "Password reset successfully",
@@ -127,6 +147,19 @@
   "failed_team": "Failed to load teams",
   "error_occurred": "An error occurred",
   "my_booking": "My Booking",
+  
+  "specialist_fee": "{price} KD will be added as a specialist fee",
+  "@specialist_fee": {
+    "description": "Text shown when a specialist is selected, showing the extra fee",
+    "placeholders": {
+      "price": {
+        "type": "String",
+        "example": "1"
+      }
+    }
+  },
+
+
 
   "title2": "Ready for a refresh? Let’s get you styled!",
   "title3": "A haircut your way… Booking made easy",

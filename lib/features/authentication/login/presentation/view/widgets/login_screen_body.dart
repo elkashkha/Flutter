@@ -28,7 +28,9 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final screenHeight = mediaQuery.size.height;
-    final screenWidth = MediaQuery.of(context).size.width>600?MediaQuery.of(context).size.width*.75:MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width > 600
+        ? MediaQuery.of(context).size.width * .75
+        : MediaQuery.of(context).size.width;
     final localizations = AppLocalizations.of(context)!;
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
@@ -55,7 +57,12 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
           );
         } else if (state is LoginSuccess) {
           Navigator.pop(context);
-          context.go('/');
+
+          if (state.type == "user") {
+            context.go('/NavBarView');
+          } else {
+            context.go('/SpecialistNavBarView');
+          }
         } else if (state is OtpRequired) {
           Navigator.pop(context);
           context.go('/otpVerification', extra: state.email);
@@ -75,18 +82,21 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
                 child: Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(topRight: Radius.circular(80)),
+                    borderRadius:
+                        BorderRadius.only(topRight: Radius.circular(80)),
                   ),
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                       child: Column(
                         crossAxisAlignment: isArabic
                             ? CrossAxisAlignment.end
                             : CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 25.0, left: 10, right: 10, bottom: 8),
+                            padding: const EdgeInsets.only(
+                                top: 25.0, left: 10, right: 10, bottom: 8),
                             child: Text(
                               localizations.welcome_back,
                               style: GoogleFonts.tajawal(
@@ -97,7 +107,8 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                              textAlign:
+                                  isArabic ? TextAlign.right : TextAlign.left,
                             ),
                           ),
                           SizedBox(height: screenHeight * 0.02),
@@ -113,7 +124,8 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
                                     if (value!.trim().isEmpty) {
                                       return localizations.email_required;
                                     }
-                                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                        .hasMatch(value)) {
                                       return localizations.invalid_email;
                                     }
                                     return null;
@@ -131,7 +143,9 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
                                 ),
                                 SizedBox(height: screenHeight * 0.02),
                                 Align(
-                                  alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
+                                  alignment: isArabic
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
                                   child: TextButton(
                                     onPressed: () {
                                       context.push('/ForgetPasswordBody');
@@ -150,9 +164,11 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
                                   text: localizations.login,
                                   voidCallback: () {
                                     if (formKey.currentState!.validate()) {
-                                      BlocProvider.of<LoginCubit>(context).login(
+                                      BlocProvider.of<LoginCubit>(context)
+                                          .login(
                                         email: emailController.text.trim(),
-                                        password: passwordController.text.trim(),
+                                        password:
+                                            passwordController.text.trim(),
                                       );
                                     }
                                   },
@@ -162,8 +178,13 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
                           ),
                           Center(
                             child: TextButton(
-                              onPressed: () { context.go('/NavBarView'); },
-                              child: Text(isArabic ? 'الدخول كزائر' : 'Continue as Guest',
+                              onPressed: () {
+                                context.go('/NavBarView');
+                              },
+                              child: Text(
+                                  isArabic
+                                      ? 'الدخول كزائر'
+                                      : 'Continue as Guest',
                                   style: TextStyle(
                                       fontSize: screenWidth * 0.035,
                                       color: Colors.grey)),
