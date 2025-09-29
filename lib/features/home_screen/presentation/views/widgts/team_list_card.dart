@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../../../../core/widgets/loading.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SpecialistCard extends StatelessWidget {
   final Specialist specialist;
@@ -20,6 +21,8 @@ class SpecialistCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return GestureDetector(
       onTap: () {
         context.push(
@@ -57,31 +60,33 @@ class SpecialistCard extends StatelessWidget {
                       fit: BoxFit.contain,
                       placeholder: (context, url) =>
                           const Center(child: CustomDotsTriangleLoader()),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                    ),
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          specialist.level.isNotEmpty
-                              ? specialist.level
-                              : 'بدون مستوى',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                      errorWidget: (context, url, error) => const Icon(
+                        Icons.person,
+                        size: 60,
                       ),
                     ),
+                    // Positioned(
+                    //   top: 8,
+                    //   right: 8,
+                    //   child: Container(
+                    //     padding: const EdgeInsets.symmetric(
+                    //         horizontal: 8, vertical: 4),
+                    //     decoration: BoxDecoration(
+                    //       color: Colors.black.withOpacity(0.5),
+                    //       borderRadius: BorderRadius.circular(8),
+                    //     ),
+                    //     child: Text(
+                    //       specialist.level.isNotEmpty
+                    //           ? specialist.level
+                    //           : 'بدون مستوى',
+                    //       style: const TextStyle(
+                    //         color: Colors.white,
+                    //         fontSize: 12,
+                    //         fontWeight: FontWeight.bold,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -96,13 +101,22 @@ class SpecialistCard extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 4),
-              Text(
-                "⭐ ${specialist.rating.toString()}",
-                style: const TextStyle(
-                  color: Colors.amber,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    l10n.rating,
+                    // كلمة "التقييم" من ملف الترجمة
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  buildStars(specialist.overallRating),
+                  const SizedBox(width: 4),
+                ],
               ),
               const SizedBox(height: 8),
             ],
@@ -111,4 +125,28 @@ class SpecialistCard extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget buildStars(double rating) {
+  List<Widget> stars = [];
+
+  int fullStars = rating.floor(); // عدد النجوم الكاملة
+  bool hasHalfStar = (rating - fullStars) >= 0.5; // نص نجمة لو في كسور
+
+  // أضيف النجوم الكاملة
+  for (int i = 0; i < fullStars; i++) {
+    stars.add(const Icon(Icons.star, color: Colors.amber, size: 18));
+  }
+
+  // أضيف نص نجمة لو موجود
+  if (hasHalfStar) {
+    stars.add(const Icon(Icons.star_half, color: Colors.amber, size: 18));
+  }
+
+  // أكمل الباقي نجوم فاضية لحد 5
+  while (stars.length < 5) {
+    stars.add(const Icon(Icons.star_border, color: Colors.amber, size: 18));
+  }
+
+  return Row(mainAxisSize: MainAxisSize.min, children: stars);
 }

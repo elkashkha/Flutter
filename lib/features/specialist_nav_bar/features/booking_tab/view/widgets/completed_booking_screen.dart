@@ -92,7 +92,7 @@ class CompletedBookingScreen extends StatelessWidget {
               if (offersText.isNotEmpty) Text("🎁 عرض: $offersText"),
               const SizedBox(height: 6),
               MyCustomButton(
-                text: "إضافة صور",
+                text: "اضافه الملاحظات",
                 voidCallback: () {
                   _showPortfolioDialog(context, booking.id);
                 },
@@ -201,31 +201,31 @@ class _AddPortfolioDialogState extends State<AddPortfolioDialog> {
                         ),
                         const SizedBox(height: 16),
 
-                        const Text("قبل", textAlign: TextAlign.right),
-                        GestureDetector(
-                          onTap: () async {
-                            final XFile? image = await ImagePicker()
-                                .pickImage(source: ImageSource.gallery);
-                            if (image != null) {
-                              setState(() => beforeImagePath = image.path);
-                            }
-                          },
-                          child: customImagePickerTile(beforeImagePath),
-                        ),
-                        const SizedBox(height: 12),
+                        // const Text("قبل", textAlign: TextAlign.right),
+                        // GestureDetector(
+                        //   onTap: () async {
+                        //     final XFile? image = await ImagePicker()
+                        //         .pickImage(source: ImageSource.gallery);
+                        //     if (image != null) {
+                        //       setState(() => beforeImagePath = image.path);
+                        //     }
+                        //   },
+                        //   child: customImagePickerTile(beforeImagePath),
+                        // ),
+                        // const SizedBox(height: 12),
 
-                        const Text("بعد", textAlign: TextAlign.right),
-                        GestureDetector(
-                          onTap: () async {
-                            final XFile? image = await ImagePicker()
-                                .pickImage(source: ImageSource.gallery);
-                            if (image != null) {
-                              setState(() => afterImagePath = image.path);
-                            }
-                          },
-                          child: customImagePickerTile(afterImagePath),
-                        ),
-                        const SizedBox(height: 16),
+                        // const Text("بعد", textAlign: TextAlign.right),
+                        // GestureDetector(
+                        //   onTap: () async {
+                        //     final XFile? image = await ImagePicker()
+                        //         .pickImage(source: ImageSource.gallery);
+                        //     if (image != null) {
+                        //       setState(() => afterImagePath = image.path);
+                        //     }
+                        //   },
+                        //   child: customImagePickerTile(afterImagePath),
+                        // ),
+                        // const SizedBox(height: 16),
 
                         // 🏷️ فئة الخدمة
                         const Text("فئة الخدمة", textAlign: TextAlign.right),
@@ -284,8 +284,6 @@ class _AddPortfolioDialogState extends State<AddPortfolioDialog> {
                           descAr: _descArController.text,
                           descEn: _descEnController.text,
                           serviceId: selectedServiceId!,
-                          beforeImage: beforeImagePath,
-                          afterImage: afterImagePath,
                         );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

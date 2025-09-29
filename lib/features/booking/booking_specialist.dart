@@ -268,14 +268,14 @@ class _BookingSpecialistState extends State<BookingSpecialist> {
                               ),
                             ),
                             const TextSpan(text: " "), // مسافة
-                            TextSpan(
-                              text: widget.level,
-                              style: const TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
+                            // TextSpan(
+                            //   text: widget.level,
+                            //   style: const TextStyle(
+                            //     color: Colors.red,
+                            //     fontWeight: FontWeight.bold,
+                            //     fontSize: 16,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

@@ -9,7 +9,6 @@ android {
     namespace = "com.ahdafweb.elkashkha"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
-
     defaultConfig {
         applicationId = "com.ahdafweb.elkashkha"
         minSdk = 23

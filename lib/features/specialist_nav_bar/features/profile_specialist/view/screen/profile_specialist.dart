@@ -46,6 +46,7 @@ class ProfileSpecialist extends StatelessWidget {
                       ),
                     ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         CircleAvatar(
                           radius: 45,
@@ -66,10 +67,22 @@ class ProfileSpecialist extends StatelessWidget {
                               fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 6),
-                        Text(
-                          profile.status,
-                          style: const TextStyle(
-                              color: Colors.white70, fontSize: 14),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              localization
+                                  .rating, // كلمة "التقييم" من ملف الترجمة
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            buildStars(
+                                profile.adminRatingsAvg), // النجوم حسب التقييم
+                          ],
                         ),
                       ],
                     ),
@@ -95,7 +108,7 @@ class ProfileSpecialist extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    profile.email,
+                                    "البريد: ${profile.email}",
                                     style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
@@ -103,16 +116,17 @@ class ProfileSpecialist extends StatelessWidget {
                                   ),
                                   const Spacer(),
                                   GestureDetector(
-                                      onTap: () {
-                                        context.push('/UpdateProfileScreen');
-                                      },
-                                      child: const Icon(
-                                          Icons.mode_edit_outline_outlined)),
+                                    onTap: () {
+                                      context.push('/UpdateProfileScreen');
+                                    },
+                                    child: const Icon(
+                                        Icons.mode_edit_outline_outlined),
+                                  ),
                                 ],
                               ),
                               const SizedBox(height: 6),
                               Text(
-                                profile.name,
+                                "الاسم: ${profile.name}",
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -134,23 +148,23 @@ class ProfileSpecialist extends StatelessWidget {
                         //     style: const TextStyle(
                         //         fontSize: 14, color: Colors.black54)),
 
-                        SizedBox(height: 20),
+                        // SizedBox(height: 20),
 
-                        // الخبرة
-                        Row(
-                          children: [
-                            const Text("الخبرة: ",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 15)),
-                            Container(
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF9F9F9),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child:
-                                    Text("${profile.experienceYears} سنوات")),
-                          ],
-                        ),
+                        // // الخبرة
+                        // Row(
+                        //   children: [
+                        //     const Text("الخبرة: ",
+                        //         style: TextStyle(
+                        //             fontWeight: FontWeight.bold, fontSize: 15)),
+                        //     Container(
+                        //         decoration: BoxDecoration(
+                        //           color: const Color(0xFFF9F9F9),
+                        //           borderRadius: BorderRadius.circular(6),
+                        //         ),
+                        //         child:
+                        //             Text("${profile.experienceYears} سنوات")),
+                        //   ],
+                        // ),
                         const SizedBox(height: 15),
 
                         // Bio
@@ -273,4 +287,28 @@ class ProfileSpecialist extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget buildStars(double rating) {
+  List<Widget> stars = [];
+
+  int fullStars = rating.floor();
+  bool hasHalfStar = (rating - fullStars) >= 0.5;
+
+  for (int i = 0; i < fullStars; i++) {
+    stars.add(const Icon(Icons.star, color: Colors.amber, size: 20));
+  }
+
+  if (hasHalfStar) {
+    stars.add(const Icon(Icons.star_half, color: Colors.amber, size: 20));
+  }
+
+  while (stars.length < 5) {
+    stars.add(const Icon(Icons.star_border, color: Colors.amber, size: 20));
+  }
+
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: stars,
+  );
 }

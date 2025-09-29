@@ -47,12 +47,10 @@ class ActiveBookingScreen extends StatelessWidget {
   }
 
   Widget _buildBookingCard(BuildContext context, Booking booking) {
-    // جمع كل أسماء الـ Services
     final serviceNames = booking.services.isNotEmpty
         ? booking.services.map((s) => s.nameAr).join(", ")
         : "لا يوجد";
 
-    // جمع كل أسماء الـ Packages
     final packageNames = booking.packages.isNotEmpty
         ? booking.packages.map((p) => p.nameAr).join(", ")
         : null;

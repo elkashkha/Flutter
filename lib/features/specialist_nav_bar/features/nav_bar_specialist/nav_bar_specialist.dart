@@ -7,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
-
 import '../../../../core/app_theme.dart';
 import '../../../../core/flutter_local_notifications/notification_page.dart';
 import '../../../../core/widgets/custom_button.dart';

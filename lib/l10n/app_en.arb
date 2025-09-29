@@ -81,6 +81,8 @@
   "notifications": "Notifications",
   "my_bookings": "My Bookings",
   "about_us": "About Us",
+  "rating": "Rating :",
+
   "contact_us": "Contact Us",
   "privacy_policy": "Privacy Policy",
   "loading_error": "Failed to load data.",
@@ -118,6 +120,7 @@
   "team": "Team",
   "date": "Date",
   "time": "Time",
+  
   "note": "Notes",
   "not_selected": "Not Selected",
   "choose_service": "Choose Service",

@@ -49,10 +49,10 @@ class _BookingSpecialistTabsState extends State<BookingSpecialistTabs>
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
       decoration: BoxDecoration(
-        color: isSelected ? Colors.black : Color(0xfff2f2f2),
+        color: isSelected ? Colors.black : const Color(0xfff2f2f2),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isSelected ? Colors.black : Color(0xfff2f2f2),
+          color: isSelected ? Colors.black : const Color(0xfff2f2f2),
         ),
       ),
       child: Text(

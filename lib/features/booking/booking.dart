@@ -355,19 +355,19 @@ class _BookingServiceState extends State<BookingService> {
                                       ),
                                     ),
                                     const TextSpan(text: " "), // مسافة
-                                    TextSpan(
-                                      text: selectedTeamId != null
-                                          ? specialists
-                                              .firstWhere((s) =>
-                                                  s.id.toString() ==
-                                                  selectedTeamId)
-                                              .level
-                                          : "",
-                                      style: const TextStyle(
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                    // TextSpan(
+                                    //   text: selectedTeamId != null
+                                    //       ? specialists
+                                    //           .firstWhere((s) =>
+                                    //               s.id.toString() ==
+                                    //               selectedTeamId)
+                                    //           .level
+                                    //       : "",
+                                    //   style: const TextStyle(
+                                    //     color: Colors.red,
+                                    //     fontWeight: FontWeight.bold,
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
                               )

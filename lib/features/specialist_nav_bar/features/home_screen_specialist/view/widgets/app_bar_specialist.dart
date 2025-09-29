@@ -42,7 +42,7 @@ class AppBarSpecialist extends StatelessWidget {
                 if (value == 0) {
                   context.push('/BookingSpecialistScreen');
                 } else if (value == 1) {
-                  context.push('/PortfolioScreen');
+                  context.push('/NotificationsScreen');
                 } else if (value == 2) {
                   context.push('/NotificationsScreen');
                 }
@@ -58,19 +58,19 @@ class AppBarSpecialist extends StatelessWidget {
                     ],
                   ),
                 ),
+                // const PopupMenuItem(
+                //   value: 1,
+                //   child: Row(
+                //     children: [
+                //       Icon(Icons.image, color: Colors.white),
+                //       SizedBox(width: 10),
+                //       Text("معرض الاعمال",
+                //           style: TextStyle(color: Colors.white)),
+                //     ],
+                //   ),
+                // ),
                 const PopupMenuItem(
                   value: 1,
-                  child: Row(
-                    children: [
-                      Icon(Icons.image, color: Colors.white),
-                      SizedBox(width: 10),
-                      Text("معرض الاعمال",
-                          style: TextStyle(color: Colors.white)),
-                    ],
-                  ),
-                ),
-                const PopupMenuItem(
-                  value: 2,
                   child: Row(
                     children: [
                       Icon(Icons.notifications, color: Colors.white),

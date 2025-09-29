@@ -1,11 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:elkashkha/features/home_screen/presentation/views_model/top_rate/cubit/top_rate_cubit.dart';
+import 'package:elkashkha/features/home_screen/presentation/views_model/top_rate/cubit/top_rate_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import '../../../../../core/app_theme.dart';
-import '../../../../../core/app_router.dart';
-import '../../../../../core/widgets/loading.dart';
-import '../../views_model/slider/slider_cubit.dart';
 
 class HomeBannerWidget extends StatelessWidget {
   const HomeBannerWidget({super.key});
@@ -13,101 +9,68 @@ class HomeBannerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SliderCubit()..fetchSliders(),
-
-      child: BlocBuilder<SliderCubit, SliderState>(
+      create: (_) => TopRatedSpecialistCubit()..getTopRatedSpecialist(),
+      child: BlocBuilder<TopRatedSpecialistCubit, TopRatedSpecialistState>(
         builder: (context, state) {
-          if (state is SliderLoading) {
-            return const Center(child: CustomDotsTriangleLoader());
-          } else if (state is SliderError) {
-            return Center(child: Text(state.message));
-          } else if (state is SliderLoaded) {
-            final sliders = state.sliderModel.data;
-            if (sliders == null || sliders.isEmpty) {
-              return const Center(child: Text('لا توجد بيانات حالياً'));
-            }
-
-            final lastSlider = sliders.last;
-            final locale = Localizations.localeOf(context).languageCode;
-            final isArabic = locale == 'ar';
-
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Stack(
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl: lastSlider.image ?? 'assets/images/2.png',
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: 180,
-                      progressIndicatorBuilder: (context, url, downloadProgress) =>
-                          const Center(child: CustomDotsTriangleLoader()),
-                      errorWidget: (context, url, error) =>
-                      const Center(child: Icon(Icons.error, color: Colors.red, size: 50)),
-                    ),
-                    Positioned(
-                      right: isArabic ? 60 : null,
-                      left: isArabic ? null : 60,
-                      bottom: 25,
-                      child: Container(
-                        width: 230,
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Column(
-                          crossAxisAlignment:
-                          isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              lastSlider.title?[isArabic ? 'ar' : 'en'] ?? '',
-                              softWrap: true,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              lastSlider.subtitle?[isArabic ? 'ar' : 'en'] ?? '',
-                              softWrap: true,
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 11,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            ElevatedButton(
-                              onPressed: () {
-                                context.push('/ServicesScreen');
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xffD1D1D1),
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                              ),
-                              child: const Text(
-                                'اكتشف خدمتنا',
-                                style: TextStyle(color: AppTheme.primary, fontSize: 12),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+          if (state is TopRatedSpecialistLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is TopRatedSpecialistSuccess) {
+            final specialist = state.specialist;
+            return Container(
+              width: 343,
+              height: 108,
+              padding: const EdgeInsets.all(8),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color(0xFF888887),
+                    Color(0xC9000000),
+                    Color(0xC9000000),
                   ],
+                  stops: [.0, 0.79, 1.0],
+                ),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(4),
+                  topRight: Radius.circular(16),
+                  bottomRight: Radius.circular(4),
+                  bottomLeft: Radius.circular(16),
                 ),
               ),
-            );
-          }
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "الموظف المثالي لهذا الشهر :\n${specialist.name}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.end,
+                  ),
 
+                  /// الصورة
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: specialist.profilePicture != ''
+                        ? Image.network(
+                            specialist.profilePicture,
+                            width: 100,
+                            height: 109,
+                            fit: BoxFit.contain,
+                          )
+                        : const Icon(Icons.person, size: 60),
+                  ),
+
+                  /// النص
+                ],
+              ),
+            );
+          } else if (state is TopRatedSpecialistFailure) {
+            return Text("Error: ${state.message}");
+          }
           return const SizedBox.shrink();
         },
       ),
