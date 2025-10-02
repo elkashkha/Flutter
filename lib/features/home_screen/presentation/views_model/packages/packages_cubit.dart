@@ -15,7 +15,7 @@ class PackagesCubit extends Cubit<PackagesState> {
   Future<void> fetchPackages() async {
     emit(PackagesLoading());
 
-    const url = 'https://api.alkashkhaa.com/public/api/packages?lang=ar';
+    const url = 'https://apiv2.alkashkhaa.com/public/api/packages?lang=ar';
 
     try {
       final response = await dio.get(url);

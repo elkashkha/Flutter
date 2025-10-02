@@ -20,22 +20,20 @@ class SearchCubit extends Cubit<SearchState> {
     emit(SearchLoading());
 
     try {
-      final response = await dio
-          .get('https://api.alkashkhaa.com/public/api/services');
+      final response =
+          await dio.get('https://apiv2.alkashkhaa.com/public/api/services');
 
       if (response.data == null) {
         emit(SearchError("لا توجد بيانات من السيرفر"));
         return;
       }
 
-
       final serviceResponse = ServiceResponse.fromMap(response.data);
       final services = serviceResponse.data;
 
-
       final filteredServices = services
           .where((service) =>
-      service.nameAr.contains(query) || service.nameEn.contains(query))
+              service.nameAr.contains(query) || service.nameEn.contains(query))
           .toList();
 
       if (filteredServices.isNotEmpty) {

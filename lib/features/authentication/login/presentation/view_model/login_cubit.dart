@@ -11,7 +11,7 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitial());
 
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'https://apitest.alkashkhaa.com/public/api/',
+    baseUrl: 'https://apiv2.alkashkhaa.com/public/api/',
     contentType: 'application/json',
   ));
 
@@ -101,7 +101,7 @@ class LoginCubit extends Cubit<LoginState> {
       }
 
       final response = await Dio().post(
-        'https://apitest.alkashkhaa.com/public/api/notifications/save-token',
+        'https://apiv2.alkashkhaa.com/public/api/notifications/save-token',
         data: {
           "fcm_token": fcmToken,
           "type": type,
@@ -165,7 +165,13 @@ class LoginCubit extends Cubit<LoginState> {
         return "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
       } else if (e.response!.data != null &&
           e.response!.data['message'] != null) {
-        return e.response!.data['message'];
+        final msg = e.response!.data['message'];
+
+        if (msg is List && msg.isNotEmpty) {
+          return msg.first.toString(); // أول عنصر من الليست
+        } else if (msg is String) {
+          return msg; // لو هي String
+        }
       }
     }
     return "خطأ في الاتصال بالسيرفر.";

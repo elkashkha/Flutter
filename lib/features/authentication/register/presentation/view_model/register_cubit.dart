@@ -18,7 +18,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       emit(RegisterLoading());
 
       Response response = await _dio.post(
-        'https://api.alkashkhaa.com/public/api/user/register',
+        'https://apiv2.alkashkhaa.com/public/api/user/register',
         data: {
           "name": name,
           "email": email,
@@ -34,7 +34,6 @@ class RegisterCubit extends Cubit<RegisterState> {
         emit(RegisterFailure("حدث خطأ أثناء التسجيل."));
       }
     } on DioException catch (e) {
-
       String errorMessage = _handleDioError(e);
       emit(RegisterFailure(errorMessage));
     } catch (e) {
@@ -42,12 +41,13 @@ class RegisterCubit extends Cubit<RegisterState> {
     }
   }
 
-  Future<void> verifyOtp({required String email, required String otpCode}) async {
+  Future<void> verifyOtp(
+      {required String email, required String otpCode}) async {
     try {
       emit(OtpVerificationLoading());
 
       Response response = await _dio.post(
-        'https://api.alkashkhaa.com/public/api/verify-otp',
+        'https://apiv2.alkashkhaa.com/public/api/verify-otp',
         data: {
           "email": email,
           "otp": otpCode,

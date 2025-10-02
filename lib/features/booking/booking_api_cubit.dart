@@ -44,7 +44,7 @@ class BookingCubitApi extends Cubit<BookingApiState> {
       print("📤 Booking Data Before Sending: $requestData");
 
       final response = await _dio.post(
-        'https://apitest.alkashkhaa.com/public/api/bookings',
+        'https://apiv2.alkashkhaa.com/public/api/bookings',
         data: requestData,
         options: Options(headers: {
           'Authorization': 'Bearer $token',

@@ -13,10 +13,10 @@ class ProductCubit extends Cubit<ProductState> {
         super(ProductInitial());
 
   Future<void> fetchProductsByCategory(int categoryId) async {
-
     emit(ProductLoading());
 
-    final url = 'https://api.alkashkhaa.com/public/api/products?category_id=$categoryId';
+    final url =
+        'https://apiv2.alkashkhaa.com/public/api/products?category_id=$categoryId';
 
     try {
       final response = await dio.get(url);
@@ -37,5 +37,4 @@ class ProductCubit extends Cubit<ProductState> {
       emit(ProductError("حدث خطأ غير متوقع"));
     }
   }
-
 }

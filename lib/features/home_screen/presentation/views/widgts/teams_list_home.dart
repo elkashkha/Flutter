@@ -19,7 +19,7 @@ class SpecialistsView extends StatelessWidget {
             return const Center(child: CustomDotsTriangleLoader());
           } else if (state is SpecialistsLoaded) {
             return SizedBox(
-              height: 180,
+              height: 250,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),

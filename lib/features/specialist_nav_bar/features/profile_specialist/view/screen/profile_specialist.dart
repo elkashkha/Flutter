@@ -7,7 +7,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../../view_model/specialist_model.dart';
 import '../../view_model/specialist_profile__cubit.dart';
 import '../../view_model/specialist_profile__state.dart';
@@ -70,18 +69,22 @@ class ProfileSpecialist extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              localization
-                                  .rating, // كلمة "التقييم" من ملف الترجمة
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            buildStars(
-                                profile.adminRatingsAvg), // النجوم حسب التقييم
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'التقيم العام :', // كلمة "التقييم" من ملف الترجمة
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                buildStars(profile
+                                    .overallRating), // النجوم حسب التقييم
+                              ],
+                            ), // النجوم حسب التقييم
                           ],
                         ),
                       ],
@@ -165,7 +168,6 @@ class ProfileSpecialist extends StatelessWidget {
                         //             Text("${profile.experienceYears} سنوات")),
                         //   ],
                         // ),
-                        const SizedBox(height: 15),
 
                         // Bio
                         // const Text(
@@ -174,6 +176,60 @@ class ProfileSpecialist extends StatelessWidget {
                         // ),
 
                         const SizedBox(height: 20),
+
+                        const Text("الاحصايات",
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 10),
+
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'التقيم حسب الاداره:', // كلمة "التقييم" من ملف الترجمة
+                                    style: TextStyle(),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  buildStars(profile
+                                      .adminRatingsAvg), // النجوم حسب التقييم
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  const Icon(Icons.shopping_bag,
+                                      color: Colors.black54, size: 20),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    "المنتجات الشهرية: ${profile.monthlyProducts}",
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  const Icon(Icons.add_box,
+                                      color: Colors.black54, size: 20),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    "عدد الخدمات الإضافية الشهريه : ${profile.monthlyExtras}",
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
 
                         // التخصصات (الخدمات)
                         const Text("التخصص",

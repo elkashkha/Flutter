@@ -7,7 +7,7 @@ class UpdateSpecialistProfileCubit extends Cubit<UpdateProfileState> {
   UpdateSpecialistProfileCubit() : super(UpdateProfileInitial());
 
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'https://apitest.alkashkhaa.com/public/api/',
+    baseUrl: 'https://apiv2.alkashkhaa.com/public/api/',
     contentType: 'multipart/form-data',
   ));
 

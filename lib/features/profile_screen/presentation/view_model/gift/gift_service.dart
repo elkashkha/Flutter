@@ -15,7 +15,7 @@ class GiftService {
     if (token == null) throw Exception('Access token not found');
 
     final response = await dio.get(
-      'https://apitest.alkashkhaa.com/public/api/platinum-gift/latest',
+      'https://apiv2.alkashkhaa.com/public/api/platinum-gift/latest',
       options: Options(
         headers: {
           'Authorization': 'Bearer $token',

@@ -15,6 +15,8 @@ class SpecialistProfile {
   final String overprice;
   final double overallRating;
   final double adminRatingsAvg;
+  final int monthlyProducts;
+  final int monthlyExtras;
   final List<Service> services;
   final List<Portfolio> portfolio;
   final List<Review> reviews;
@@ -35,6 +37,8 @@ class SpecialistProfile {
     required this.overprice,
     required this.overallRating,
     required this.adminRatingsAvg,
+    required this.monthlyProducts,
+    required this.monthlyExtras,
     required this.services,
     required this.portfolio,
     required this.reviews,
@@ -61,12 +65,20 @@ class SpecialistProfile {
           ? List<String>.from(jsonDecode(specialistJson['work_hours']))
           : [],
       profilePicture: specialistJson['profile_picture'],
-      level: specialistJson['level'] ?? '',
+      level: specialistJson['level']?.toString() ??
+          '', // لو جاي int هيحولها String
       overprice: specialistJson['overprice']?.toString() ?? '',
-      overallRating:
-          (specialistJson['overall_rating'] as num?)?.toDouble() ?? 0.0,
       adminRatingsAvg:
           (specialistJson['admin_ratings_avg'] as num?)?.toDouble() ?? 0.0,
+      monthlyProducts:
+          int.tryParse(specialistJson['monthly_products']?.toString() ?? "0") ??
+              0,
+      monthlyExtras:
+          int.tryParse(specialistJson['monthly_extras']?.toString() ?? "0") ??
+              0,
+      overallRating: double.tryParse(
+              specialistJson['overall_rating']?.toString() ?? "0") ??
+          0.0,
       services: (specialistJson['services'] as List? ?? [])
           .map((e) => Service.fromJson(e))
           .toList(),
@@ -117,6 +129,8 @@ class Portfolio {
   final String descriptionEn;
   final String? beforeImage;
   final String? afterImage;
+  final int productsSold;
+  final int extraServicesUsed;
   final Service service;
 
   Portfolio({
@@ -127,6 +141,8 @@ class Portfolio {
     required this.descriptionEn,
     this.beforeImage,
     this.afterImage,
+    required this.productsSold,
+    required this.extraServicesUsed,
     required this.service,
   });
 
@@ -139,6 +155,8 @@ class Portfolio {
       descriptionEn: json['description_en'] ?? '',
       beforeImage: json['before_image'],
       afterImage: json['after_image'],
+      productsSold: json['products_sold'] ?? 0,
+      extraServicesUsed: json['extra_services_used'] ?? 0,
       service: Service.fromJson(json['service']),
     );
   }
@@ -151,6 +169,8 @@ class Portfolio {
         'description_en': descriptionEn,
         'before_image': beforeImage,
         'after_image': afterImage,
+        'products_sold': productsSold,
+        'extra_services_used': extraServicesUsed,
         'service': service.toJson(),
       };
 }

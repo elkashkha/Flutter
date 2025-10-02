@@ -16,8 +16,8 @@ class UnreadNotificationsCubit extends Cubit<UnreadNotificationsState> {
 
     try {
       final endpoint = (type == 'specialist')
-          ? 'https://apitest.alkashkhaa.com/public/api/specialist/notifications/unread-count'
-          : 'https://api.alkashkhaa.com/public/api/notifications/unread-count';
+          ? 'https://apiv2.alkashkhaa.com/public/api/specialist/notifications/unread-count'
+          : 'https://apiv2.alkashkhaa.com/public/api/notifications/unread-count';
 
       final response = await dio.get(
         endpoint,

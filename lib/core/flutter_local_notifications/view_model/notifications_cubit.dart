@@ -67,7 +67,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
           : 'notifications/$id';
 
       final response = await dio.delete(
-        'https://api.alkashkhaa.com/public/api/$endpoint',
+        'https://apiv2.alkashkhaa.com/public/api/$endpoint',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -102,7 +102,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
           : 'mark-as-read/$id';
 
       final response = await dio.post(
-        'https://apitest.alkashkhaa.com/public/api/$endpoint',
+        'https://apiv2.alkashkhaa.com/public/api/$endpoint',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

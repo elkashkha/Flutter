@@ -16,7 +16,7 @@ class SpecialistCard extends StatelessWidget {
     super.key,
     required this.specialist,
     this.width = 200,
-    this.height = 210,
+    this.height = 250,
   });
 
   @override
@@ -31,8 +31,9 @@ class SpecialistCard extends StatelessWidget {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(7.0),
         child: Container(
+          height: height,
           width: width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
@@ -51,43 +52,17 @@ class SpecialistCard extends StatelessWidget {
               ClipRRect(
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(16)),
-                child: Stack(
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl: specialist.profilePicture,
-                      width: width,
-                      height: height * 0.35,
-                      fit: BoxFit.contain,
-                      placeholder: (context, url) =>
-                          const Center(child: CustomDotsTriangleLoader()),
-                      errorWidget: (context, url, error) => const Icon(
-                        Icons.person,
-                        size: 60,
-                      ),
-                    ),
-                    // Positioned(
-                    //   top: 8,
-                    //   right: 8,
-                    //   child: Container(
-                    //     padding: const EdgeInsets.symmetric(
-                    //         horizontal: 8, vertical: 4),
-                    //     decoration: BoxDecoration(
-                    //       color: Colors.black.withOpacity(0.5),
-                    //       borderRadius: BorderRadius.circular(8),
-                    //     ),
-                    //     child: Text(
-                    //       specialist.level.isNotEmpty
-                    //           ? specialist.level
-                    //           : 'بدون مستوى',
-                    //       style: const TextStyle(
-                    //         color: Colors.white,
-                    //         fontSize: 12,
-                    //         fontWeight: FontWeight.bold,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
+                child: CachedNetworkImage(
+                  imageUrl: specialist.profilePicture,
+                  width: width,
+                  height: height * 0.6, // الصورة واخدة نص الكارت
+                  fit: BoxFit.cover, // تملى الكارت بالكامل
+                  placeholder: (context, url) =>
+                      const Center(child: CustomDotsTriangleLoader()),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.person,
+                    size: 60,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
@@ -106,7 +81,6 @@ class SpecialistCard extends StatelessWidget {
                 children: [
                   Text(
                     l10n.rating,
-                    // كلمة "التقييم" من ملف الترجمة
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.black,
@@ -130,20 +104,17 @@ class SpecialistCard extends StatelessWidget {
 Widget buildStars(double rating) {
   List<Widget> stars = [];
 
-  int fullStars = rating.floor(); // عدد النجوم الكاملة
-  bool hasHalfStar = (rating - fullStars) >= 0.5; // نص نجمة لو في كسور
+  int fullStars = rating.floor();
+  bool hasHalfStar = (rating - fullStars) >= 0.5;
 
-  // أضيف النجوم الكاملة
   for (int i = 0; i < fullStars; i++) {
     stars.add(const Icon(Icons.star, color: Colors.amber, size: 18));
   }
 
-  // أضيف نص نجمة لو موجود
   if (hasHalfStar) {
     stars.add(const Icon(Icons.star_half, color: Colors.amber, size: 18));
   }
 
-  // أكمل الباقي نجوم فاضية لحد 5
   while (stars.length < 5) {
     stars.add(const Icon(Icons.star_border, color: Colors.amber, size: 18));
   }

@@ -8,7 +8,7 @@ class CompletedBookingCubit extends Cubit<CompletedBookingState> {
   CompletedBookingCubit() : super(CompletedBookingInitial());
 
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: "https://apitest.alkashkhaa.com/public/api/",
+    baseUrl: "https://apiv2.alkashkhaa.com/public/api/",
     contentType: "application/json",
   ));
 

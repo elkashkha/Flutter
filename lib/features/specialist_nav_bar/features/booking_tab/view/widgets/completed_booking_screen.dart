@@ -61,10 +61,14 @@ class CompletedBookingScreen extends StatelessWidget {
     String offersText =
         booking.offers.isNotEmpty ? booking.offers.join(" ، ") : "";
 
+    final bool canAddNotes = !booking.addedToPortfolio;
+
     return GestureDetector(
-      onTap: () {
-        _showPortfolioDialog(context, booking.id);
-      },
+      onTap: canAddNotes
+          ? () {
+              _showPortfolioDialog(context, booking.id);
+            }
+          : null, // إذا كان true، لا يستجيب للضغط
       child: Card(
         elevation: 4,
         margin: const EdgeInsets.symmetric(vertical: 8),
@@ -93,11 +97,15 @@ class CompletedBookingScreen extends StatelessWidget {
               const SizedBox(height: 6),
               MyCustomButton(
                 text: "اضافه الملاحظات",
-                voidCallback: () {
-                  _showPortfolioDialog(context, booking.id);
-                },
-                isLoading: false, // هنا مفيش loading لأنه مجرد فتح الدايـلوج
-                backgroundColor: Colors.black,
+                voidCallback: canAddNotes
+                    ? () {
+                        _showPortfolioDialog(context, booking.id);
+                      }
+                    : () {}, // إذا كان true، الـ callback فارغ (لا يفعل شيئًا)
+                isLoading: false,
+                backgroundColor: canAddNotes
+                    ? Colors.black
+                    : Colors.grey, // تغيير اللون للدلالة على الـ disabled
                 textColor: Colors.white,
               ),
             ],
@@ -108,16 +116,25 @@ class CompletedBookingScreen extends StatelessWidget {
   }
 
   void _showPortfolioDialog(BuildContext context, int bookingId) {
+    final completedBookingCubit = context.read<CompletedBookingCubit>();
     showDialog(
       context: context,
-      builder: (ctx) => AddPortfolioDialog(bookingId: bookingId),
+      builder: (ctx) => AddPortfolioDialog(
+        bookingId: bookingId,
+        completedBookingCubit: completedBookingCubit,
+      ),
     );
   }
 }
 
 class AddPortfolioDialog extends StatefulWidget {
   final int bookingId;
-  const AddPortfolioDialog({super.key, required this.bookingId});
+  final CompletedBookingCubit completedBookingCubit;
+  const AddPortfolioDialog({
+    super.key,
+    required this.bookingId,
+    required this.completedBookingCubit,
+  });
 
   @override
   State<AddPortfolioDialog> createState() => _AddPortfolioDialogState();
@@ -126,14 +143,14 @@ class AddPortfolioDialog extends StatefulWidget {
 class _AddPortfolioDialogState extends State<AddPortfolioDialog> {
   final _formKey = GlobalKey<FormState>();
   final _nameArController = TextEditingController();
-  final _nameEnController = TextEditingController();
   final _descArController = TextEditingController();
-  final _descEnController = TextEditingController();
   String? beforeImagePath;
   String? afterImagePath;
   int? selectedServiceId;
   String? selectedServiceName;
   DateTime? selectedDate;
+  int? productsSold;
+  int? extraServicesUsed;
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +168,7 @@ class _AddPortfolioDialogState extends State<AddPortfolioDialog> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("✅ تم إضافة البورتفوليو بنجاح")),
             );
+            widget.completedBookingCubit.fetchCompletedBookings();
           } else if (state is PortfolioError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
@@ -160,7 +178,7 @@ class _AddPortfolioDialogState extends State<AddPortfolioDialog> {
         builder: (context, state) {
           return AlertDialog(
             backgroundColor: AppTheme.white,
-            title: const Text("اضافة صور"),
+            title: const Text("اضافة الملاحظات"),
             content: SizedBox(
               width: double.infinity,
               child: SingleChildScrollView(
@@ -179,12 +197,7 @@ class _AddPortfolioDialogState extends State<AddPortfolioDialog> {
                           validate: (v) => v!.isEmpty ? "مطلوب" : null,
                         ),
                         const SizedBox(height: 12),
-                        EmailField(
-                          taskController: _nameEnController,
-                          hint: "الاسم (إنجليزي)",
-                          icon: Icons.title,
-                          validate: (v) => v!.isEmpty ? "مطلوب" : null,
-                        ),
+
                         const SizedBox(height: 12),
                         EmailField(
                           taskController: _descArController,
@@ -193,12 +206,7 @@ class _AddPortfolioDialogState extends State<AddPortfolioDialog> {
                           maxLines: 3,
                         ),
                         const SizedBox(height: 12),
-                        EmailField(
-                          taskController: _descEnController,
-                          hint: "الوصف (إنجليزي)",
-                          icon: Icons.description,
-                          maxLines: 3,
-                        ),
+
                         const SizedBox(height: 16),
 
                         // const Text("قبل", textAlign: TextAlign.right),
@@ -261,6 +269,46 @@ class _AddPortfolioDialogState extends State<AddPortfolioDialog> {
                           },
                         ),
                         const SizedBox(height: 16),
+
+                        // عدد المنتجات المباعة
+                        // const Text("عدد المنتجات المباعة",
+                        //     textAlign: TextAlign.right),
+                        DropdownButtonFormField<int>(
+                          value: productsSold,
+                          hint: const Text("عدد المنتجات المباعة"),
+                          items: List.generate(30, (index) => index + 1)
+                              .map((value) => DropdownMenuItem<int>(
+                                    value: value,
+                                    child: Text(value.toString()),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              productsSold = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+
+                        // عدد الخدمات الإضافية المستخدمة
+                        // const Text("عدد الخدمات الإضافية المستخدمة",
+                        //     textAlign: TextAlign.right),
+                        DropdownButtonFormField<int>(
+                          value: extraServicesUsed,
+                          hint: const Text("عدد الخدمات الإضافية المستخدمة"),
+                          items: List.generate(30, (index) => index + 1)
+                              .map((value) => DropdownMenuItem<int>(
+                                    value: value,
+                                    child: Text(value.toString()),
+                                  ))
+                              .toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              extraServicesUsed = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
                       ],
                     ),
                   ),
@@ -280,10 +328,12 @@ class _AddPortfolioDialogState extends State<AddPortfolioDialog> {
                     context.read<PortfolioCubit>().addPortfolio(
                           bookingId: widget.bookingId,
                           nameAr: _nameArController.text,
-                          nameEn: _nameEnController.text,
+                          nameEn: _nameArController.text,
                           descAr: _descArController.text,
-                          descEn: _descEnController.text,
+                          descEn: _descArController.text,
                           serviceId: selectedServiceId!,
+                          productsSold: productsSold,
+                          extraServicesUsed: extraServicesUsed,
                         );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(

@@ -9,12 +9,11 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
 
   final Dio _dio = Dio();
 
-
   Future<void> sendResetCode(String email) async {
     emit(ForgetPasswordLoading());
     try {
       var response = await _dio.post(
-        'https://api.alkashkhaa.com/public/api/forgot-password',
+        'https://apiv2.alkashkhaa.com/public/api/forgot-password',
         data: {'email': email},
       );
 
@@ -28,13 +27,12 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
     }
   }
 
-
   Future<void> resetPassword(
       String email, String otp, String newPassword) async {
     emit(ForgetPasswordLoading());
     try {
       var response = await _dio.post(
-        'https://api.alkashkhaa.com/public/api/reset-password',
+        'https://apiv2.alkashkhaa.com/public/api/reset-password',
         data: {
           'email': email,
           'otp': otp,

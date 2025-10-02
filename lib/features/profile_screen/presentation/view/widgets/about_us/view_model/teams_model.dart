@@ -73,7 +73,7 @@ class Specialist {
       workDays: _parseStringOrList(json['work_days']),
       workHours: _parseStringOrList(json['work_hours']),
       profilePicture: json['profile_picture'] as String? ?? '',
-      level: json['level'] as String? ?? '',
+      level: json['level']?.toString() ?? '',
       overprice: json['overprice']?.toString() ?? '',
       overallRating: (json['overall_rating'] != null)
           ? (json['overall_rating'] as num).toDouble()

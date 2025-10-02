@@ -16,7 +16,7 @@ class ServicesCubit extends Cubit<ServicesState> {
   Future<void> fetchServices() async {
     emit(ServicesLoading());
 
-    const url = 'https://api.alkashkhaa.com/public/api/services';
+    const url = 'https://apiv2.alkashkhaa.com/public/api/services';
 
     try {
       final response = await dio.get(url);

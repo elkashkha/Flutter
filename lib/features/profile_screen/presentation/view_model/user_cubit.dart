@@ -8,7 +8,7 @@ class UserCubit extends Cubit<UserState> {
   UserCubit() : super(UserInitial());
 
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'https://apitest.alkashkhaa.com/public/api/',
+    baseUrl: 'https://apiv2.alkashkhaa.com/public/api/',
     contentType: 'application/json',
   ));
 

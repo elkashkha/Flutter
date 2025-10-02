@@ -20,6 +20,7 @@ class BookingResponse {
 
 class Booking {
   final int id;
+  final bool addedToPortfolio;
   final int? userId;
   final int? teamId;
   final int specialistId;
@@ -43,6 +44,7 @@ class Booking {
 
   Booking({
     required this.id,
+    required this.addedToPortfolio,
     this.userId,
     this.teamId,
     required this.specialistId,
@@ -68,6 +70,7 @@ class Booking {
   factory Booking.fromJson(Map<String, dynamic> json) {
     return Booking(
       id: json['id'] as int,
+      addedToPortfolio: json['added_to_portfolio'] as bool,
       userId: json['user_id'] as int?,
       teamId: json['team_id'] as int?,
       specialistId: json['specialist_id'] as int,
@@ -76,9 +79,13 @@ class Booking {
       name: json['name'] as String,
       email: json['email'] as String,
       phone: json['phone'] as String,
-      totalPrice: double.tryParse(json['total_price'] as String ?? '0'),
+      totalPrice: json['total_price'] != null
+          ? double.tryParse(json['total_price'].toString())
+          : null,
       specialistLevel: json['specialist_level'] as String,
-      overprice: double.tryParse(json['overprice'] as String ?? '0'),
+      overprice: json['overprice'] != null
+          ? double.tryParse(json['overprice'].toString())
+          : null,
       paymentMethod: json['payment_method'] as String,
       invoiceId: json['invoice_id'] as String?,
       status: json['status'] as String,
@@ -97,6 +104,7 @@ class Booking {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'added_to_portfolio': addedToPortfolio,
       'user_id': userId,
       'team_id': teamId,
       'specialist_id': specialistId,

@@ -12,14 +12,12 @@ class CartCubit extends Cubit<CartState> {
   final CartRepository repository;
   final Dio _dio = Dio();
 
-
   CartCubit(this.repository) : super(CartInitial());
 
   Future<void> addToCart({
     required int productId,
     required int quantity,
   }) async {
-
     emit(CartLoading());
     try {
       await repository.addToCart(productId: productId, quantity: quantity);
@@ -29,6 +27,7 @@ class CartCubit extends Cubit<CartState> {
       emit(CartError(e.toString()));
     }
   }
+
   Future<void> checkout(BuildContext context) async {
     emit(CartLoading());
     try {
@@ -38,7 +37,7 @@ class CartCubit extends Cubit<CartState> {
         return;
       }
       final response = await _dio.post(
-        'https://api.alkashkhaa.com/public/api/cart/checkout',
+        'https://apiv2.alkashkhaa.com/public/api/cart/checkout',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -47,11 +46,13 @@ class CartCubit extends Cubit<CartState> {
         ),
       );
       if (response.statusCode == 200) {
-        final invoiceUrl = response.data["sadad_response"]?["sadad_response"]?["InvoiceURL"];
+        final invoiceUrl =
+            response.data["sadad_response"]?["sadad_response"]?["InvoiceURL"];
 
         emit(CheckoutSuccess(invoiceUrl));
       } else {
-        emit(CartError('فشل في إتمام الشراء: غير متوقع ${response.statusCode}'));
+        emit(
+            CartError('فشل في إتمام الشراء: غير متوقع ${response.statusCode}'));
       }
     } catch (e) {
       if (e is DioException) {
@@ -62,7 +63,9 @@ class CartCubit extends Cubit<CartState> {
         emit(CartError('فشل في إتمام الشراء: $e'));
       }
     }
-  }  Future<String?> _getToken() async {
+  }
+
+  Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('access_token');
   }
@@ -76,6 +79,7 @@ class CartCubit extends Cubit<CartState> {
       emit(CartError(e.toString()));
     }
   }
+
   Future<void> deleteCartItem(int cartItemId) async {
     emit(CartLoading());
     try {
@@ -86,7 +90,7 @@ class CartCubit extends Cubit<CartState> {
       }
 
       final response = await _dio.delete(
-        'https://api.alkashkhaa.com/public/api/cart/item/$cartItemId',
+        'https://apiv2.alkashkhaa.com/public/api/cart/item/$cartItemId',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -110,7 +114,4 @@ class CartCubit extends Cubit<CartState> {
       }
     }
   }
-
-
-
 }

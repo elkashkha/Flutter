@@ -16,6 +16,12 @@ class HomeBannerWidget extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           } else if (state is TopRatedSpecialistSuccess) {
             final specialist = state.specialist;
+
+            // ✅ لو الرسالة من السيرفر هي "No specialists found this month"
+            if (specialist.name == "No specialists found this month") {
+              return const SizedBox.shrink();
+            }
+
             return Container(
               width: 343,
               height: 108,
@@ -54,21 +60,27 @@ class HomeBannerWidget extends StatelessWidget {
                   /// الصورة
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: specialist.profilePicture != ''
-                        ? Image.network(
-                            specialist.profilePicture,
-                            width: 100,
-                            height: 109,
-                            fit: BoxFit.contain,
-                          )
-                        : const Icon(Icons.person, size: 60),
+                    child: AspectRatio(
+                      aspectRatio: 1 / 1, // تقدر تغير النسبة
+                      child: Image.network(
+                        specialist.profilePicture,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.person, size: 60),
+                      ),
+                    ),
                   ),
-
-                  /// النص
                 ],
               ),
             );
           } else if (state is TopRatedSpecialistFailure) {
+            // ✅ لو جالي 404 أو رسالة No specialists → اخفي البانر
+            if (state.message
+                    .toString()
+                    .contains("No specialists found this month") ||
+                state.message.toString().contains("404")) {
+              return const SizedBox.shrink();
+            }
             return Text("Error: ${state.message}");
           }
           return const SizedBox.shrink();

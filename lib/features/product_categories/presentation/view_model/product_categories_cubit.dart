@@ -15,12 +15,13 @@ class ProductCategoriesCubit extends Cubit<ProductCategoriesState> {
   Future<void> fetchProductCategories() async {
     emit(ProductCategoriesLoading());
 
-    const url = 'https://api.alkashkhaa.com/public/api/product-categories';
+    const url = 'https://apiv2.alkashkhaa.com/public/api/product-categories';
 
     try {
       final response = await dio.get(url);
 
-      final categoriesResponse = ProductCategoriesResponse.fromJson(response.data);
+      final categoriesResponse =
+          ProductCategoriesResponse.fromJson(response.data);
       final categories = categoriesResponse.data;
 
       if (categories.isNotEmpty) {

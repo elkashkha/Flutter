@@ -17,7 +17,7 @@ class BookingApi extends Cubit<BookingApi2State> {
       }
 
       final response = await Dio().post(
-        'https://api.alkashkhaa.com/public/api/bookings',
+        'https://apiv2.alkashkhaa.com/public/api/bookings',
         data: bookingRequest.toJson(),
         options: Options(
           headers: {

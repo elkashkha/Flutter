@@ -4,7 +4,6 @@ import 'package:elkashkha/features/home_screen/presentation/views_model/slider/s
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
-
 part 'slider_state.dart';
 
 class SliderCubit extends Cubit<SliderState> {
@@ -19,7 +18,7 @@ class SliderCubit extends Cubit<SliderState> {
 
     try {
       Response response = await dio.get(
-        'https://api.alkashkhaa.com/public/api/sliders',
+        'https://apiv2.alkashkhaa.com/public/api/sliders',
       );
 
       if (response.statusCode == 200) {

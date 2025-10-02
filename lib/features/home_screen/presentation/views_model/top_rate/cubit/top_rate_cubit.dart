@@ -7,7 +7,7 @@ class TopRatedSpecialistCubit extends Cubit<TopRatedSpecialistState> {
   TopRatedSpecialistCubit() : super(TopRatedSpecialistInitial());
 
   final Dio _dio = Dio(
-    BaseOptions(baseUrl: "https://apitest.alkashkhaa.com/public/api/"),
+    BaseOptions(baseUrl: "https://apiv2.alkashkhaa.com/public/api/"),
   );
 
   Future<void> getTopRatedSpecialist() async {

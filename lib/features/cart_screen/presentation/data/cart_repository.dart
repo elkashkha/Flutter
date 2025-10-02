@@ -16,7 +16,7 @@ class CartRepository {
     final token = prefs.getString('access_token');
 
     final response = await dio.post(
-      'https://api.alkashkhaa.com/public/api/cart/add',
+      'https://apiv2.alkashkhaa.com/public/api/cart/add',
       data: {
         'product_id': productId,
         'quantity': quantity,
@@ -32,6 +32,7 @@ class CartRepository {
       throw Exception('فشل في الإضافة إلى السلة');
     }
   }
+
   Future<CartModel> getCart() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
@@ -39,7 +40,7 @@ class CartRepository {
     if (token == null) throw Exception('Access token not found');
 
     final response = await dio.get(
-        'https://api.alkashkhaa.com/public/api/cart',
+      'https://apiv2.alkashkhaa.com/public/api/cart',
       options: Options(
         headers: {
           'Authorization': 'Bearer $token',
@@ -53,6 +54,4 @@ class CartRepository {
       throw Exception('فشل في جلب بيانات العربة');
     }
   }
-
-
 }

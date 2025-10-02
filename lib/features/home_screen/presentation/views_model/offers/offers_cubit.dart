@@ -14,7 +14,7 @@ class OffersCubit extends Cubit<OffersState> {
   Future<void> fetchOffers() async {
     emit(OffersLoading());
 
-    const url = 'https://apitest.alkashkhaa.com/public/api/offers';
+    const url = 'https://apiv2.alkashkhaa.com/public/api/offers';
 
     try {
       final response = await dio.get(url);

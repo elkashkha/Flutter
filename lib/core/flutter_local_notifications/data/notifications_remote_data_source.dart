@@ -15,7 +15,7 @@ class NotificationsRemoteDataSource {
       if (token == null) throw Exception('No auth token found');
 
       final response = await dio.get(
-        'https://apitest.alkashkhaa.com/public/api/$endpoint',
+        'https://apiv2.alkashkhaa.com/public/api/$endpoint',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

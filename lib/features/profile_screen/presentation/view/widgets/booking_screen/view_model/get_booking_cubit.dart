@@ -21,9 +21,8 @@ class GetBookingCubit extends Cubit<GetBookingState> {
         return;
       }
 
-
       final response = await _dio.get(
-        'https://api.alkashkhaa.com/public/api/bookings',
+        'https://apiv2.alkashkhaa.com/public/api/bookings',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -32,13 +31,10 @@ class GetBookingCubit extends Cubit<GetBookingState> {
         ),
       );
 
-
-
       if (response.data == null) {
         emit(const GetBookingError('البيانات المستلمة فارغة'));
         return;
       }
-
 
       if (response.data['data'] == null) {
         emit(const GetBookingError('لا توجد بيانات حجوزات'));
@@ -52,19 +48,15 @@ class GetBookingCubit extends Cubit<GetBookingState> {
         return;
       }
 
-      final List<Booking> bookings = bookingsData
-          .map((json) => Booking.fromJson(json))
-          .toList();
+      final List<Booking> bookings =
+          bookingsData.map((json) => Booking.fromJson(json)).toList();
 
       emit(GetBookingLoaded(bookings));
-
     } on DioException catch (dioError) {
-
       String errorMessage;
 
       if (dioError.response != null) {
         final statusCode = dioError.response!.statusCode;
-
 
         switch (statusCode) {
           case 401:
@@ -93,7 +85,6 @@ class GetBookingCubit extends Cubit<GetBookingState> {
       }
 
       emit(GetBookingError(errorMessage));
-
     } catch (e) {
       emit(GetBookingError('خطأ غير متوقع: ${e.toString()}'));
     }

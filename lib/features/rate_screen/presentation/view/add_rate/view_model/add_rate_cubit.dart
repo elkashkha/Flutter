@@ -40,7 +40,7 @@ class ReviewCubit extends Cubit<ReviewState> {
       }
 
       final response = await Dio().post(
-        'https://apitest.alkashkhaa.com/public/api/reviews',
+        'https://apiv2.alkashkhaa.com/public/api/reviews',
         data: {
           'user_id': userId,
           'service_id': selectedServiceId,

@@ -3,7 +3,6 @@ import 'package:elkashkha/core/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-
 import '../../../../../../../core/widgets/custom_button.dart';
 import '../../../../profile_screen/presentation/view/widgets/about_us/view_model/teams_model.dart';
 
@@ -35,16 +34,18 @@ class SpecialistDetailsPage extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: CachedNetworkImage(
-                  imageUrl: specialist.profilePicture,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      const Center(child: CustomDotsTriangleLoader()),
-                  errorWidget: (context, url, error) => const Icon(
-                    Icons.person,
-                    size: 60,
+                child: AspectRatio(
+                  aspectRatio: 4 / 3, // تقدر تغيرها لـ 1/1 أو 16/9
+                  child: CachedNetworkImage(
+                    imageUrl: specialist.profilePicture,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        const Center(child: CustomDotsTriangleLoader()),
+                    errorWidget: (context, url, error) => const Icon(
+                      Icons.person,
+                      size: 60,
+                    ),
                   ),
                 ),
               ),
@@ -91,8 +92,6 @@ class SpecialistDetailsPage extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 20),
-
             // ===== الإيميل =====
             // Container(
             //   width: double.infinity,
@@ -107,8 +106,6 @@ class SpecialistDetailsPage extends StatelessWidget {
             //         fontSize: 14, fontWeight: FontWeight.w600),
             //   ),
             // ),
-
-            const SizedBox(height: 20),
 
             // ===== الخبرة =====
             // Row(
@@ -128,7 +125,7 @@ class SpecialistDetailsPage extends StatelessWidget {
             //   ],
             // ),
 
-            const SizedBox(height: 20),
+            // const SizedBox(height: 10),
 
             // ===== الخدمات =====
             Text(

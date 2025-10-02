@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:elkashkha/features/specialist_nav_bar/features/booking_tab/view_model/cubit/cubit/completed_booking_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'portfolio_state.dart';
@@ -8,7 +9,7 @@ class PortfolioCubit extends Cubit<PortfolioState> {
   PortfolioCubit() : super(PortfolioInitial());
 
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: "https://apitest.alkashkhaa.com/public/api/",
+    baseUrl: "https://apiv2.alkashkhaa.com/public/api/",
     contentType: "application/json",
   ));
 
@@ -17,6 +18,8 @@ class PortfolioCubit extends Cubit<PortfolioState> {
     required String nameAr,
     required String nameEn,
     required String descAr,
+    int? productsSold,
+    int? extraServicesUsed,
     required String descEn,
     required int serviceId,
     String? beforeImage,
@@ -39,6 +42,8 @@ class PortfolioCubit extends Cubit<PortfolioState> {
         "description_ar": descAr,
         "description_en": descEn,
         "service_id": serviceId,
+        if (productsSold != null) "products_sold": productsSold,
+        if (extraServicesUsed != null) "extra_services_used": extraServicesUsed,
         if (beforeImage != null)
           "before_image": await MultipartFile.fromFile(beforeImage),
         if (afterImage != null)
@@ -53,6 +58,7 @@ class PortfolioCubit extends Cubit<PortfolioState> {
 
       if (response.statusCode == 201) {
         emit(PortfolioSuccess());
+        await CompletedBookingCubit().fetchCompletedBookings();
       } else {
         emit(PortfolioError("فشل في إضافة البورتفوليو"));
       }

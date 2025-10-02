@@ -10,7 +10,7 @@ class AboutUsCubit extends Cubit<AboutUsState> {
     emit(AboutUsLoading());
     try {
       var response =
-          await Dio().get('https://api.alkashkhaa.com/public/api/about-us');
+          await Dio().get('https://apiv2.alkashkhaa.com/public/api/about-us');
       if (response.statusCode == 200) {
         List<dynamic> data = response.data['data'];
 
