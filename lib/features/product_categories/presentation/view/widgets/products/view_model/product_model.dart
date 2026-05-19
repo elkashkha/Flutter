@@ -16,6 +16,7 @@ class Product {
   final String usageInstructionsAr;
   final String usageInstructionsEn;
   final double averageRating;
+  final String createdAt;
   final List<Review> reviews;
 
   Product({
@@ -34,6 +35,7 @@ class Product {
     required this.usageInstructionsAr,
     required this.usageInstructionsEn,
     required this.averageRating,
+    required this.createdAt,
     required this.reviews,
   });
 
@@ -54,6 +56,7 @@ class Product {
       usageInstructionsAr: map['usage_instructions_ar'] ?? '',
       usageInstructionsEn: map['usage_instructions_en'] ?? '',
       averageRating: (map['average_rating'] as num?)?.toDouble() ?? 0.0,
+      createdAt: map['created_at'] ?? '',
       reviews: (map['reviews'] != null && map['reviews'] is List)
           ? List<Review>.from(map['reviews'].map((review) => Review.fromMap(review)))
           : [],

@@ -163,73 +163,117 @@ class _SpecialistNavBarViewState extends State<SpecialistNavBarView> {
         builder: (context, currentIndex) {
           return PopScope(
             canPop: false,
-            child: Scaffold(
-              body: SafeArea(
-                child: [
-                  const HomeScreenSpecialist(),
-                  const BookingSpecialistScreen(),
-                  const NotificationsScreen(),
-                  const ProfileSpecialist(),
-                ][currentIndex],
+            child: SafeArea(
+              child: Scaffold(
+                backgroundColor: Colors.white,
+                body: SafeArea(
+                  child: IndexedStack(
+                    index: currentIndex,
+                    children: const [
+                      HomeScreenSpecialist(),
+                      BookingSpecialistScreen(),
+                      NotificationsScreen(),
+                      ProfileSpecialist(),
+                    ],
+                  ),
+                ),
+              
+                // Custom Bottom Navigation Bar
+                bottomNavigationBar: Container(
+                  color: const Color(0xff0B0B0F),
+                  child: SafeArea(
+                    bottom: true,
+                    top: false,
+                    left: false,
+                    right: false,
+                    child: SizedBox(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: List.generate(4, (index) {
+                          final isSelected = currentIndex == index;
+                  
+                          final icons = [
+                            Icons.home,
+                            Icons.bookmark_add,
+                            Icons.notifications,
+                            Icons.person,
+                          ];
+                  
+                          return GestureDetector(
+                            onTap: () {
+                              context.read<BottomNavCubit>().changeTab(index);
+                            },
+                            child: SizedBox(
+                              width: 70,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                clipBehavior: Clip.none,
+                                children: [
+                                  // Active Item
+                                  if (isSelected)
+                                    Positioned(
+                                      top: -28,
+                                      child: Transform.rotate(
+                                        angle: 0.785398,
+                                        child: Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            color: const Color(
+                                              0xff0B0B0F,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.white.withOpacity(
+                                                  0.5,
+                                                ),
+                                                blurRadius: 10,
+                                                spreadRadius: 1,
+                                                offset: const Offset(
+                                                  0,
+                                                  1,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Transform.rotate(
+                                            angle: -0.785398,
+                                            child: Center(
+                                              child: Icon(
+                                                icons[index],
+                                                size: 18,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                  
+                                  // Inactive Item
+                                  if (!isSelected)
+                                    Icon(
+                                      icons[index],
+                                      color: Colors.grey,
+                                      size: 28,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              bottomNavigationBar: _buildCustomNavBar(context, currentIndex),
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildCustomNavBar(BuildContext context, int currentIndex) {
-    final List<IconData> icons = [
-      Icons.home_filled,
-      Icons.bookmark_add,
-      Icons.notifications,
-      Icons.person_2,
-    ];
-
-    return Container(
-      height: 65,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppTheme.primary,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(icons.length, (index) {
-          final isSelected = currentIndex == index;
-          return GestureDetector(
-            onTap: () {
-              context.read<BottomNavCubit>().changeTab(index);
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? AppTheme.white.withOpacity(0.2)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Icon(
-                icons[index],
-                color: isSelected
-                    ? const Color(0xffD1D1D1)
-                    : AppTheme.white.withOpacity(0.6),
-                size: isSelected ? 28 : 24,
-              ),
-            ),
-          );
-        }),
       ),
     );
   }

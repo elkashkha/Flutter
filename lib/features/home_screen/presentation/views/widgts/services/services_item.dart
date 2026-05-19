@@ -45,12 +45,15 @@ class ListServiceItem extends StatelessWidget {
     final locale = Localizations.localeOf(context).languageCode;
     final isArabic = locale == 'ar';
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () {
         context.push(
           '/ServiceDetails',
           extra: {
             'service': {
+              'id': serviceId,
               'imageUrl': imageUrl,
               'name_ar': text,
               'name_en': text,
@@ -97,7 +100,7 @@ class ListServiceItem extends StatelessWidget {
                       height: screenHeight * 0.22,
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) =>
-                              const Center(child: CustomDotsTriangleLoader()),
+                               const Center(child: CustomDotsTriangleLoader()),
                       errorWidget: (context, url, error) => const Center(
                         child: Icon(Icons.error, color: Colors.red, size: 40),
                       ),
@@ -141,8 +144,12 @@ class ListServiceItem extends StatelessWidget {
               ],
             ),
             Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                ),
               ),
               padding: EdgeInsets.all(screenWidth * 0.02),
               child: Column(
@@ -156,7 +163,7 @@ class ListServiceItem extends StatelessWidget {
                         style: GoogleFonts.tajawal(
                           textStyle: TextStyle(
                             fontSize: screenWidth * 0.035,
-                            color: Colors.black,
+                            color: isDark ? Colors.white : Colors.black,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -173,7 +180,7 @@ class ListServiceItem extends StatelessWidget {
                     style: GoogleFonts.tajawal(
                       textStyle: TextStyle(
                         fontSize: screenWidth * 0.035,
-                        color: Colors.black,
+                        color: isDark ? Colors.white : Colors.black,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -189,7 +196,7 @@ class ListServiceItem extends StatelessWidget {
                     style: GoogleFonts.tajawal(
                       textStyle: TextStyle(
                         fontSize: screenWidth * 0.030,
-                        color: Colors.black,
+                        color: isDark ? Colors.white70 : Colors.black,
                       ),
                     ),
                     overflow: TextOverflow.ellipsis,

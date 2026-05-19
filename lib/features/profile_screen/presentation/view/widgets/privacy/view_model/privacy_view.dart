@@ -13,12 +13,15 @@ class PoliciesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BlocProvider(
       create: (context) => PoliciesCubit()..fetchPolicies(),
       child: Scaffold(
+        backgroundColor: isDark ? const Color(0xff151414) : Colors.white,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: AppTheme.white,
+          backgroundColor: isDark ? const Color(0xff151414) : AppTheme.white,
           title: CustomAppBar(
             title:  _getLocalizedText(context, 'privacy_policy'),
 
@@ -27,7 +30,7 @@ class PoliciesView extends StatelessWidget {
         body: BlocBuilder<PoliciesCubit, PoliciesState>(
           builder: (context, state) {
             if (state is PoliciesLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator(color: isDark ? Colors.white : Colors.black));
             } else if (state is PoliciesLoaded) {
               return ListView.builder(
                 padding: const EdgeInsets.all(12),
@@ -43,10 +46,10 @@ class PoliciesView extends StatelessWidget {
                       children: [
                         Text(
                           policy.title[locale] ?? 'No title',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: isDark ? Colors.white : Colors.black87,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -54,7 +57,7 @@ class PoliciesView extends StatelessWidget {
                           policy.content[locale] ?? 'No content available.',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.grey[700],
+                            color: isDark ? Colors.white70 : Colors.grey[700],
                             height: 1.5,
                           ),
                         ),

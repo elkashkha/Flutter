@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart'; // للتأكد إن اللغات مدعومة
 
 import '../../../../../core/widgets/loading.dart';
 import '../../view_model/product_categories_cubit.dart';
@@ -32,19 +31,18 @@ class ProductCategoriesList extends StatelessWidget {
 
           return GridView.builder(
             shrinkWrap: true,
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 10.0,
-              mainAxisSpacing: 10.0,
-              mainAxisExtent: 200,
+              crossAxisSpacing: 16.0,
+              mainAxisSpacing: 16.0,
+              childAspectRatio: 0.9,
             ),
             itemCount: state.categories.length,
             itemBuilder: (context, index) {
               final category = state.categories[index];
 
               return ProductCategoriesItem(
-                imageUrl: category.imageUrl,
                 title: locale.languageCode == 'ar' ? category.nameAr : category.nameEn,
                 categoryId: category.id,
               );

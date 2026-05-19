@@ -13,15 +13,16 @@ class PortfolioCubit extends Cubit<PortfolioState> {
     contentType: "application/json",
   ));
 
+  // 🟢 الدالة الأصلية (تحتاج bookingId وباقي التفاصيل)
   Future<void> addPortfolio({
     required int bookingId,
-    required String nameAr,
-    required String nameEn,
-    required String descAr,
+    String? nameAr,
+    String? nameEn,
+    String? descAr,
+    String? descEn,
+    int? serviceId,
     int? productsSold,
     int? extraServicesUsed,
-    required String descEn,
-    required int serviceId,
     String? beforeImage,
     String? afterImage,
   }) async {
@@ -37,11 +38,11 @@ class PortfolioCubit extends Cubit<PortfolioState> {
       }
 
       final formData = FormData.fromMap({
-        "name_ar": nameAr,
-        "name_en": nameEn,
-        "description_ar": descAr,
-        "description_en": descEn,
-        "service_id": serviceId,
+        if (nameAr != null) "name_ar": nameAr,
+        if (nameEn != null) "name_en": nameEn,
+        if (descAr != null) "description_ar": descAr,
+        if (descEn != null) "description_en": descEn,
+        if (serviceId != null) "service_id": serviceId,
         if (productsSold != null) "products_sold": productsSold,
         if (extraServicesUsed != null) "extra_services_used": extraServicesUsed,
         if (beforeImage != null)
@@ -66,4 +67,47 @@ class PortfolioCubit extends Cubit<PortfolioState> {
       emit(PortfolioError("خطأ: ${e.toString()}"));
     }
   }
+
+  // 🆕 الدالة الجديدة (خاصة بـ endpoint custom)
+  Future<void> addCustomPortfolio({
+    String? nameAr,
+    String? descAr,
+    int? productsSold,
+    int? extraServicesUsed,
+  }) async {
+    emit(PortfolioLoading());
+
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString("access_token");
+
+      if (token == null) {
+        emit(PortfolioError("التوكن غير موجود"));
+        return;
+      }
+
+      final formData = FormData.fromMap({
+        if (nameAr != null) "name_ar": nameAr,
+        if (descAr != null) "description_ar": descAr,
+        if (productsSold != null) "products_sold": productsSold,
+        if (extraServicesUsed != null) "extra_services_used": extraServicesUsed,
+      });
+
+      final response = await _dio.post(
+        "portfolio/custom", // ✅ endpoint الجديد
+        data: formData,
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        emit(PortfolioSuccess());
+        await CompletedBookingCubit().fetchCompletedBookings();
+      } else {
+        emit(PortfolioError("فشل في إضافة البيانات"));
+      }
+    } catch (e) {
+      emit(PortfolioError("خطأ: ${e.toString()}"));
+    }
+  }
+
 }

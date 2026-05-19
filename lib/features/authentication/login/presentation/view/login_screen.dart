@@ -10,15 +10,10 @@
   
     @override
     Widget build(BuildContext context) {
+      final isDark = Theme.of(context).brightness == Brightness.dark;
       return SafeArea(
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            title:  Text(AppLocalizations.of(context)!.login),
-            titleTextStyle: const TextStyle(color: AppTheme.white, fontSize: 20),
-            centerTitle: true,
-          ),
-          backgroundColor: AppTheme.primary,
+          backgroundColor: isDark ? const Color(0xFF121212) : AppTheme.white,
           body: const LoginScreenBody(),
         ),
       );

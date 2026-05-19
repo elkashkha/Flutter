@@ -9,17 +9,17 @@ class OnBoardingCubit extends Cubit<int> {
 
   final List<OnBoardingModel> pages = [
     OnBoardingModel(
-      image: 'assets/images/1.svg',
+      image: 'assets/images/on_v1.svg',
       titleKey: 'onboarding_1_title',
       descriptionKey: 'onboarding_1_description',
     ),
     OnBoardingModel(
-      image: 'assets/images/2.svg',
+      image: 'assets/images/on_v2.svg',
       titleKey: 'onboarding_2_title',
       descriptionKey: 'onboarding_2_description',
     ),
     OnBoardingModel(
-      image: 'assets/images/3.svg',
+      image: 'assets/images/on_v3.svg',
       titleKey: 'onboarding_3_title',
       descriptionKey: 'onboarding_3_description',
     ),

@@ -1,5 +1,4 @@
 import 'package:elkashkha/features/service_details/presentation/view/widgets/service_details_body.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ServiceDetails extends StatelessWidget {
@@ -7,12 +6,6 @@ class ServiceDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-      ),
-      backgroundColor: Colors.white,
-      body: const ServiceDetailsBody(),
-    );
+    return const ServiceDetailsBody();
   }
 }

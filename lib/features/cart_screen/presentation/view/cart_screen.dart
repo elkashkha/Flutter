@@ -12,15 +12,44 @@ class CartScreen extends StatelessWidget {
   const CartScreen({super.key, this.isArabic = true});
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocProvider(
       create: (context) => CartCubit(CartRepository(Dio()))..getCart(),
       child: Scaffold(
+        backgroundColor: isDark ? const Color(0xff151414) : const Color(0xFF1E1E1E), // Dynamic background for the top
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: isDark ? const Color(0xff151414) : const Color(0xFF1E1E1E),
+          elevation: 0,
           centerTitle: true,
-          title: Text(isArabic ? 'سلة التسوق' : 'Shopping Cart'),
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: Text(
+            isArabic ? 'سلة التسوق' : 'Shopping Cart',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
-        body: const CartScreenBody(),
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          margin: const EdgeInsets.only(top: 10),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF121212) : Colors.white,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+          ),
+          child: const ClipRRect(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            child: CartScreenBody(),
+          ),
+        ),
       ),
     );
   }

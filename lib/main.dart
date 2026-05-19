@@ -10,6 +10,7 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'core/app_router.dart';
 import 'core/app_theme.dart';
 import 'core/change_language_cubit/change_language_cubit.dart';
+import 'core/theme_cubit/theme_cubit.dart';
 import 'core/flutter_local_notifications/flutter_local_notifications_service.dart';
 import 'features/authentication/forget_password/view_model/forget_password_cubit.dart';
 import 'features/authentication/login/presentation/view_model/login_cubit.dart';
@@ -25,6 +26,7 @@ import 'features/profile_screen/presentation/view_model/user_cubit.dart';
 import 'features/rate_screen/presentation/view_model/reviews_cubit.dart';
 import 'features/booking/booking_api_cubit.dart';
 import 'features/booking/booking_cubit.dart';
+import 'features/specialist_nav_bar/features/profile_specialist/view_model/specialist_profile__cubit.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
@@ -45,13 +47,21 @@ void main() async {
   final languageCubit = LanguageCubit();
   await languageCubit.loadSavedLanguage();
 
-  RemoteMessage? initialMessage =
-      await FirebaseMessaging.instance.getInitialMessage();
+  final themeCubit = ThemeCubit();
+  await themeCubit.loadSavedTheme();
+
+  RemoteMessage? initialMessage;
+  try {
+    initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+  } catch (e) {
+    print("❌ Error fetching FCM initial message in main: $e");
+  }
 
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => languageCubit),
+        BlocProvider(create: (context) => themeCubit),
         BlocProvider(create: (context) => RegisterCubit()),
         BlocProvider(create: (context) => BookingCubitApi()),
         BlocProvider(create: (context) => LoginCubit()),
@@ -66,6 +76,7 @@ void main() async {
                 ProductCategoriesCubit()..fetchProductCategories()),
         BlocProvider(create: (context) => UserCubit()..fetchUserProfile()),
         BlocProvider(create: (context) => ReviewsCubit()..fetchReviews()),
+        BlocProvider(create: (context) => SpecialistCubit()),
       ],
       child: MyApp(initialMessage: initialMessage),
     ),
@@ -98,10 +109,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final languageCode = context.watch<LanguageCubit>().state.languageCode;
+    final themeMode = context.watch<ThemeCubit>().state.themeMode;
 
     return MaterialApp.router(
       routerConfig: Approuter.router,
       theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: themeMode,
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

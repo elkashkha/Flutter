@@ -1,4 +1,4 @@
-import 'package:elkashkha/core/widgets/loading.dart';
+  import 'package:elkashkha/core/widgets/loading.dart';
 import 'package:elkashkha/features/booking/paymet_wepView.dart';
 import 'package:elkashkha/features/booking/view_model/booking_cubit.dart';
 import 'package:elkashkha/features/booking/view_model/booking_state.dart';
@@ -6,12 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../core/app_theme.dart';
+import 'package:cherry_toast/cherry_toast.dart';
 import '../../core/widgets/custom_button.dart';
 import '../../core/widgets/emali_fild.dart';
 import 'booking_api_cubit.dart';
 import 'booking_api_state.dart';
 import 'custom_date_picker.dart';
+import 'widgets/booking_selection_container.dart';
+import 'widgets/specialists_section.dart';
+import 'booking_summary_screen.dart';
 import '../home_screen/presentation/views_model/offers/offers_cubit.dart';
 import '../home_screen/presentation/views_model/offers/offers_state.dart';
 import '../home_screen/presentation/views_model/packages/packages_cubit.dart';
@@ -50,17 +55,27 @@ class _BookingServiceState extends State<BookingService> {
   List<String> selectedPackageDiscountedPrices = [];
   List<String> selectedOfferDiscountedPrices = [];
 
-  DateTime? selectedDate;
+  DateTime? selectedDate = DateTime.now();
   TimeOfDay? selectedTime;
 
   @override
   void initState() {
     super.initState();
     selectedOverprice = null; // تهيئة إلى null
+    _loadUserData();
     context.read<ServicesCubit>().fetchServices();
     context.read<PackagesCubit>().fetchPackages();
     // context.read<SpecialistsCubit>().fetchSpecialists();
     context.read<OffersCubit>().fetchOffers();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      nameController.text = prefs.getString('user_name') ?? '';
+      emailController.text = prefs.getString('user_email') ?? '';
+      phoneController.text = prefs.getString('user_phone') ?? '';
+    });
   }
 
   @override
@@ -70,6 +85,39 @@ class _BookingServiceState extends State<BookingService> {
     noteController.dispose();
     emailController.dispose();
     super.dispose();
+  }
+
+  Widget _buildSelectionContainer({
+    required String title,
+    required IconData icon,
+    required List<String> selectedNames,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppTheme.gray, width: 1.5),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.grey.shade700, size: 24.0),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                selectedNames.isEmpty ? title : selectedNames.join(', '),
+                style: TextStyle(
+                  color: selectedNames.isEmpty ? Colors.grey : Colors.black,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void clearFields() {
@@ -89,8 +137,7 @@ class _BookingServiceState extends State<BookingService> {
       selectedOfferNames = [];
       selectedServicePrices = [];
       selectedPackageDiscountedPrices = [];
-      selectedOfferDiscountedPrices = [];
-      selectedDate = null;
+      selectedDate = DateTime.now();
       selectedTime = null;
     });
   }
@@ -133,8 +180,10 @@ class _BookingServiceState extends State<BookingService> {
     required String Function(dynamic) getId,
     required String? Function(dynamic) getPrice,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     showModalBottomSheet(
       context: context,
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
@@ -145,9 +194,10 @@ class _BookingServiceState extends State<BookingService> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -158,7 +208,12 @@ class _BookingServiceState extends State<BookingService> {
                         final item = items[index];
                         final isSelected = selectedIds.contains(getId(item));
                         return CheckboxListTile(
-                          title: Text(getName(item)),
+                          title: Text(
+                            getName(item),
+                            style: TextStyle(color: isDark ? Colors.white : Colors.black),
+                          ),
+                          activeColor: const Color(0xff262626),
+                          checkColor: Colors.white,
                           value: isSelected,
                           onChanged: (bool? value) {
                             setModalState(() {
@@ -187,6 +242,7 @@ class _BookingServiceState extends State<BookingService> {
                   const SizedBox(height: 16),
                   MyCustomButton(
                     text: AppLocalizations.of(context)!.confirm,
+                    backgroundColor: const Color(0xff262626),
                     voidCallback: () => Navigator.pop(context),
                   ),
                 ],
@@ -203,602 +259,341 @@ class _BookingServiceState extends State<BookingService> {
     final double padding = MediaQuery.of(context).size.width * 0.05;
     const double spacing = 16.0;
     final localizations = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return MultiBlocProvider(
-      providers: [
-        BlocProvider<ServicesCubit>(
-          create: (context) => ServicesCubit()..fetchServices(),
-        ),
-        BlocProvider<PackagesCubit>(
-          create: (context) => PackagesCubit()..fetchPackages(),
-        ),
-        BlocProvider<SpecialistsCubit>(
-          create: (context) => SpecialistsCubit()..fetchSpecialists(),
-        ),
-        BlocProvider<BookingCubitApi>(
-          create: (context) => BookingCubitApi(),
-        ),
-        BlocProvider(create: (context) => OffersCubit()..fetchOffers()),
-      ],
-      child: Scaffold(
-        backgroundColor: const Color(0xfffcfcfc),
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          title: Text(localizations.booking_page),
-          backgroundColor: AppTheme.white,
-          elevation: 0,
-        ),
-        body: Padding(
-          padding: EdgeInsets.all(padding),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomDatePicker(
-                    onDateSelected: (value) {
-                      setState(() {
-                        selectedDate = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: spacing),
-                  BlocBuilder<SpecialistsCubit, SpecialistsState>(
-                    builder: (context, state) {
-                      if (state is SpecialistsLoading) {
-                        return const Center(child: CustomDotsTriangleLoader());
-                      } else if (state is SpecialistsLoaded) {
-                        final specialists = state.specialists;
+        providers: [
+          BlocProvider<ServicesCubit>(
+            create: (context) => ServicesCubit()..fetchServices(),
+          ),
+          BlocProvider<PackagesCubit>(
+            create: (context) => PackagesCubit()..fetchPackages(),
+          ),
+          BlocProvider<SpecialistsCubit>(
+            create: (context) => SpecialistsCubit()..fetchSpecialists(),
+          ),
+          BlocProvider<BookingCubitApi>(
+            create: (context) => BookingCubitApi(),
+          ),
+          BlocProvider(create: (context) => OffersCubit()..fetchOffers()),
+        ],
+        child: Scaffold(
+          backgroundColor: isDark ? const Color(0xff151414) : const Color(0xff121212),
+          appBar: AppBar(
+            scrolledUnderElevation: 0,
+            title: const Text(
+              "احجز موعد الان", // Match design specifically or use localizations.booking_page if it's identical
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            centerTitle: true,
+            backgroundColor: isDark ? const Color(0xff151414) : const Color(0xff121212),
+            iconTheme: const IconThemeData(color: Colors.white),
+            elevation: 0,
+          ),
+          body: Container(
+            margin: const EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xff151414) : const Color(0xfffcfcfc),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(padding),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomDatePicker(
+                        onDateSelected: (value) {
+                          setState(() {
+                            selectedDate = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: spacing),
+                      CustomTimePicker(
+                        onTimeSelected: (time) {
+                          setState(() {
+                            selectedTime = time;
+                          });
+                        },
+                        hintText: localizations.enter_time,
+                      ),
+                      const SizedBox(height: spacing),
+                      BlocBuilder<SpecialistsCubit, SpecialistsState>(
+                        builder: (context, state) {
+                          if (state is SpecialistsLoading) {
+                            return const Center(
+                                child: CustomDotsTriangleLoader());
+                          } else if (state is SpecialistsLoaded) {
+                            final specialists = state.specialists;
 
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              localizations.choose_the_team,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 8),
-                            SizedBox(
-                              height: 100,
-                              child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: specialists.length,
-                                separatorBuilder: (_, __) =>
-                                    const SizedBox(width: 12),
-                                itemBuilder: (context, index) {
-                                  final specialist = specialists[index];
-                                  final isSelected = selectedTeamId ==
-                                      specialist.id.toString();
-
-                                  return GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedTeamId =
-                                            specialist.id.toString();
-                                        selectedTeamName =
-                                            Localizations.localeOf(context)
-                                                        .languageCode ==
-                                                    'ar'
-                                                ? specialist.name
-                                                : specialist.name;
-                                        selectedOverprice =
-                                            specialist.overprice;
-                                      });
-                                    },
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          width: 70,
-                                          height: 70,
-                                          padding: const EdgeInsets.all(3),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: isSelected
-                                                  ? Colors.black
-                                                  : Colors.grey,
-                                              width: 2,
-                                            ),
-                                          ),
-                                          child: ClipOval(
-                                            child: Image.network(
-                                              specialist.profilePicture,
-                                              width: 64,
-                                              height: 50,
-                                              fit: BoxFit.contain,
-                                              errorBuilder: (context, error,
-                                                      stackTrace) =>
-                                                  const Icon(Icons.person),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              specialist.name,
-                                              style: TextStyle(
-                                                color: isSelected
-                                                    ? Colors.black
-                                                    : Colors.grey[600],
-                                                fontWeight: isSelected
-                                                    ? FontWeight.bold
-                                                    : FontWeight.normal,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            if (selectedOverprice != null &&
-                                selectedOverprice!.isNotEmpty &&
-                                selectedOverprice != "0" &&
-                                selectedOverprice != "0.00")
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: AppLocalizations.of(context)!
-                                          .specialist_fee(selectedOverprice!),
-                                      style: const TextStyle(
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const TextSpan(text: " "), // مسافة
-                                    // TextSpan(
-                                    //   text: selectedTeamId != null
-                                    //       ? specialists
-                                    //           .firstWhere((s) =>
-                                    //               s.id.toString() ==
-                                    //               selectedTeamId)
-                                    //           .level
-                                    //       : "",
-                                    //   style: const TextStyle(
-                                    //     color: Colors.red,
-                                    //     fontWeight: FontWeight.bold,
-                                    //   ),
-                                    // ),
-                                  ],
-                                ),
-                              )
-                          ],
-                        );
-                      } else if (state is SpecialistsError) {
-                        return Text(state.message);
-                      } else {
-                        return const SizedBox();
-                      }
-                    },
-                  ),
-                  const SizedBox(height: spacing),
-                  EmailField(
-                    taskController: nameController,
-                    icon: Icons.person,
-                    validate: (value) => value!.trim().isEmpty
-                        ? localizations.validate_name
-                        : null,
-                    hint: localizations.full_name,
-                  ),
-                  const SizedBox(height: spacing),
-                  EmailField(
-                    taskController: phoneController,
-                    icon: Icons.phone,
-                    validate: (value) => value!.trim().isEmpty
-                        ? localizations.validate_phone
-                        : null,
-                    hint: localizations.phone_number,
-                  ),
-                  const SizedBox(height: spacing),
-                  EmailField(
-                    taskController: emailController,
-                    icon: Icons.email,
-                    validate: (value) => value!.trim().isEmpty
-                        ? localizations.enterYourEmail
-                        : null,
-                    hint: localizations.email,
-                  ),
-                  const SizedBox(height: spacing),
-                  const SizedBox(height: spacing),
-                  BlocBuilder<ServicesCubit, ServicesState>(
-                    builder: (context, state) {
-                      if (state is ServicesLoaded) {
-                        return GestureDetector(
-                          onTap: () {
-                            showSelectionBottomSheet(
-                              context: context,
-                              title: localizations.choose_service,
-                              items: state.services,
-                              selectedIds: selectedServiceIds,
-                              selectedNames: selectedServiceNames,
-                              selectedPrices: selectedServicePrices,
-                              getName: (service) =>
-                                  Localizations.localeOf(context)
-                                              .languageCode ==
-                                          'ar'
-                                      ? service.nameAr
-                                      : service.nameEn,
-                              getId: (service) => service.id.toString(),
-                              getPrice: (service) => service.price?.toString(),
+                            return SpecialistsSection(
+                              specialists: specialists,
+                              selectedTeamId: selectedTeamId,
+                              onSpecialistSelected: (id, name, overprice) {
+                                setState(() {
+                                  selectedTeamId = id;
+                                  selectedTeamName = name;
+                                  selectedOverprice = overprice;
+                                });
+                              },
                             );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 15),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border:
-                                  Border.all(color: AppTheme.gray, width: 1.5),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.category,
-                                  color: Colors.grey.shade700,
-                                  size: 24.0,
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    selectedServiceNames.isEmpty
-                                        ? localizations.choose_service
-                                        : selectedServiceNames.join(', '),
-                                    style: TextStyle(
-                                      color: selectedServiceNames.isEmpty
-                                          ? Colors.grey
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                      return Text(localizations.failed_services);
-                    },
-                  ),
-                  const SizedBox(height: spacing),
-                  BlocBuilder<OffersCubit, OffersState>(
-                    builder: (context, state) {
-                      if (state is OffersLoaded) {
-                        return GestureDetector(
-                          onTap: () {
-                            showSelectionBottomSheet(
-                              context: context,
-                              title: localizations.choose_offer,
-                              items: state.offers,
-                              selectedIds: selectedOfferIds,
-                              selectedNames: selectedOfferNames,
-                              selectedPrices: selectedOfferDiscountedPrices,
-                              getName: (offer) =>
-                                  Localizations.localeOf(context)
-                                              .languageCode ==
-                                          'ar'
-                                      ? offer.titleAr
-                                      : offer.titleEn,
-                              getId: (offer) => offer.id.toString(),
-                              getPrice: (offer) =>
-                                  offer.discountedPrice?.toString(),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 15),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border:
-                                  Border.all(color: AppTheme.gray, width: 1.5),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.local_offer,
-                                  color: Colors.grey.shade700,
-                                  size: 24.0,
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    selectedOfferNames.isEmpty
-                                        ? localizations.choose_offer
-                                        : selectedOfferNames.join(', '),
-                                    style: TextStyle(
-                                      color: selectedOfferNames.isEmpty
-                                          ? Colors.grey
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                      return Text(localizations.failed_offers);
-                    },
-                  ),
-                  const SizedBox(height: spacing),
-                  BlocBuilder<PackagesCubit, PackagesState>(
-                    builder: (context, state) {
-                      if (state is PackagesLoaded) {
-                        return GestureDetector(
-                          onTap: () {
-                            showSelectionBottomSheet(
-                              context: context,
-                              title: localizations.choose_package,
-                              items: state.packages,
-                              selectedIds: selectedPackageIds,
-                              selectedNames: selectedPackageNames,
-                              selectedPrices: selectedPackageDiscountedPrices,
-                              getName: (package) =>
-                                  Localizations.localeOf(context)
-                                              .languageCode ==
-                                          'ar'
-                                      ? package.nameAr
-                                      : package.nameEn,
-                              getId: (package) => package.id.toString(),
-                              getPrice: (package) =>
-                                  package.discountedPrice?.toString(),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 15),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border:
-                                  Border.all(color: AppTheme.gray, width: 1.5),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.card_giftcard,
-                                  color: Colors.grey.shade700,
-                                  size: 24.0,
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    selectedPackageNames.isEmpty
-                                        ? localizations.choose_package
-                                        : selectedPackageNames.join(', '),
-                                    style: TextStyle(
-                                      color: selectedPackageNames.isEmpty
-                                          ? Colors.grey
-                                          : Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }
-                      return Text(localizations.failed_packages);
-                    },
-                  ),
-                  const SizedBox(height: spacing),
-                  CustomTimePicker(
-                    onTimeSelected: (time) {
-                      setState(() {
-                        selectedTime = time;
-                      });
-                    },
-                    hintText: localizations.enter_time,
-                  ),
-                  const SizedBox(height: spacing),
-                  EmailField(
-                    taskController: noteController,
-                    icon: Icons.note,
-                    maxLines: 5,
-                    hint: localizations.add_note,
-                  ),
-                  const SizedBox(height: spacing),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[50],
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          localizations.total_amount,
-                          style: const TextStyle(
+                          } else if (state is SpecialistsError) {
+                            return Text(state.message);
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+                      const SizedBox(height: spacing),
+                      Center(
+                        child: Text(
+                          localizations.choose_service_or_more,
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                            color: isDark ? Colors.white : Colors.black,
                           ),
                         ),
-                        Text(
-                          '${calculateTotalAmount()} د.ك',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: spacing * 1.5),
-                  BlocListener<BookingCubitApi, BookingApiState>(
-                    listener: (context, state) {
-                      print(
-                          "📱 BookingCubitApi Listener triggered with state: ${state.runtimeType}");
-
-                      if (state is BookingSuccess) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(localizations.booking_success),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-
-                        if (state.paymentUrl != null &&
-                            state.paymentUrl!.isNotEmpty) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  BookingWebViewScreen(url: state.paymentUrl!),
-                            ),
-                          );
-                        }
-
-                        clearFields();
-                      } else if (state is BookingFailure) {
-                        print("❌ BookingCubitApi failed: ${state.message}");
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                "${localizations.error_occurred}: ${state.message}"),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      } else if (state is BookingLoading) {
-                        print("⏳ BookingCubitApi in progress...");
-                      }
-                    },
-                    child: BlocBuilder<BookingCubitApi, BookingApiState>(
-                      builder: (context, state) {
-                        bool isLoading = state is BookingLoading;
-
-                        return MyCustomButton(
-                          textColor: AppTheme.white,
-                          voidCallback: isLoading
-                              ? null
-                              : () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    if (selectedDate == null) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content:
-                                                Text(localizations.error_date)),
-                                      );
-                                      return;
-                                    }
-
-                                    if (selectedTime == null) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(localizations
-                                                .validate_time_empty)),
-                                      );
-                                      return;
-                                    }
-
-                                    if (selectedServiceIds.isEmpty &&
-                                        selectedPackageIds.isEmpty &&
-                                        selectedOfferIds.isEmpty) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(localizations
-                                                .error_service_package_team)),
-                                      );
-                                      return;
-                                    }
-
-                                    double totalAmount = calculateTotalAmount();
-
-                                    if (totalAmount <= 0) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(content: Text('')),
-                                      );
-                                      return;
-                                    }
-
-                                    print(
-                                        "📤 Validation passed, sending booking...");
-                                    print("💰 Total Amount: $totalAmount");
-                                    print(
-                                        "👥 Team ID: $selectedTeamId, Team Name: $selectedTeamName");
-
-                                    final List<int> serviceIds =
-                                        selectedServiceIds
-                                            .map((id) => int.parse(id))
-                                            .toList();
-                                    final List<int> packageIds =
-                                        selectedPackageIds
-                                            .map((id) => int.parse(id))
-                                            .toList();
-                                    final List<int> offerIds = selectedOfferIds
-                                        .map((id) => int.parse(id))
-                                        .toList();
-
-                                    await context
-                                        .read<BookingCubitApi>()
-                                        .createBooking(
-                                          teamId: selectedTeamId != null
-                                              ? int.parse(selectedTeamId!)
-                                              : null,
-                                          bookingDate: DateFormat('yyyy-MM-dd')
-                                              .format(selectedDate!),
-                                          bookingTime:
-                                              DateFormat('HH:mm').format(
-                                            DateTime(
-                                                0,
-                                                0,
-                                                0,
-                                                selectedTime!.hour,
-                                                selectedTime!.minute),
-                                          ),
-                                          name: nameController.text.trim(),
-                                          email: emailController.text.trim(),
-                                          phone: phoneController.text.trim(),
-                                          services: serviceIds.isNotEmpty
-                                              ? serviceIds
-                                              : null,
-                                          packages: packageIds.isNotEmpty
-                                              ? packageIds
-                                              : null,
-                                          offers: offerIds.isNotEmpty
-                                              ? offerIds
-                                              : null,
-                                        );
-                                  }
-                                },
-                          child: isLoading
-                              ? const SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : Text(
-                                  localizations.send,
-                                  style: const TextStyle(color: AppTheme.white),
+                      ),
+                      const SizedBox(height: 20),
+                      BlocBuilder<ServicesCubit, ServicesState>(
+                        builder: (context, state) {
+                          if (state is ServicesLoaded) {
+                            return BookingSelectionContainer(
+                              title: localizations.choose_service,
+                              icon: Icons.category,
+                              selectedNames: selectedServiceNames,
+                              onTap: () {
+                                showSelectionBottomSheet(
+                                  context: context,
+                                  title: localizations.choose_service,
+                                  items: state.services,
+                                  selectedIds: selectedServiceIds,
+                                  selectedNames: selectedServiceNames,
+                                  selectedPrices: selectedServicePrices,
+                                  getName: (service) =>
+                                      Localizations.localeOf(context)
+                                                  .languageCode ==
+                                              'ar'
+                                          ? service.nameAr
+                                          : service.nameEn,
+                                  getId: (service) => service.id.toString(),
+                                  getPrice: (service) =>
+                                      service.price?.toString(),
+                                );
+                              },
+                            );
+                          }
+                          return Text(localizations.failed_services);
+                        },
+                      ),
+                      const SizedBox(height: spacing),
+                      BlocBuilder<OffersCubit, OffersState>(
+                        builder: (context, state) {
+                          if (state is OffersLoaded &&
+                              state.offers.isNotEmpty) {
+                            return Column(
+                              children: [
+                                BookingSelectionContainer(
+                                  title: localizations.choose_offer,
+                                  icon: Icons.local_offer,
+                                  selectedNames: selectedOfferNames,
+                                  onTap: () {
+                                    showSelectionBottomSheet(
+                                      context: context,
+                                      title: localizations.choose_offer,
+                                      items: state.offers,
+                                      selectedIds: selectedOfferIds,
+                                      selectedNames: selectedOfferNames,
+                                      selectedPrices:
+                                          selectedOfferDiscountedPrices,
+                                      getName: (offer) =>
+                                          Localizations.localeOf(context)
+                                                      .languageCode ==
+                                                  'ar'
+                                              ? offer.titleAr
+                                              : offer.titleEn,
+                                      getId: (offer) => offer.id.toString(),
+                                      getPrice: (offer) =>
+                                          offer.discountedPrice?.toString(),
+                                    );
+                                  },
                                 ),
-                        );
-                      },
-                    ),
+                                const SizedBox(height: spacing),
+                              ],
+                            );
+                          }
+                          return const SizedBox();
+                        },
+                      ),
+                      BlocBuilder<PackagesCubit, PackagesState>(
+                        builder: (context, state) {
+                          if (state is PackagesLoaded) {
+                            return BookingSelectionContainer(
+                              title: localizations.choose_package,
+                              icon: Icons.card_giftcard,
+                              selectedNames: selectedPackageNames,
+                              onTap: () {
+                                showSelectionBottomSheet(
+                                  context: context,
+                                  title: localizations.choose_package,
+                                  items: state.packages,
+                                  selectedIds: selectedPackageIds,
+                                  selectedNames: selectedPackageNames,
+                                  selectedPrices:
+                                      selectedPackageDiscountedPrices,
+                                  getName: (package) =>
+                                      Localizations.localeOf(context)
+                                                  .languageCode ==
+                                              'ar'
+                                          ? package.nameAr
+                                          : package.nameEn,
+                                  getId: (package) => package.id.toString(),
+                                  getPrice: (package) =>
+                                      package.discountedPrice?.toString(),
+                                );
+                              },
+                            );
+                          }
+                          return Text(localizations.failed_packages);
+                        },
+                      ),
+                      const SizedBox(height: spacing),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: isDark ? const Color(0xFF222121) : Colors.grey[50],
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              localizations.total_amount,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: isDark ? Colors.white : Colors.black,
+                              ),
+                            ),
+                            Text(
+                              '${calculateTotalAmount()} د.ك',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: spacing * 1.5),
+                      MyCustomButton(
+                        textColor: AppTheme.white,
+                        backgroundColor: const Color(0xff262626),
+                        voidCallback: () {
+                          if (_formKey.currentState!.validate()) {
+                            if (selectedDate == null) {
+                              CherryToast.warning(
+                                title: Text(localizations.error_date,
+                                    style:
+                                        const TextStyle(color: Colors.black)),
+                              ).show(context);
+                              return;
+                            }
+
+                            if (selectedTime == null) {
+                              CherryToast.warning(
+                                title: Text(localizations.validate_time_empty,
+                                    style:
+                                        const TextStyle(color: Colors.black)),
+                              ).show(context);
+                              return;
+                            }
+
+                            if (selectedServiceIds.isEmpty &&
+                                selectedPackageIds.isEmpty &&
+                                selectedOfferIds.isEmpty) {
+                              CherryToast.warning(
+                                title: Text(
+                                    localizations.error_service_package_team,
+                                    style:
+                                        const TextStyle(color: Colors.black)),
+                              ).show(context);
+                              return;
+                            }
+
+                            double totalAmount = calculateTotalAmount();
+
+                            if (totalAmount <= 0) {
+                              CherryToast.warning(
+                                title: const Text('Total amount cannot be zero',
+                                    style: TextStyle(color: Colors.black)),
+                              ).show(context);
+                              return;
+                            }
+
+                            final List<int> serviceIds = selectedServiceIds
+                                .map((id) => int.parse(id))
+                                .toList();
+                            final List<int> packageIds = selectedPackageIds
+                                .map((id) => int.parse(id))
+                                .toList();
+                            final List<int> offerIds = selectedOfferIds
+                                .map((id) => int.parse(id))
+                                .toList();
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BookingSummaryScreen(
+                                  selectedDate: selectedDate!,
+                                  selectedTime: selectedTime!,
+                                  userName: nameController.text.trim(),
+                                  userPhone: phoneController.text.trim(),
+                                  userEmail: emailController.text.trim(),
+                                  serviceNames: selectedServiceNames,
+                                  serviceIds: serviceIds,
+                                  packageNames: selectedPackageNames,
+                                  packageIds: packageIds,
+                                  offerNames: selectedOfferNames,
+                                  offerIds: offerIds,
+                                  specialistName: selectedTeamName,
+                                  specialistId: selectedTeamId,
+                                  totalAmount: totalAmount,
+                                  bookingCubit: context.read<BookingCubitApi>(),
+                                ),
+                              ),
+                            ).then((success) {
+                              if (success == true) {
+                                clearFields();
+                              }
+                            });
+                          }
+                        },
+                        child: Text(
+                          localizations.confirm_booking,
+                          style: const TextStyle(
+                              color: AppTheme.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

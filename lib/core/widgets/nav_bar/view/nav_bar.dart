@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'dart:io' show Platform;
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:elkashkha/core/app_router.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
+
 import '../../../../features/home_screen/presentation/views/home_screen_view.dart';
 import '../../../../features/home_screen/presentation/views/widgts/services/services_screen.dart';
 import '../../../../features/product_categories/presentation/view/product_categories_view.dart';
@@ -52,12 +53,14 @@ class _NavBarViewState extends State<NavBarView> {
 
   Future<void> checkInternetConnection() async {
     var connectivityResult = await Connectivity().checkConnectivity();
+
     if (connectivityResult.contains(ConnectivityResult.none)) {
       showNoInternetDialog();
       return;
     }
 
     bool hasInternet = await _checkActualInternetConnection();
+
     if (!hasInternet) {
       showNoInternetDialog();
     }
@@ -70,6 +73,7 @@ class _NavBarViewState extends State<NavBarView> {
                 const Duration(seconds: 5),
                 onTimeout: () => http.Response('Timeout', 408),
               );
+
       return response.statusCode == 200;
     } catch (e) {
       return false;
@@ -98,9 +102,7 @@ class _NavBarViewState extends State<NavBarView> {
                     'assets/images/Animation - 1747816986527.gif',
                     height: 100,
                   ),
-                  const SizedBox(
-                    height: 40,
-                  ),
+                  const SizedBox(height: 40),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -117,14 +119,14 @@ class _NavBarViewState extends State<NavBarView> {
                       Text(
                         localization.no_internet_message,
                         style: const TextStyle(
-                            fontSize: 14, color: Colors.black87),
+                          fontSize: 14,
+                          color: Colors.black87,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 15,
-                  ),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -140,9 +142,7 @@ class _NavBarViewState extends State<NavBarView> {
                           context.go('/');
                         },
                       ),
-                      const SizedBox(
-                        width: 8,
-                      ),
+                      const SizedBox(width: 8),
                       MyCustomButton(
                         fontSize: 14,
                         width: screenSize.width * 0.3,
@@ -158,9 +158,7 @@ class _NavBarViewState extends State<NavBarView> {
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    width: 8,
-                  ),
+                  const SizedBox(width: 8),
                 ],
               ),
             ),
@@ -178,91 +176,117 @@ class _NavBarViewState extends State<NavBarView> {
         builder: (context, currentIndex) {
           return PopScope(
             canPop: false,
-            child: Scaffold(
-              body: SafeArea(
-                child: IndexedStack(
-                  index: currentIndex,
-                  children: const [
-                    HomeScreenView(),
-                    ProductCategoriesView(),
-                    ServicesScreen(),
-                    ProfileScreen(),
-                  ],
+            child: SafeArea(
+              child: Scaffold(
+                backgroundColor: Colors.white,
+                body: SafeArea(
+                  child: IndexedStack(
+                    index: currentIndex,
+                    children: const [
+                      HomeScreenView(),
+                      ProductCategoriesView(),
+                      ServicesScreen(),
+                      ProfileScreen(),
+                    ],
+                  ),
+                ),
+              
+                // Custom Bottom Navigation Bar
+                bottomNavigationBar: Container(
+                  color: const Color(0xff0B0B0F),
+                  child: SafeArea(
+                    bottom: true,
+                    top: false,
+                    left: false,
+                    right: false,
+                    child: SizedBox(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: List.generate(4, (index) {
+                          final isSelected = currentIndex == index;
+                  
+                          final icons = [
+                            Icons.home,
+                            Icons.storefront,
+                            Icons.content_cut,
+                            Icons.person,
+                          ];
+                  
+                          return GestureDetector(
+                            onTap: () {
+                              context.read<BottomNavCubit>().changeTab(index);
+                            },
+                            child: SizedBox(
+                              width: 70,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                clipBehavior: Clip.none,
+                                children: [
+                                  // Active Item
+                                  if (isSelected)
+                                    Positioned(
+                                      top: -28,
+                                      child: Transform.rotate(
+                                        angle: 0.785398,
+                                        child: Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            color: const Color(
+                                              0xff0B0B0F,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.white.withOpacity(
+                                                  0.5,
+                                                ),
+                                                blurRadius: 10,
+                                                spreadRadius: 1,
+                                                offset: const Offset(
+                                                  0,
+                                                  1,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Transform.rotate(
+                                            angle: -0.785398,
+                                            child: Center(
+                                              child: Icon(
+                                                icons[index],
+                                                size: 18,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                  
+                                  // Inactive Item
+                                  if (!isSelected)
+                                    Icon(
+                                      icons[index],
+                                      color: Colors.grey,
+                                      size: 28,
+                                    ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              floatingActionButton:
-                  _buildFloatingNavigationBar(context, currentIndex),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerFloat,
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget _buildFloatingNavigationBar(BuildContext context, int currentIndex) {
-    final List<IconData> icons = [
-      Icons.home_filled,
-      Icons.storefront,
-      Icons.content_cut,
-      Icons.person_2,
-    ];
-
-    return Container(
-      height: 60,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: AppTheme.primary,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(icons.length, (index) {
-          return _buildNavButton(
-            context: context,
-            icon: icons[index],
-            index: index,
-            isSelected: currentIndex == index,
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget _buildNavButton({
-    required BuildContext context,
-    required IconData icon,
-    required int index,
-    required bool isSelected,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        context.read<BottomNavCubit>().changeTab(index);
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color:
-              isSelected ? AppTheme.white.withOpacity(0.2) : Colors.transparent,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Icon(
-          icon,
-          color: isSelected
-              ? const Color(0xffD1D1D1)
-              : AppTheme.white.withOpacity(0.6),
-          size: isSelected ? 28 : 24,
-        ),
       ),
     );
   }

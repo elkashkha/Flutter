@@ -11,16 +11,12 @@ class RateList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: AppTheme.white,
-        title: CustomAppBar(
-          title: AppLocalizations.of(context)!.customer_reviews,
-
-        ),
+      backgroundColor: isDark ? const Color(0xff151414) : Colors.white,
+      appBar: CustomAppBar(
+        title: localization.customer_reviews,
       ),
       body: const ReviewsScreen(),
     );

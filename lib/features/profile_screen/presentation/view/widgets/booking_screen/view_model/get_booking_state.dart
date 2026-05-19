@@ -1,4 +1,5 @@
-part of 'get_booking_cubit.dart';
+import 'package:equatable/equatable.dart';
+import 'model.dart';
 
 abstract class GetBookingState extends Equatable {
   const GetBookingState();

@@ -1,4 +1,24 @@
 {
+  "new_item": "New",
+  "know_the_specialist": "Know the Specialist",
+  "hair_expert_title": "Haircut & styling expert - over {years} years",
+  "@hair_expert_title": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "professional_level": "Specialist",
+  "specialist_desc": "Professional specialist in modern and classic men's haircuts, distinguished by accuracy and understanding of each client's style to provide an exceptional experience.",
+  "years_of_experience": "years of experience in specialized salons ",
+  "read_more": "Read more.",
+  "work_gallery": "Work Gallery",
+  "no_work_gallery": "No work gallery available",
+  "before_image": "Before",
+  "after_image": "After",
+  "client_name": "Client",
+  "no_reviews_available": "No reviews available",
   "enterEmailToReceiveCode": "Enter your email to receive the verification code",
   "verificationCodeWillBeSent": "A verification code will be sent to your email. Enter the email associated with your account.",
   "enterYourEmail": "Enter your email",
@@ -41,6 +61,10 @@
   "passwordResetSuccess": "Password reset successfully",
   "homePage": "Home Page",
   "welcome_back": "Welcome Back!",
+  "login_title": "Sign In",
+  "login_subtitle": "Log in to access your bookings and enjoy our services with ease.",
+  "register_title": "Create Account",
+  "register_subtitle": "Register to access your bookings and enjoy our services with ease.",
   "enter_email": "Enter your email",
   "email_required": "Please enter your email",
   "invalid_email": "Enter a valid email",
@@ -288,6 +312,12 @@
   "error_select_one_option": "Please select at least a service, package, or team",
   "@error_select_one_option": {
     "description": "Error message when no service, package, or team is selected."
-  }
-
+  },
+  "booking_summary": "Booking Summary",
+  "your_booking_date": "Your Booking Date",
+  "service_or_offer": "Service / Offer",
+  "payment_method_cash": "Payment Method : Cash",
+  "complete_booking": "Complete Booking",
+  "choose_service_or_more": "Choose a service or more",
+  "confirm_booking": "Confirm Booking"
 }

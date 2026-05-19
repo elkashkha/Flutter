@@ -20,38 +20,54 @@ class StatisticsChart extends StatelessWidget {
           if (state is StatisticsLoading) {
             return const Center(child: CustomDotsTriangleLoader());
           } else if (state is StatisticsLoaded) {
+            // Find highest bookings month dynamically from the loaded backend data
+            ChartData? highestMonth;
+            if (state.chartData.isNotEmpty) {
+              highestMonth = state.chartData.reduce((a, b) => a.value > b.value ? a : b);
+            }
+
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  width: double.infinity,
-                  height: 48,
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  decoration: BoxDecoration(
-                    color: const Color(0xfff0f0f0),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    children: [
-                      Text(
-                        'عدد الحجوزات لهذا الشهر : ${state.currentMonthBookings} حجز',
-                        style: GoogleFonts.notoKufiArabic(
-                            color: AppTheme.primary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      const Spacer(),
-                      const Icon(
-                        Icons.list_alt,
-                        color: AppTheme.primary,
-                      ),
-                    ],
+                // Title
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(
+                    'عدد الحجوزات اخر 6 شهور',
+                    style: GoogleFonts.notoKufiArabic(
+                      color: const Color(0xff0B0B0F),
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
+                const SizedBox(height: 8),
+                // Chart
                 SizedBox(
-                  height: 250,
+                  height: 180,
                   child: WavyChart(data: state.chartData),
                 ),
+                const SizedBox(height: 12),
+                // Dynamically fetched highest month detail
+                if (highestMonth != null)
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xffF7F7F9),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      '${highestMonth.month} : ${highestMonth.value.toInt()} حجز',
+                      style: GoogleFonts.notoKufiArabic(
+                        color: const Color(0xff0B0B0F),
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
               ],
             );
           } else if (state is StatisticsError) {

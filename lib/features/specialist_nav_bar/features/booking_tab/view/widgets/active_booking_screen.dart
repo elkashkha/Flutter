@@ -22,7 +22,27 @@ class ActiveBookingScreen extends StatelessWidget {
             return const Center(child: CustomDotsTriangleLoader());
           } else if (state is ActiveBookingSuccess) {
             if (state.bookings.isEmpty) {
-              return const Center(child: Text("لا توجد حجوزات نشطة"));
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.calendar_today_outlined,
+                      size: 64,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      "لا توجد حجوزات نشطة",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }
 
             return ListView.builder(
@@ -51,70 +71,150 @@ class ActiveBookingScreen extends StatelessWidget {
         ? booking.services.map((s) => s.nameAr).join(", ")
         : "لا يوجد";
 
-    final packageNames = booking.packages.isNotEmpty
-        ? booking.packages.map((p) => p.nameAr).join(", ")
-        : null;
-
-    // جمع كل أسماء الـ Offers باستخدام Map بدل موديل
-    final offerNames = booking.offers.isNotEmpty
-        ? booking.offers.map((o) => o['title_ar'] ?? "لا يوجد").join(", ")
-        : null;
-
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("👤 العميل: ${booking.user.name}",
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 6),
-            Text("✂️ الخدمة: $serviceNames"),
-            if (packageNames != null) Text("📦 الباقة: $packageNames"),   
-            if (offerNames != null) Text("🎁 العرض: $offerNames"),
-            const SizedBox(height: 6),
-            Text("⏰ ${booking.bookingDate} - ${booking.bookingTime}"),
-            Text("💰 ${booking.totalPrice} KWT"),
-            const SizedBox(height: 12),
-            Row(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xffE2E2E6), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header Bar with calendar and date
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: const BoxDecoration(
+              color: Color(0xffF7F7F9),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Expanded(
-                  child: MyCustomButton(
-                    text: "تأكيد الحضور",
-                    backgroundColor: Colors.green,
-                    voidCallback: () {
-                      context
-                          .read<ActiveBookingCubit>()
-                          .acceptBooking(booking.id);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("تم قبول الحجز ✅")),
-                      );
-                    },
+                Text(
+                  "اليوم ${booking.bookingDate}",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: MyCustomButton(
-                    text: "رفض",
-                    backgroundColor: Colors.red,
-                    voidCallback: () {
-                      context
-                          .read<ActiveBookingCubit>()
-                          .rejectBooking(booking.id);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("تم رفض الحجز ❌")),
-                      );
-                    },
-                  ),
+                const SizedBox(width: 6),
+                const Icon(
+                  Icons.calendar_today_outlined,
+                  size: 16,
+                  color: Colors.grey,
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          // Card Body
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end, // RTL align
+              children: [
+                // Client Name
+                Text(
+                  "اسم العميل : ${booking.user.name}",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Service Type
+                Text(
+                  "نوع الخدمة : $serviceNames",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Price
+                Text(
+                  "المبلغ المستحق : ${booking.totalPrice ?? 0} دينار",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Action Buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 38,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            context
+                                .read<ActiveBookingCubit>()
+                                .rejectBooking(booking.id);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("تم إلغاء الحجز ❌")),
+                            );
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xffD92D20)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            backgroundColor: Colors.white,
+                          ),
+                          child: const Text(
+                            "إلغاء الحجز",
+                            style: TextStyle(
+                              color: Color(0xffD92D20),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: SizedBox(
+                        height: 38,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            context
+                                .read<ActiveBookingCubit>()
+                                .acceptBooking(booking.id);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("تم قبول الحجز ✅")),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            backgroundColor: Colors.black,
+                          ),
+                          child: const Text(
+                            "تأكيد الحضور",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

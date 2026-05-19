@@ -11,19 +11,12 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  SafeArea(
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return SafeArea(
       child: Padding(
         padding: const EdgeInsets.only(top: 15.0),
         child: Scaffold(
-
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            title:  Text(AppLocalizations.of(context)!.register),
-            titleTextStyle: const TextStyle(color: AppTheme.white, fontSize: 20),
-            centerTitle: true,
-          ),
-
-          backgroundColor: AppTheme.primary,
+          backgroundColor: isDark ? const Color(0xFF121212) : AppTheme.white,
           body: const RegisterScreenBody(),
         ),
       ),

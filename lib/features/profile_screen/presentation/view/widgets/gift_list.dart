@@ -3,6 +3,7 @@ import 'package:elkashkha/core/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:cherry_toast/cherry_toast.dart';
 
 import '../../view_model/gift/gift_cubit.dart';
 import '../../view_model/gift/gift_service.dart';
@@ -29,6 +30,7 @@ class GiftsListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return BlocProvider(
       create: (_) => PlatinumGiftCubit(GiftService(Dio()))..fetchGift(),
       child: BlocBuilder<PlatinumGiftCubit, PlatinumGiftState>(
@@ -41,7 +43,12 @@ class GiftsListScreen extends StatelessWidget {
             final giftData = state.gift;
 
             if (giftData.gift == null || giftData.gift!.giftable == null) {
-              return const Center(child: Text('لقد حصلت على هديتك بالفعل أو لا توجد بيانات متاحة'));
+              return Center(
+                child: Text(
+                  'لقد حصلت على هديتك بالفعل أو لا توجد بيانات متاحة',
+                  style: TextStyle(color: isDark ? Colors.white70 : Colors.black54),
+                ),
+              );
             }
 
             return GiftListItem(
@@ -51,14 +58,24 @@ class GiftsListScreen extends StatelessWidget {
               canClaim: giftData.canClaim,
               onClaimPressed: () async {
                 try {
+                  CherryToast.success(
+                    title: const Text(
+                      'جاري تحويلك للمطالبة بالهدية عبر واتساب...',
+                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                    ),
+                  ).show(context);
+                  
                   await _openWhatsApp(
                     giftData.gift!.giftable!.nameAr,
                     giftData.gift!.giftable!.descriptionAr,
                   );
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('فشل فتح WhatsApp: $e')),
-                  );
+                  CherryToast.error(
+                    title: Text(
+                      'فشل فتح WhatsApp: $e',
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ).show(context);
                 }
               },
             );

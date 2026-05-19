@@ -19,7 +19,7 @@ class SpecialistsCubit extends Cubit<SpecialistsState> {
 
     try {
       final response =
-          await _dio.get('https://apiv2.alkashkhaa.com/public/api/specialists');
+            await _dio.get('https://apiv2.alkashkhaa.com/public/api/specialists');
 
       final specialistsResponse = SpecialistsResponse.fromJson(response.data);
       final specialists = specialistsResponse.data;

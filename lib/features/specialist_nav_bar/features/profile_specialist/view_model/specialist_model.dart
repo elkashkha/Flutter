@@ -148,7 +148,7 @@ class Portfolio {
 
   factory Portfolio.fromJson(Map<String, dynamic> json) {
     return Portfolio(
-      id: json['id'],
+      id: json['id'] ?? 0,
       nameAr: json['name_ar'] ?? '',
       nameEn: json['name_en'] ?? '',
       descriptionAr: json['description_ar'] ?? '',
@@ -157,7 +157,9 @@ class Portfolio {
       afterImage: json['after_image'],
       productsSold: json['products_sold'] ?? 0,
       extraServicesUsed: json['extra_services_used'] ?? 0,
-      service: Service.fromJson(json['service']),
+      service: json['service'] != null
+          ? Service.fromJson(json['service'])
+          : Service(id: 0, nameAr: '', nameEn: ''), // ✅ fallback safe
     );
   }
 

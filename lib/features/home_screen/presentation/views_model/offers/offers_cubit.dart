@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import 'offers_model.dart';
@@ -25,7 +24,7 @@ class OffersCubit extends Cubit<OffersState> {
       }
 
       final List<Offer> offers = parseOffer(response.data['data'])
-          .where((offer) => offer.status == "active")
+          .where((offer) => offer.status.toLowerCase() == "active")
           .toList();
 
       if (offers.isNotEmpty) {

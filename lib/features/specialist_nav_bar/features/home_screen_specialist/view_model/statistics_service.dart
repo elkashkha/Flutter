@@ -5,7 +5,7 @@ import 'statistics_model.dart';
 class StatisticsService {
   final Dio dio = Dio(
     BaseOptions(
-      baseUrl: "https://apiv2.alkashkhaa.com/public/api/",
+        baseUrl: "https://apiv2.alkashkhaa.com/public/api/",
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
     ),

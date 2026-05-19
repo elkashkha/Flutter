@@ -28,6 +28,7 @@ class _EmailFieldState extends State<EmailField> {
   @override
   Widget build(BuildContext context) {
     final bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,9 +37,9 @@ class _EmailFieldState extends State<EmailField> {
           alignment: isArabic ? Alignment.centerRight : Alignment.centerLeft,
           child: Text(
             widget.hint,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: AppTheme.primary,
+              color: isDark ? const Color(0xFFC0A476) : AppTheme.primary,
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -50,32 +51,32 @@ class _EmailFieldState extends State<EmailField> {
           controller: widget.taskController,
           maxLines: widget.maxLines,
           validator: widget.validate,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
-            color: Colors.black,
+            color: isDark ? Colors.white : const Color(0xff464545),
             fontWeight: FontWeight.w500,
           ),
           decoration: InputDecoration(
-            prefixIcon: Icon(widget.icon, color: Colors.grey),
+            prefixIcon: Icon(widget.icon, color: isDark ? Colors.white60 : const Color(0xff464545)),
             hintText: widget.hint,
-            hintStyle: const TextStyle(
-              color: Colors.grey,
+            hintStyle: TextStyle(
+              color: isDark ? Colors.white54 : const Color(0xff464545),
               fontSize: 14,
               fontWeight: FontWeight.w400,
             ),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: isDark ? const Color(0xFF2C2C2C) : const Color(0xffF2F2F2),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.gray, width: 1.5),
+              borderRadius: BorderRadius.circular(40),
+              borderSide: BorderSide(color: isDark ? const Color(0xFF2C2C2C) : const Color(0xffF2F2F2), width: 1.5),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.gray, width: 1.5),
+              borderRadius: BorderRadius.circular(40),
+              borderSide: BorderSide(color: isDark ? const Color(0xFF2C2C2C) : const Color(0xffF2F2F2), width: 1.5),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: AppTheme.gray, width: 1.5),
+              borderRadius: BorderRadius.circular(40),
+              borderSide: BorderSide(color: isDark ? const Color(0xFF2C2C2C) : const Color(0xffF2F2F2), width: 1.5),
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           ),

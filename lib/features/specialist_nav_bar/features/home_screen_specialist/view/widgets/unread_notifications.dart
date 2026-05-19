@@ -3,6 +3,7 @@ import 'package:elkashkha/core/flutter_local_notifications/view_model/unread_not
 import 'package:elkashkha/core/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class UnreadNotificationWidget extends StatelessWidget {
@@ -21,34 +22,53 @@ class UnreadNotificationWidget extends StatelessWidget {
               return const SizedBox(); // لو مفيش إشعارات مش هنظهر حاجة
             }
             return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: 344,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: const Color(0xfffaf6f1),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
                     children: [
-                      const Icon(
-                        Icons.notifications_active_outlined,
-                        color: Color(0xffC9A36C),
+                      // Decorative background circular elements for a high-end feel
+                      Positioned(
+                        top: 10,
+                        left: 10,
+                        child: Icon(Icons.star, size: 6, color: Colors.grey[400]),
                       ),
-                      const SizedBox(width: 10),
-                      Text(
-                        'لديك ${state.count} إشعار جديد اليوم',
-                        style: GoogleFonts.notoKufiArabic(
-                          color: const Color(0xffC9A36C),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      Positioned(
+                        bottom: 12,
+                        right: 14,
+                        child: Icon(Icons.star, size: 8, color: Colors.grey[400]),
+                      ),
+                      SvgPicture.asset(
+                        'assets/images/Notificationillustration.svg',
+                        width: 42,
+                        height: 42,
                       ),
                     ],
                   ),
-                ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'لديك حجز جديد اليوم',
+                        style: GoogleFonts.notoKufiArabic(
+                          color: const Color(0xff0B0B0F),
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      SvgPicture.asset(
+                        'assets/images/arrow_icon.svg',
+                        width: 16,
+                        height: 16,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             );
           } else if (state is UnreadNotificationsError) {

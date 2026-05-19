@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class CustomDatePicker extends StatefulWidget {
   final Function(DateTime?)? onDateSelected;
@@ -13,76 +13,116 @@ class CustomDatePicker extends StatefulWidget {
 }
 
 class _CustomDatePickerState extends State<CustomDatePicker> {
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+  DateTime _selectedDay = DateTime.now();
+  late List<DateTime> _daysInMonth;
+
+  @override
+  void initState() {
+    super.initState();
+    _generateDaysInMonth(_selectedDay);
+  }
+
+  void _generateDaysInMonth(DateTime month) {
+    int daysInMonth = DateUtils.getDaysInMonth(month.year, month.month);
+    _daysInMonth = List.generate(
+      daysInMonth,
+      (index) => DateTime(month.year, month.month, index + 1),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context).languageCode;
+    final DateFormat monthFormat = DateFormat('MMMM', locale);
+    final DateFormat dayNameFormat = DateFormat('EEEE', locale);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          localization.select_date,
-          style: GoogleFonts.tajawal(
-            textStyle: TextStyle(
-              fontSize: MediaQuery.of(context).size.width * 0.040,
-              color: Colors.white,
-              height: 1.5,
-              fontWeight: FontWeight.w500,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              localization.select_date, // Or custom text "اختر اليوم"
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black,
+              ),
             ),
-          ),
-          textAlign: TextAlign.right,
+            Row(
+              children: [
+                Icon(Icons.arrow_drop_down, color: isDark ? Colors.white70 : Colors.grey),
+                Text(
+                  monthFormat.format(_selectedDay),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: isDark ? Colors.white70 : Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-        const SizedBox(height: 10),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          padding: const EdgeInsets.all(16),
-          child: TableCalendar(
-            firstDay: DateTime.utc(2020, 1, 1),
-            lastDay: DateTime.utc(2050, 12, 31),
-            focusedDay: _focusedDay,
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            calendarStyle: CalendarStyle(
-              todayDecoration: BoxDecoration(
-                color: Colors.grey.shade700,
-                shape: BoxShape.circle,
-              ),
-              selectedDecoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-              selectedTextStyle: const TextStyle(color: Colors.black),
-              weekendTextStyle: const TextStyle(color: Colors.grey),
-              defaultTextStyle: const TextStyle(color: Colors.white),
-            ),
-            headerStyle: HeaderStyle(
-              titleTextStyle: GoogleFonts.tajawal(
-                textStyle: const TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              formatButtonVisible: false,
-              titleCentered: true,
-              leftChevronIcon: const Icon(Icons.chevron_left, color: Colors.white),
-              rightChevronIcon: const Icon(Icons.chevron_right, color: Colors.white),
-            ),
-            daysOfWeekStyle: const DaysOfWeekStyle(
-              weekendStyle: TextStyle(color: Colors.grey),
-              weekdayStyle: TextStyle(color: Colors.white),
-            ),
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-              });
-              if (widget.onDateSelected != null) {
-                widget.onDateSelected!(selectedDay);
-              }
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 100,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            reverse: locale == 'ar', // Scroll from right to left in Arabic
+            itemCount: _daysInMonth.length,
+            itemBuilder: (context, index) {
+              final day = _daysInMonth[index];
+              final isSelected = DateUtils.isSameDay(day, _selectedDay);
+
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _selectedDay = day;
+                  });
+                  if (widget.onDateSelected != null) {
+                    widget.onDateSelected!(day);
+                  }
+                },
+                child: Container(
+                  width: 70,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: isSelected
+                      ? BoxDecoration(
+                          border: Border.all(color: isDark ? Colors.white : Colors.black, width: 1.5),
+                          borderRadius: BorderRadius.circular(35),
+                        )
+                      : null,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        dayNameFormat.format(day),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          color: isSelected 
+                              ? (isDark ? Colors.white : Colors.black) 
+                              : (isDark ? Colors.white38 : Colors.grey),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '${day.day}',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          color: isSelected 
+                              ? (isDark ? Colors.white : Colors.black) 
+                              : (isDark ? Colors.white38 : Colors.grey),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             },
           ),
         ),

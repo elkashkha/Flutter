@@ -35,6 +35,7 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
     final screenHeight = mediaQuery.size.height;
     final screenWidth = MediaQuery.of(context).size.width>600?MediaQuery.of(context).size.width*.75:MediaQuery.of(context).size.width;
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BlocConsumer<RegisterCubit, RegisterState>(
       listener: (context, state) {
@@ -54,10 +55,10 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
             children: [
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF121212) : Colors.white,
                     borderRadius:
-                        BorderRadius.only(topRight: Radius.circular(80)),
+                        const BorderRadius.only(topRight: Radius.circular(80)),
                   ),
                   child: SingleChildScrollView(
                     child: Padding(
@@ -66,19 +67,53 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(30.0),
-                            child: Text(
-                              localization.welcome_message,
-                              style: GoogleFonts.tajawal(
-                                textStyle: TextStyle(
-                                  fontSize: screenWidth * 0.042,
-                                  color: AppTheme.primary,
-                                  height: 1.5,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/shiny-scissors-VUXIdfPWUO.png',
+                                // width: screenWidth * 0.14,
+                                // height: 80,
+                                // fit: BoxFit.contain,
                               ),
-                              textAlign: TextAlign.right,
+                              Image.asset(
+                                'assets/images/55b1adc337b9fd5c644cf814642fffae37ec9020.png',
+                                width: screenWidth * 0.35,
+                                height: 120,
+                                fit: BoxFit.contain,
+                              ),
+                            ],
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  localization.register_title,
+                                  style: GoogleFonts.tajawal(
+                                    textStyle: TextStyle(
+                                      fontSize: screenWidth * 0.055,
+                                      color: isDark ? const Color(0xFFC0A476) : AppTheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  textAlign: TextAlign.right,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  localization.register_subtitle,
+                                  style: GoogleFonts.tajawal(
+                                    textStyle: TextStyle(
+                                      fontSize: screenWidth * 0.036,
+                                      color: isDark ? Colors.white60 : Colors.black,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                  textAlign: TextAlign.right,
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(height: screenHeight * 0.02),
@@ -170,22 +205,25 @@ class _RegisterScreenBodyState extends State<RegisterScreenBody> {
                                 style: GoogleFonts.manjari(
                                   textStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
-                                    color: Colors.black,
+                                    color: isDark ? Colors.white70 : Colors.black,
                                     fontSize: screenWidth * 0.04,
                                   ),
                                 ),
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  context.push('/LoginScreenView');
-                                },
-                                child: Text(
-                                  localization.login,
-                                  style: GoogleFonts.manjari(
-                                    textStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: AppTheme.primary,
-                                      fontSize: screenWidth * 0.05,
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextButton(
+                                  onPressed: () {
+                                    context.push('/LoginScreenView');
+                                  },
+                                  child: Text(
+                                    localization.login,
+                                    style: GoogleFonts.manjari(
+                                      textStyle: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: isDark ? const Color(0xFFC0A476) : AppTheme.primary,
+                                        fontSize: screenWidth * 0.05,
+                                      ),
                                     ),
                                   ),
                                 ),

@@ -31,7 +31,27 @@ class CompletedBookingScreen extends StatelessWidget {
               return Center(child: Text(state.message));
             } else if (state is CompletedBookingSuccess) {
               if (state.bookings.isEmpty) {
-                return const Center(child: Text("لا توجد حجوزات مكتملة"));
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.calendar_today_outlined,
+                        size: 64,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        "لا توجد حجوزات مكتملة",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               }
               return ListView.builder(
                 padding: const EdgeInsets.all(12),
@@ -58,59 +78,161 @@ class CompletedBookingScreen extends StatelessWidget {
         ? booking.packages.map((p) => p.nameAr).join(" ، ")
         : "";
 
-    String offersText =
-        booking.offers.isNotEmpty ? booking.offers.join(" ، ") : "";
+    final offerNames = booking.offers.isNotEmpty
+        ? booking.offers.map((o) => o['title_ar'] ?? "لا يوجد").join(", ")
+        : null;
 
     final bool canAddNotes = !booking.addedToPortfolio;
 
-    return GestureDetector(
-      onTap: canAddNotes
-          ? () {
-              _showPortfolioDialog(context, booking.id);
-            }
-          : null, // إذا كان true، لا يستجيب للضغط
-      child: Card(
-        elevation: 4,
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                booking.user.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+    // Format all services, packages, and offers dynamically
+    List<String> details = [];
+    if (servicesText.isNotEmpty && servicesText != "لا توجد خدمات") {
+      details.add(servicesText);
+    }
+    if (packagesText.isNotEmpty) {
+      details.add(packagesText);
+    }
+    if (offerNames != null) {
+      details.add(offerNames);
+    }
+    final fullServicesText = details.isNotEmpty ? details.join(" ، ") : "لا يوجد";
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xffE2E2E6), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header Bar with calendar and date
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: const BoxDecoration(
+              color: Color(0xffF7F7F9),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  "اليوم ${booking.bookingDate}",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 6),
-              Text("💰 السعر: ${booking.totalPrice} KWT"),
-              Text("📅 التاريخ: ${booking.bookingDate}"),
-              const SizedBox(height: 6),
-              Text("🛠️ الخدمة: $servicesText"),
-              if (packagesText.isNotEmpty) Text("📦 الباقه: $packagesText"),
-              if (offersText.isNotEmpty) Text("🎁 عرض: $offersText"),
-              const SizedBox(height: 6),
-              MyCustomButton(
-                text: "اضافه الملاحظات",
-                voidCallback: canAddNotes
-                    ? () {
-                        _showPortfolioDialog(context, booking.id);
-                      }
-                    : () {}, // إذا كان true، الـ callback فارغ (لا يفعل شيئًا)
-                isLoading: false,
-                backgroundColor: canAddNotes
-                    ? Colors.black
-                    : Colors.grey, // تغيير اللون للدلالة على الـ disabled
-                textColor: Colors.white,
-              ),
-            ],
+                const SizedBox(width: 6),
+                const Icon(
+                  Icons.calendar_today_outlined,
+                  size: 16,
+                  color: Colors.grey,
+                ),
+              ],
+            ),
           ),
-        ),
+          // Card Body
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end, // RTL align
+              children: [
+                // Client Name
+                Text(
+                  "اسم العميل : ${booking.user.name}",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Service Type
+                Text(
+                  "نوع الخدمة : $fullServicesText",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Price
+                Text(
+                  "المبلغ المستحق : ${booking.totalPrice ?? 0} دينار",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Action Buttons
+                Row(
+                  children: [
+                    // Left Button: Upload Photos / Add Notes
+                    Expanded(
+                      child: SizedBox(
+                        height: 38,
+                        child: OutlinedButton(
+                          onPressed: canAddNotes
+                              ? () {
+                                  _showPortfolioDialog(context, booking.id);
+                                }
+                              : null,
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: canAddNotes ? Colors.black : const Color(0xffE2E2E6),
+                              width: 1,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            backgroundColor: Colors.white,
+                          ),
+                          child: Text(
+                            canAddNotes ? "اضافه الملاحظات" : "تم الاضافه",
+                            style: TextStyle(
+                              color: canAddNotes ? Colors.black : Colors.grey,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Right Button: Attended Status (Static/Non-clickable)
+                    Expanded(
+                      child: SizedBox(
+                        height: 38,
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: const Color(0xffE2E2E6),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Text(
+                            "تم الحضور",
+                            style: TextStyle(
+                              color: Color(0xff8E8E93),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

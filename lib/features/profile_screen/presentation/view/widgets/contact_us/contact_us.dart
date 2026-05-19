@@ -361,12 +361,13 @@ class _ContactUsState extends State<ContactUs> {
         ? mediaQuery.size.width * .75
         : mediaQuery.size.width;
     final screenHeight = mediaQuery.size.height;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: const Color(0xffFCFCFC),
+      backgroundColor: isDark ? const Color(0xff151414) : const Color(0xffFCFCFC),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: AppTheme.white,
+        backgroundColor: isDark ? const Color(0xff151414) : AppTheme.white,
         title: const CustomAppBar(
           title: 'اتصل بنا',
         ),
@@ -383,6 +384,7 @@ class _ContactUsState extends State<ContactUs> {
               style: TextStyle(
                 fontSize: screenWidth * 0.04,
                 fontWeight: FontWeight.w500,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             const SizedBox(height: 20),
@@ -398,7 +400,7 @@ class _ContactUsState extends State<ContactUs> {
             ElevatedButton(
               onPressed: () => _openMap(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xffD1D1D1),
+                backgroundColor: isDark ? const Color(0xFF2C2B2B) : const Color(0xffD1D1D1),
                 padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -407,8 +409,9 @@ class _ContactUsState extends State<ContactUs> {
               child: Text(
                 'افتح الموقع على الخريطة',
                 style: TextStyle(
-                    fontSize: screenWidth * 0.04,
-                    color: const Color(0xff343333)),
+                  fontSize: screenWidth * 0.04,
+                  color: isDark ? Colors.white70 : const Color(0xff343333),
+                ),
               ),
             ),
 
@@ -431,20 +434,38 @@ class _ContactUsState extends State<ContactUs> {
               style: TextStyle(
                 fontSize: screenWidth * 0.04,
                 fontWeight: FontWeight.w500,
+                color: isDark ? Colors.white70 : Colors.black87,
               ),
             ),
-            const Text('من الأحد إلى الأربعاء ( من الساعة 10 صباحاً حتي الساعه 10:30 مساءً)'),
-            const Text(' من  الخميس الي السبت (10من الساعة صباحاً حتي الساعه 11:30 مساءً)'),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
+            Text(
+              'من الأحد إلى الأربعاء ( من الساعة 10 صباحاً حتي الساعه 10:30 مساءً)',
+              style: TextStyle(color: isDark ? Colors.white60 : Colors.black87),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              ' من  الخميس الي السبت (10من الساعة صباحاً حتي الساعه 11:30 مساءً)',
+              style: TextStyle(color: isDark ? Colors.white60 : Colors.black87),
+            ),
+            const SizedBox(height: 16),
             Text(
               'ساعات العمل رمضان :',
               style: TextStyle(
                 fontSize: screenWidth * 0.04,
                 fontWeight: FontWeight.w500,
+                color: isDark ? Colors.white70 : Colors.black87,
               ),
             ),
-            const Text('من 1 ظهراً حتي الساعة 4 عصراً'),
-            const Text('ومن 8 مساءً حتي الساعة 2 فجراً'),
+            const SizedBox(height: 8),
+            Text(
+              'من 1 ظهراً حتي الساعة 4 عصراً',
+              style: TextStyle(color: isDark ? Colors.white60 : Colors.black87),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'ومن 8 مساءً حتي الساعة 2 فجراً',
+              style: TextStyle(color: isDark ? Colors.white60 : Colors.black87),
+            ),
             const SizedBox(height: 20),
 
 
@@ -486,7 +507,7 @@ class _ContactUsState extends State<ContactUs> {
             ElevatedButton(
               onPressed: () => _submitFormLocally(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey[700],
+                backgroundColor: isDark ? const Color(0xff262626) : Colors.grey[700],
                 padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -500,25 +521,6 @@ class _ContactUsState extends State<ContactUs> {
             ),
 
             const SizedBox(height: 10),
-
-            // زر واتساب (اختياري)
-            // ElevatedButton(
-            //   onPressed: () => _sendMessageOnWhatsapp(context),
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: AppTheme.primary,
-            //     padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(8),
-            //     ),
-            //   ),
-            //   child: Text(
-            //     'إرسال عبر واتساب (اختياري)',
-            //     style: TextStyle(
-            //         fontSize: screenWidth * 0.04, color: AppTheme.white),
-            //   ),
-            // ),
-
-            // const SizedBox(height: 20),
           ],
         ),
       ),
@@ -537,6 +539,8 @@ class ContactInfoRow extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width > 600
         ? MediaQuery.of(context).size.width * .75
         : MediaQuery.of(context).size.width;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -549,6 +553,7 @@ class ContactInfoRow extends StatelessWidget {
               style: TextStyle(
                 fontSize: screenWidth * 0.04,
                 fontWeight: FontWeight.w500,
+                color: isDark ? Colors.white70 : Colors.black87,
               ),
             ),
           ),

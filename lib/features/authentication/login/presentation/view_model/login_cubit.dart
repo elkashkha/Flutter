@@ -33,8 +33,11 @@ class LoginCubit extends Cubit<LoginState> {
         String token = response.data['access_token'];
         int userId = response.data['user']['id'];
         String type = response.data['type'];
+        String name = response.data['user']['name'] ?? '';
+        String email = response.data['user']['email'] ?? '';
+        String phone = response.data['user']['phone'] ?? '';
 
-        await _saveAuthData(token, userId, type);
+        await _saveAuthData(token, userId, type, name, email, phone);
         emit(LoginSuccess(token, userId, type));
 
         await sendFcmTokenToServer();
@@ -130,11 +133,14 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  Future<void> _saveAuthData(String token, int userId, String type) async {
+  Future<void> _saveAuthData(String token, int userId, String type, String name, String email, String phone) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('access_token', token);
     await prefs.setInt('user_id', userId);
     await prefs.setString('user_type', type);
+    await prefs.setString('user_name', name);
+    await prefs.setString('user_email', email);
+    await prefs.setString('user_phone', phone);
   }
 
   Future<String?> getToken() async {
@@ -152,6 +158,9 @@ class LoginCubit extends Cubit<LoginState> {
     await prefs.remove('access_token');
     await prefs.remove('user_id');
     await prefs.remove('user_type');
+    await prefs.remove('user_name');
+    await prefs.remove('user_email');
+    await prefs.remove('user_phone');
   }
 
   Future<String?> getType() async {

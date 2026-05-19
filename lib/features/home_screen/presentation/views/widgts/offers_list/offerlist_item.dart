@@ -1,178 +1,214 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../views_model/offers/offers_model.dart';
-import '../../../../../../core/widgets/loading.dart'; // Contains CustomDotsTriangleLoader
+import '../../../../../../core/widgets/loading.dart';
+
+/// Clips a circular notch out of the top-left corner of the image,
+/// with smooth concave flares connecting to the edges (squircle style).
+class _TopLeftNotchClipper extends CustomClipper<Path> {
+  final double s; // center offset (x and y)
+  final double r; // radius of the notch arc
+  final double f; // flare size
+  final double cr; // corner radius of the card
+
+  const _TopLeftNotchClipper({
+    this.s = 30,
+    this.r = 30,
+    this.f = 24,
+    this.cr = 20,
+  });
+
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+
+    // Start at top edge, right after the cutout flare
+    path.moveTo(s + r + f, 0);
+
+    // Top edge -> top-right rounded corner
+    path.lineTo(size.width - cr, 0);
+    path.quadraticBezierTo(size.width, 0, size.width, cr);
+
+    // Right edge -> bottom-right rounded corner
+    path.lineTo(size.width, size.height - cr);
+    path.quadraticBezierTo(size.width, size.height, size.width - cr, size.height);
+
+    // Bottom edge -> bottom-left rounded corner
+    path.lineTo(cr, size.height);
+    path.quadraticBezierTo(0, size.height, 0, size.height - cr);
+
+    // Left edge -> up to the start of the cutout flare
+    path.lineTo(0, s + r + f);
+
+    // Bottom flare (concave, connects left edge to notch)
+    path.quadraticBezierTo(0, s + r, s, s + r);
+
+    // The notch arc (curves inward towards the center s, s)
+    path.arcToPoint(
+      Offset(s + r, s),
+      radius: Radius.circular(r),
+      clockwise: false,
+    );
+
+    // Top flare (concave, connects notch to top edge)
+    path.quadraticBezierTo(s + r, 0, s + r + f, 0);
+
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
 
 class OfferlistItem extends StatelessWidget {
   const OfferlistItem({super.key, required this.offer});
 
   final Offer offer;
 
-  String _shortenText(String fullText, int wordLimit) {
-    List<String> words = fullText.split(' ');
-    if (words.length > wordLimit) {
-      return "${words.sublist(0, wordLimit).join(' ')} ...";
-    }
-    return fullText;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width>600?MediaQuery.of(context).size.width*.8:MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final name = isArabic ? offer.titleAr : offer.titleEn;
+    final description = isArabic
+        ? (offer.descriptionAr)
+        : (offer.descriptionEn);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: () {
-        context.push(
-          '/OffersDetails',
-          extra: {'offer': offer},
-        );
+        context.push('/OffersDetails', extra: {'offer': offer});
       },
-      child: SizedBox(
-        width: screenWidth * 0.4,
-        height: screenHeight * 0.35,
+      child: Container(
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.08),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image Section
+            // ── Image with top-left notch ──
             Stack(
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
+                ClipPath(
+                  clipper: const _TopLeftNotchClipper(
+                    s: 30,
+                    r: 30,
+                    f: 24,
+                    cr: 20,
+                  ),
                   child: Container(
-                    width: screenWidth * 0.4,
-                    height: screenHeight * 0.20,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.4),
-                          Colors.black.withOpacity(0.4),
-                        ],
-                      ),
-                    ),
-                    child: CachedNetworkImage(
-                      imageUrl: offer.imageUrl.isNotEmpty
-                          ? offer.imageUrl
-                          : 'https://cdn.vectorstock.com/i/1000v/97/22/no-picture-vector-739722.avif',
-                      fit: BoxFit.cover,
-                      width: screenWidth * 0.4,
-                      height: screenHeight * 0.22,
-                      progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      const Center(child: CustomDotsTriangleLoader()),
-                      errorWidget: (context, url, error) => const Center(
-                        child: Icon(Icons.error, color: Colors.red, size: 40),
+                    height: 110,
+                    width: double.infinity,
+                    color: isDark ? const Color(0xFF2C2B2B) : const Color(0xFFF5F5F5),
+                    child: Center(
+                      child: SvgPicture.asset(
+                        'assets/images/offer2v.svg',
+                        width: 70,
+                        height: 70,
+                        fit: BoxFit.contain,
+                        colorFilter: isDark
+                            ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+                            : null,
                       ),
                     ),
                   ),
                 ),
-                // SVG Overlay
+                // Back arrow button sitting exactly in the center of the notch
                 Positioned(
-                  left: -6,
-                  bottom: -5,
-                  child: SvgPicture.asset(
-                    'assets/images/Subtract2 (3)-cropped.svg',
-                    width: screenWidth * 0.5,
-                    height: screenHeight * 0.08,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                // Price Tag
-                Positioned(
-                  bottom: screenHeight * 0.01,
-                  left: screenWidth * 0.02,
+                  top: 12,
+                  left: 12,
                   child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: screenWidth * 0.02,
-                      vertical: screenHeight * 0.005,
-                    ),
+                    width: 36,
+                    height: 36,
                     decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      '${offer.discountedPrice} دينار',
-                      style: GoogleFonts.tajawal(
-                        textStyle: TextStyle(
-                          fontSize: screenWidth * 0.035,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                      color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: isDark ? Colors.white : Colors.black, width: 1.5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 6,
                         ),
-                      ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.arrow_forward_ios, // matching user's edit for packages
+                      size: 16,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
                 ),
               ],
             ),
-            // Text Section
-            Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              padding: EdgeInsets.all(screenWidth * 0.02),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Rating
-                  // Row(
-                  //   children: [
-                  //     Text(
-                  //       offer.averageRating?.toStringAsFixed(1) ?? '0.0',
-                  //       style: GoogleFonts.tajawal(
-                  //         textStyle: TextStyle(
-                  //           fontSize: screenWidth * 0.035,
-                  //           color: Colors.black,
-                  //           fontWeight: FontWeight.bold,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     SizedBox(width: screenWidth * 0.01),
-                  //     Icon(Icons.star,
-                  //         color: Colors.yellow, size: screenWidth * 0.04),
-                  //   ],
-                  // ),
-                  SizedBox(height: screenHeight * 0.01),
-                  // Offer Title
-                  Text(
-                    _shortenText(
-                      isArabic ? offer.titleAr : offer.titleEn,
-                      3,
+
+            // ── Text section ──
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(12, 6, 12, 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Name + Price row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      textDirection:
+                          isArabic ? TextDirection.rtl : TextDirection.ltr,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            name,
+                            style: GoogleFonts.tajawal(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.black,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '${offer.discountedPrice} دينار',
+                          style: GoogleFonts.tajawal(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.white : Colors.black,
+                          ),
+                        ),
+                      ],
                     ),
-                    style: GoogleFonts.tajawal(
-                      textStyle: TextStyle(
-                        fontSize: screenWidth * 0.035,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
+                    const SizedBox(height: 6),
+                    // Description
+                    if (description.isNotEmpty)
+                      Flexible(
+                        child: Text(
+                          description,
+                          style: GoogleFonts.tajawal(
+                            fontSize: 12,
+                            color: isDark ? Colors.white70 : Colors.black87,
+                            height: 1.5,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          textDirection: isArabic
+                              ? TextDirection.rtl
+                              : TextDirection.ltr,
+                        ),
                       ),
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  SizedBox(height: screenHeight * 0.01),
-                  // Description
-                  Text(
-                    (isArabic ? offer.descriptionAr : offer.descriptionEn)
-                        .isNotEmpty
-                        ? _shortenText(
-                      isArabic ? offer.descriptionAr : offer.descriptionEn,
-                      10,
-                    )
-                        : 'No description available',
-                    style: GoogleFonts.tajawal(
-                      textStyle: TextStyle(
-                        fontSize: screenWidth * 0.030,
-                        color: Colors.black,
-                      ),
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  ),
-                  SizedBox(height: screenHeight * 0.01),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

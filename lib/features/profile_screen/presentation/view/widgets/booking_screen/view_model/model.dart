@@ -9,9 +9,9 @@ class Booking {
   final int? offerId;
   final String bookingDate;
   final String bookingTime;
-  final String name;
-  final String email;
-  final String phone;
+  final String? name;
+  final String? email;
+  final String? phone;
   final String paymentMethod;
   final String? invoiceId;
   final String status;
@@ -22,6 +22,12 @@ class Booking {
   final Service? service;
   final Package? package;
   final Offer? offer;
+  final String? totalPrice;
+  final String? overprice;
+  final String? specialistLevel;
+  final List<Service> services;
+  final List<Package> packages;
+  final List<Offer> offers;
 
   Booking({
     required this.id,
@@ -32,9 +38,9 @@ class Booking {
     this.offerId,
     required this.bookingDate,
     required this.bookingTime,
-    required this.name,
-    required this.email,
-    required this.phone,
+    this.name,
+    this.email,
+    this.phone,
     required this.paymentMethod,
     this.invoiceId,
     required this.status,
@@ -45,6 +51,12 @@ class Booking {
     this.service,
     this.package,
     this.offer,
+    this.totalPrice,
+    this.overprice,
+    this.specialistLevel,
+    this.services = const [],
+    this.packages = const [],
+    this.offers = const [],
   });
 
   factory Booking.fromJson(Map<String, dynamic> json) {
@@ -61,17 +73,18 @@ class Booking {
       serviceId: json['service_id'] == 'لا يوجد' || json['service_id'] == null
           ? null
           : int.tryParse(json['service_id']?.toString() ?? ''),
-      packagesId: json['packages_id'] == 'لا يوجد' || json['packages_id'] == null
-          ? null
-          : int.tryParse(json['packages_id']?.toString() ?? ''),
+      packagesId:
+          json['packages_id'] == 'لا يوجد' || json['packages_id'] == null
+              ? null
+              : int.tryParse(json['packages_id']?.toString() ?? ''),
       offerId: json['offer_id'] == 'لا يوجد' || json['offer_id'] == null
           ? null
           : int.tryParse(json['offer_id']?.toString() ?? ''),
       bookingDate: json['booking_date'] ?? '',
       bookingTime: json['booking_time'] ?? '',
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-      phone: json['phone']?.toString() ?? '',
+      name: json['name'],
+      email: json['email'],
+      phone: json['phone']?.toString(),
       paymentMethod: json['payment_method'] ?? '',
       invoiceId: json['invoice_id'] == 'لا يوجد' || json['invoice_id'] == null
           ? null
@@ -79,30 +92,73 @@ class Booking {
       status: json['status'] ?? '',
       createdAt: json['created_at'] ?? '',
       updatedAt: json['updated_at'] ?? '',
-
       user: json['user'] != null && json['user'] is Map<String, dynamic>
           ? User.fromJson(json['user'])
           : User.empty(),
       team: json['team'] != null &&
-          json['team'] != 'لا يوجد' &&
-          json['team'] is Map<String, dynamic>
+              json['team'] != 'لا يوجد' &&
+              json['team'] is Map<String, dynamic>
           ? Team.fromJson(json['team'])
-          : null,
+          : json['specialist'] != null && json['specialist'] is Map<String, dynamic>
+              ? Team(
+                  id: json['specialist']['id'] is int
+                      ? json['specialist']['id']
+                      : int.tryParse(json['specialist']['id']?.toString() ?? '') ?? 0,
+                  name: json['specialist']['name'],
+                  image: json['specialist']['profile_picture'] ?? '',
+                )
+              : null,
       service: json['service'] != null &&
-          json['service'] != 'لا يوجد' &&
-          json['service'] is Map<String, dynamic>
+              json['service'] != 'لا يوجد' &&
+              json['service'] is Map<String, dynamic>
           ? Service.fromJson(json['service'])
-          : null,
+          : (json['services'] != null &&
+                  json['services'] is List &&
+                  (json['services'] as List).isNotEmpty &&
+                  json['services'][0] is Map<String, dynamic>)
+              ? Service.fromJson(json['services'][0])
+              : null,
       package: json['package'] != null &&
-          json['package'] != 'لا يوجد' &&
-          json['package'] is Map<String, dynamic>
+              json['package'] != 'لا يوجد' &&
+              json['package'] is Map<String, dynamic>
           ? Package.fromJson(json['package'])
-          : null,
+          : (json['packages'] != null &&
+                  json['packages'] is List &&
+                  (json['packages'] as List).isNotEmpty &&
+                  json['packages'][0] is Map<String, dynamic>)
+              ? Package.fromJson(json['packages'][0])
+              : null,
       offer: json['offer'] != null &&
-          json['offer'] != 'لا يوجد' &&
-          json['offer'] is Map<String, dynamic>
+              json['offer'] != 'لا يوجد' &&
+              json['offer'] is Map<String, dynamic>
           ? Offer.fromJson(json['offer'])
-          : null,
+          : (json['offers'] != null &&
+                  json['offers'] is List &&
+                  (json['offers'] as List).isNotEmpty &&
+                  json['offers'][0] is Map<String, dynamic>)
+              ? Offer.fromJson(json['offers'][0])
+              : null,
+      totalPrice: json['total_price']?.toString(),
+      overprice: json['overprice']?.toString(),
+      specialistLevel: json['specialist_level']?.toString(),
+      services: json['services'] != null && json['services'] is List
+          ? (json['services'] as List<dynamic>)
+              .where((item) => item is Map<String, dynamic>)
+              .map((item) => Service.fromJson(item))
+              .toList()
+          : [],
+      packages: json['packages'] != null && json['packages'] is List
+          ? (json['packages'] as List<dynamic>)
+              .where((item) => item is Map<String, dynamic>)
+              .map((item) => Package.fromJson(item))
+              .toList()
+          : [],
+      offers: json['offers'] != null && json['offers'] is List
+          ? (json['offers'] as List<dynamic>)
+              .where((item) => item is Map<String, dynamic>)
+              .map((item) => Offer.fromJson(item))
+              .toList()
+          : [],
     );
   }
 
@@ -129,6 +185,12 @@ class Booking {
       'service': service?.toJson(),
       'package': package?.toJson(),
       'offer': offer?.toJson(),
+      'total_price': totalPrice,
+      'overprice': overprice,
+      'specialist_level': specialistLevel,
+      'services': services.map((x) => x.toJson()).toList(),
+      'packages': packages.map((x) => x.toJson()).toList(),
+      'offers': offers.map((x) => x.toJson()).toList(),
     };
   }
 }
@@ -147,7 +209,6 @@ class User {
     required this.accountType,
     required this.payments,
   });
-
 
   factory User.empty() {
     return User(
@@ -171,9 +232,9 @@ class User {
       accountType: json['account_type'] ?? '',
       payments: json['payments'] != null && json['payments'] is List
           ? (json['payments'] as List<dynamic>)
-          .where((payment) => payment is Map<String, dynamic>)
-          .map((payment) => Payment.fromJson(payment))
-          .toList()
+              .where((payment) => payment is Map<String, dynamic>)
+              .map((payment) => Payment.fromJson(payment))
+              .toList()
           : [],
     );
   }
@@ -296,12 +357,13 @@ class Service {
       price: json['price']?.toString() ?? '0',
       duration: json['duration'] ?? '',
       imageUrl: json['image_url'] ?? '',
-      details: json['details'] != null && json['details'] is Map<String, dynamic>
-          ? ServiceDetails.fromJson(json['details'])
-          : ServiceDetails.empty(),
+      details:
+          json['details'] != null && json['details'] is Map<String, dynamic>
+              ? ServiceDetails.fromJson(json['details'])
+              : ServiceDetails.empty(),
       averageRating: (json['average_rating'] is num
-          ? json['average_rating']
-          : double.tryParse(json['average_rating']?.toString() ?? '') ?? 0)
+              ? json['average_rating']
+              : double.tryParse(json['average_rating']?.toString() ?? '') ?? 0)
           .toDouble(),
       reviews: json['reviews'] is List ? json['reviews'] : [],
       createdAt: json['created_at'] ?? '',
@@ -348,9 +410,9 @@ class ServiceDetails {
     return ServiceDetails(
       tools: json['tools'] != null && json['tools'] is List
           ? (json['tools'] as List<dynamic>)
-          .where((tool) => tool is String)
-          .cast<String>()
-          .toList()
+              .where((tool) => tool is String)
+              .cast<String>()
+              .toList()
           : [],
       staff: json['staff'] is int
           ? json['staff']
@@ -413,9 +475,9 @@ class Offer {
       descriptionAr: json['description_ar'] ?? '',
       descriptionEn: json['description_en'],
       originalPrice:
-      double.tryParse(json['original_price']?.toString() ?? '0') ?? 0.0,
+          double.tryParse(json['original_price']?.toString() ?? '0') ?? 0.0,
       discountedPrice:
-      double.tryParse(json['discounted_price']?.toString() ?? '0') ?? 0.0,
+          double.tryParse(json['discounted_price']?.toString() ?? '0') ?? 0.0,
       discountPercentage: json['discount_percentage'] ?? '',
       startDate: json['start_date'] ?? '',
       endDate: json['end_date'] ?? '',
@@ -494,9 +556,9 @@ class Package {
       discountedPrice: json['discounted_price']?.toString() ?? '0',
       services: json['services'] != null && json['services'] is List
           ? (json['services'] as List<dynamic>)
-          .where((service) => service is String)
-          .cast<String>()
-          .toList()
+              .where((service) => service is String)
+              .cast<String>()
+              .toList()
           : [],
       imageUrl: json['image_url'] ?? '',
       createdAt: json['created_at'] ?? '',
@@ -530,18 +592,19 @@ class BookingResponse {
     return BookingResponse(
       data: json['data'] != null && json['data'] is List
           ? (json['data'] as List<dynamic>)
-          .where((item) => item is Map<String, dynamic>) // تأكد من نوع البيانات
-          .map((item) {
-        try {
-          return Booking.fromJson(item);
-        } catch (e) {
-          print('Error parsing booking: $e');
-          return null;
-        }
-      })
-          .where((booking) => booking != null) // إزالة العناصر null
-          .cast<Booking>()
-          .toList()
+              .where((item) =>
+                  item is Map<String, dynamic>) // تأكد من نوع البيانات
+              .map((item) {
+                try {
+                  return Booking.fromJson(item);
+                } catch (e) {
+                  print('Error parsing booking: $e');
+                  return null;
+                }
+              })
+              .where((booking) => booking != null) // إزالة العناصر null
+              .cast<Booking>()
+              .toList()
           : [],
     );
   }
@@ -552,7 +615,6 @@ class BookingResponse {
     };
   }
 }
-
 
 BookingResponse parseBookingResponse(String jsonString) {
   try {

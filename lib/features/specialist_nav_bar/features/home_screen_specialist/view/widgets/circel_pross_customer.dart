@@ -36,43 +36,38 @@ class _CircelProssCustomerBody extends StatelessWidget {
         }
 
         return Container(
-          padding: const EdgeInsets.all(12),
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
           decoration: BoxDecoration(
-            color: const Color(0xFFFDFCFA),
-            borderRadius: BorderRadius.circular(16),
+            color: const Color(0xffF7F7F9),
+            borderRadius: BorderRadius.circular(12),
           ),
-          child: Row(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               CircularProgress(
                 percentage: percentage,
-                size: 120,
-                strokeWidth: 20,
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'العملاء المتكررين',
-                      style: GoogleFonts.notoKufiArabic(
-                        color: AppTheme.primary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '$customerCount عميل قاموا ب الحجز معك مجدداً هذا الشهر',
-                      style: GoogleFonts.notoKufiArabic(
-                        color: AppTheme.primary.withOpacity(0.8),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
+                size: 90,
+                strokeWidth: 10,
+                progressColor: const Color(0xff0B0B0F),
+                backgroundColor: const Color(0xffE2E2E6),
+                textStyle: GoogleFonts.notoKufiArabic(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xff0B0B0F),
                 ),
-              )
+              ),
+              const SizedBox(height: 16),
+              Text(
+                '$customerCount عميل حجزوا معاك مرة اخرى',
+                style: GoogleFonts.notoKufiArabic(
+                  color: const Color(0xff0B0B0F),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
         );

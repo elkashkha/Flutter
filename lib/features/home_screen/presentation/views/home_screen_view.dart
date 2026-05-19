@@ -8,10 +8,11 @@ class HomeScreenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return SafeArea(
       child: Scaffold(
-        backgroundColor: AppTheme.white,
-        body: HomeScreenViewBody(),
+        backgroundColor: isDark ? const Color(0xff0B0B0F) : Theme.of(context).scaffoldBackgroundColor,
+        body: const HomeScreenViewBody(),
       ),
     );
   }

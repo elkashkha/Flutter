@@ -12,11 +12,13 @@ class TitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Text(
       title,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
+        color: isDark ? Colors.white : Colors.black,
       ),
     );
   }
@@ -29,11 +31,12 @@ class ContentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Text(
       content,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 16,
-        color: Colors.black54,
+        color: isDark ? Colors.white70 : Colors.black54,
       ),
     );
   }
@@ -46,6 +49,7 @@ class AboutUsContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = Localizations.localeOf(context);
     final isArabic = locale.languageCode == 'ar';
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BlocProvider(
       create: (context) => AboutUsCubit()..fetchAboutUs(),
@@ -75,7 +79,12 @@ class AboutUsContent extends StatelessWidget {
               ),
             );
           }
-          return const Center(child: Text('لم يتم تحميل البيانات بعد.'));
+          return Center(
+            child: Text(
+              'لم يتم تحميل البيانات بعد.',
+              style: TextStyle(color: isDark ? Colors.white30 : Colors.black38),
+            ),
+          );
         },
       ),
     );

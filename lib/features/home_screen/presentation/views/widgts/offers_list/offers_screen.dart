@@ -23,15 +23,13 @@ class OffersScreen extends StatelessWidget {
     final screenHeight = mediaQuery.size.height;
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xffFCFCFC),
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: AppTheme.white,
-          title: CustomAppBar(
-            title: AppLocalizations.of(context)!.offers,
-          ),
+        backgroundColor: isDark ? const Color(0xff151414) : const Color(0xffFCFCFC),
+        appBar: CustomAppBar(
+          title: AppLocalizations.of(context)!.offers,
         ),
         body: BlocBuilder<OffersCubit, OffersState>(
           builder: (context, state) {
@@ -59,7 +57,7 @@ class OffersScreen extends StatelessWidget {
                   crossAxisCount: screenWidth > 600 ? 3 : 2,
                   crossAxisSpacing: screenWidth * 0.025,
                   mainAxisSpacing: screenWidth * 0.025,
-                  mainAxisExtent: screenHeight * 0.35,
+                  mainAxisExtent: screenHeight * 0.30,
                 ),
                 itemCount: state.offers.length,
                 itemBuilder: (context, index) {

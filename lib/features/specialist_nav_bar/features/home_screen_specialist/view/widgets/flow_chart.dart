@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
 class WavyChart extends StatelessWidget {
   final List<ChartData> data;
@@ -9,10 +8,10 @@ class WavyChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 300,
+      width: double.infinity,
       height: 220,
       child: CustomPaint(
-        painter: WavyChartPainter(data),
+        painter: BarChartPainter(data),
         child: Container(),
       ),
     );
@@ -26,172 +25,123 @@ class ChartData {
   ChartData(this.month, this.value);
 }
 
-class WavyChartPainter extends CustomPainter {
+class BarChartPainter extends CustomPainter {
   final List<ChartData> data;
 
-  WavyChartPainter(this.data);
+  BarChartPainter(this.data);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final linePaint = Paint()
-      ..color = Colors.black
-      ..strokeWidth = 3.0
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
+    if (data.isEmpty) return;
 
-    final fillPaint = Paint()
-      ..color = Colors.black
-      ..style = PaintingStyle.fill;
+    const double paddingLeft = 40.0;
+    const double paddingRight = 10.0;
+    const double paddingTop = 20.0;
+    const double paddingBottom = 30.0;
+
+    final double chartWidth = size.width - paddingLeft - paddingRight;
+    final double chartHeight = size.height - paddingTop - paddingBottom;
+
+    final double maxValue = data.map((e) => e.value).reduce((a, b) => a > b ? a : b);
+    final double scaleMax = maxValue > 0 ? maxValue * 1.2 : 100.0; // headroom
+
+    // Draw Y-axis labels and horizontal grid lines
+    final linePaint = Paint()
+      ..color = const Color(0xffE2E2E6).withOpacity(0.5)
+      ..strokeWidth = 1.0;
 
     final textPaint = TextPainter(
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.rtl,
+      textAlign: TextAlign.right,
+      textDirection: TextDirection.ltr,
     );
 
-    double maxValue = data.map((e) => e.value).reduce((a, b) => a > b ? a : b);
-    double minValue = data.map((e) => e.value).reduce((a, b) => a < b ? a : b);
+    final List<double> yTicks = [0, scaleMax * 0.25, scaleMax * 0.5, scaleMax * 0.75, scaleMax];
+    for (var tick in yTicks) {
+      double normalizedY = tick / scaleMax;
+      double y = size.height - paddingBottom - (normalizedY * chartHeight);
 
-    // Find index of max value to highlight
-    int maxIndex = 0;
-    double maxVal = data[0].value;
-    for (int i = 1; i < data.length; i++) {
-      if (data[i].value > maxVal) {
-        maxVal = data[i].value;
-        maxIndex = i;
-      }
-    }
-
-    List<Offset> points = [];
-    double stepX = size.width / (data.length - 1);
-
-    for (int i = 0; i < data.length; i++) {
-      double x = i * stepX;
-
-      // ✅ تفادي القسمة على صفر
-      double normalizedValue;
-      if (maxValue == minValue) {
-        normalizedValue = 0.5;
-      } else {
-        normalizedValue = (data[i].value - minValue) / (maxValue - minValue);
-      }
-
-      double y = size.height - 60 - (normalizedValue * (size.height - 100));
-      points.add(Offset(x, y));
-    }
-
-    // رسم الخط المموج
-    Path path = Path();
-    path.moveTo(points[0].dx, points[0].dy);
-
-    for (int i = 0; i < points.length - 1; i++) {
-      double controlX1 = points[i].dx + stepX * 0.4;
-      double controlY1 = points[i].dy;
-      double controlX2 = points[i + 1].dx - stepX * 0.4;
-      double controlY2 = points[i + 1].dy;
-
-      path.cubicTo(
-        controlX1,
-        controlY1,
-        controlX2,
-        controlY2,
-        points[i + 1].dx,
-        points[i + 1].dy,
+      // Draw grid line
+      canvas.drawLine(
+        Offset(paddingLeft, y),
+        Offset(size.width - paddingRight, y),
+        linePaint,
       );
-    }
 
-    canvas.drawPath(path, linePaint);
-
-    // رسم النقاط والقيم
-    for (int i = 0; i < points.length; i++) {
-      canvas.drawCircle(points[i], 4, fillPaint);
-
-      if (i == maxIndex && maxValue > 0) {
-        double circleY = points[i].dy - 15;
-        if (circleY < 0) circleY = points[i].dy + 15; // Avoid going off top
-        canvas.drawCircle(
-          Offset(points[i].dx, circleY),
-          12,
-          fillPaint,
-        );
-
-        textPaint.text = TextSpan(
-          text: '${data[i].value.toInt()}',
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
-        );
-        textPaint.layout();
-        textPaint.paint(
-          canvas,
-          Offset(
-            points[i].dx - textPaint.width / 2,
-            circleY - textPaint.height / 2,
-          ),
-        );
-      }
-
+      // Draw Y label
       textPaint.text = TextSpan(
-        text: data[i].month,
+        text: tick == 0 ? '0k' : '${tick.toInt()}',
         style: TextStyle(
-          color: Colors.grey[600],
-          fontSize: 11,
+          color: Colors.grey[500],
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
         ),
       );
       textPaint.layout();
       textPaint.paint(
         canvas,
-        Offset(points[i].dx - textPaint.width / 2, size.height - 30),
+        Offset(paddingLeft - textPaint.width - 8, y - textPaint.height / 2),
       );
     }
 
-    // رسم قيم المحور Y بشكل ديناميكي
-    if (maxValue == minValue) {
-      // If all values same, show single label
-      double normalizedValue = 0.5;
-      double y = size.height - 60 - (normalizedValue * (size.height - 100));
+    // Draw Bars and X-axis labels
+    final double stepX = chartWidth / data.length;
+    final double barWidth = stepX * 0.18;
+
+    final blackBarPaint = Paint()
+      ..color = const Color(0xff0B0B0F)
+      ..style = PaintingStyle.fill;
+
+    final greyBarPaint = Paint()
+      ..color = const Color(0xffE2E2E6)
+      ..style = PaintingStyle.fill;
+
+    for (int i = 0; i < data.length; i++) {
+      double centerX = paddingLeft + (i * stepX) + (stepX / 2);
+      double normalizedVal = data[i].value / scaleMax;
+      double barHeight = normalizedVal * chartHeight;
+
+      // Draw Grey Bar (slightly shifted right and shorter/different)
+      double greyBarHeight = barHeight * 0.8;
+      Rect greyRect = Rect.fromLTWH(
+        centerX + 2,
+        size.height - paddingBottom - greyBarHeight,
+        barWidth,
+        greyBarHeight,
+      );
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(greyRect, const Radius.circular(4)),
+        greyBarPaint,
+      );
+
+      // Draw Black Bar (main value bar)
+      Rect blackRect = Rect.fromLTWH(
+        centerX - barWidth - 2,
+        size.height - paddingBottom - barHeight,
+        barWidth,
+        barHeight,
+      );
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(blackRect, const Radius.circular(4)),
+        blackBarPaint,
+      );
+
+      // Draw Month Label under the bars
       textPaint.text = TextSpan(
-        text: '${minValue.toInt()}',
+        text: data[i].month,
         style: TextStyle(
-          color: Colors.grey[600],
-          fontSize: 10,
+          color: Colors.grey[700],
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
         ),
       );
       textPaint.layout();
-      textPaint.paint(canvas, Offset(-25, y - textPaint.height / 2));
-    } else {
-      double range = maxValue - minValue;
-      double tickStep = math.max(1, (range / 5).ceilToDouble());
-      for (double tick = minValue; tick <= maxValue + 0.001; tick += tickStep) {
-        double normalizedValue = (tick - minValue) / (maxValue - minValue);
-        double y = size.height - 60 - (normalizedValue * (size.height - 100));
-
-        textPaint.text = TextSpan(
-          text: '${tick.toInt()}',
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 10,
-          ),
-        );
-        textPaint.layout();
-        textPaint.paint(canvas, Offset(-25, y - textPaint.height / 2));
-      }
+      textPaint.paint(
+        canvas,
+        Offset(centerX - textPaint.width / 2, size.height - paddingBottom + 8),
+      );
     }
-
-    // رسم العنوان
-    textPaint.text = const TextSpan(
-      text: '',
-      style: TextStyle(
-        color: Colors.black87,
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
-      ),
-    );
-    textPaint.layout();
-    textPaint.paint(canvas, Offset(size.width - textPaint.width, -25));
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

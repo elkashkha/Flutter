@@ -8,21 +8,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xff151414) : Colors.white,
       elevation: 0,
       centerTitle: true,
       title: Text(
         title,
-        style: const TextStyle(
-          color: Colors.black,
+        style: TextStyle(
+          color: isDark ? Colors.white : Colors.black,
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
       ),
       leading: onBackPressed != null
           ? IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
+        icon: Icon(Icons.arrow_back_ios_new, color: isDark ? Colors.white : Colors.black),
         onPressed: onBackPressed ?? () {
           if (Navigator.canPop(context)) {
             Navigator.pop(context);

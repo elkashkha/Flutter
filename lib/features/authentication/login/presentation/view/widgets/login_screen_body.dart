@@ -33,6 +33,7 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
         : MediaQuery.of(context).size.width;
     final localizations = AppLocalizations.of(context)!;
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BlocConsumer<LoginCubit, LoginState>(
       listener: (context, state) {
@@ -41,7 +42,7 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
             context: context,
             barrierDismissible: false,
             builder: (context) => AlertDialog(
-              backgroundColor: Colors.white,
+              backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -49,7 +50,10 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
                   const SizedBox(height: 20),
                   Text(
                     localizations.logging_in,
-                    style: const TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
                   ),
                 ],
               ),
@@ -80,10 +84,10 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
             children: [
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF121212) : Colors.white,
                     borderRadius:
-                        BorderRadius.only(topRight: Radius.circular(80)),
+                        const BorderRadius.only(topRight: Radius.circular(80)),
                   ),
                   child: SingleChildScrollView(
                     child: Padding(
@@ -91,24 +95,59 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
                           EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                       child: Column(
                         crossAxisAlignment: isArabic
-                            ? CrossAxisAlignment.end
+                            ? CrossAxisAlignment.start
                             : CrossAxisAlignment.start,
                         children: [
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/shiny-scissors-VUXIdfPWUO.png',
+                                // width: screenWidth * 0.14,
+                                // height: 80,
+                                // fit: BoxFit.contain,
+                              ),
+                            Image.asset(
+                                'assets/images/55b1adc337b9fd5c644cf814642fffae37ec9020.png',
+                                width: screenWidth * 0.35,
+                                height: 150,
+                                fit: BoxFit.contain,
+                              ),
+                            ],
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(
                                 top: 25.0, left: 10, right: 10, bottom: 8),
-                            child: Text(
-                              localizations.welcome_back,
-                              style: GoogleFonts.tajawal(
-                                textStyle: TextStyle(
-                                  fontSize: screenWidth * 0.042,
-                                  color: AppTheme.primary,
-                                  height: 1.5,
-                                  fontWeight: FontWeight.bold,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  localizations.login_title,
+                                  style: GoogleFonts.tajawal(
+                                    textStyle: TextStyle(
+                                      fontSize: screenWidth * 0.055,
+                                      color: isDark ? const Color(0xFFC0A476) : AppTheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  textAlign:
+                                      isArabic ? TextAlign.right : TextAlign.left,
                                 ),
-                              ),
-                              textAlign:
-                                  isArabic ? TextAlign.right : TextAlign.left,
+                                const SizedBox(height: 8),
+                                Text(
+                                  localizations.login_subtitle,
+                                  style: GoogleFonts.tajawal(
+                                    textStyle: TextStyle(
+                                      fontSize: screenWidth * 0.036,
+                                      color: isDark ? Colors.white60 : Colors.black,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                  textAlign:
+                                      isArabic ? TextAlign.right : TextAlign.left,
+                                ),
+                              ],
                             ),
                           ),
                           SizedBox(height: screenHeight * 0.02),
@@ -152,8 +191,8 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
                                     },
                                     child: Text(
                                       localizations.forgot_password,
-                                      style: const TextStyle(
-                                        color: Color(0xffB0AEAE),
+                                      style: TextStyle(
+                                        color: isDark ? Colors.white38 : const Color(0xffB0AEAE),
                                         fontSize: 14,
                                       ),
                                     ),
@@ -187,7 +226,7 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
                                       : 'Continue as Guest',
                                   style: TextStyle(
                                       fontSize: screenWidth * 0.035,
-                                      color: Colors.grey)),
+                                      color: isDark ? Colors.grey.shade400 : Colors.grey)),
                             ),
                           ),
                           Row(
@@ -198,7 +237,7 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
                                 style: GoogleFonts.manjari(
                                   textStyle: TextStyle(
                                     fontWeight: FontWeight.w400,
-                                    color: Colors.black,
+                                    color: isDark ? Colors.white70 : Colors.black,
                                     fontSize: screenWidth * 0.04,
                                   ),
                                 ),
@@ -212,22 +251,12 @@ class _LoginScreenBodyState extends State<LoginScreenBody> {
                                   style: GoogleFonts.manjari(
                                     textStyle: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: AppTheme.primary,
+                                      color: isDark ? const Color(0xFFC0A476) : AppTheme.primary,
                                       fontSize: screenWidth * 0.05,
                                     ),
                                   ),
                                 ),
                               ),
-                              // Text(
-                              //   localizations.no_account,
-                              //   style: GoogleFonts.manjari(
-                              //     textStyle: TextStyle(
-                              //       fontWeight: FontWeight.w400,
-                              //       color: Colors.black,
-                              //       fontSize: screenWidth * 0.04,
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                         ],

@@ -25,9 +25,47 @@ class ProductCubit extends Cubit<ProductState> {
       final products = productResponse.products;
 
       if (products.isNotEmpty) {
-        emit(ProductLoaded(products));
+        // Filter out duplicate products by id
+        final uniqueProductsMap = <int, Product>{};
+        for (var product in products) {
+          uniqueProductsMap[product.id] = product;
+        }
+        final uniqueProductsList = uniqueProductsMap.values.toList();
+        emit(ProductLoaded(uniqueProductsList));
       } else {
         emit(ProductError("لا توجد منتجات متاحة لهذه الفئة"));
+      }
+    } on DioException catch (dioError) {
+      log('Dio error: ${dioError.message}', error: dioError);
+      emit(ProductError("حدث خطأ أثناء الاتصال بالسيرفر"));
+    } catch (e) {
+      log('Unexpected error: $e', error: e);
+      emit(ProductError("حدث خطأ غير متوقع"));
+    }
+  }
+
+  Future<void> fetchAllProducts() async {
+    emit(ProductLoading());
+
+    const url = 'https://apiv2.alkashkhaa.com/public/api/products';
+
+    try {
+      final response = await dio.get(url);
+
+      final productResponse = ProductResponse.fromMap(response.data);
+      final products = productResponse.products;
+
+      if (products.isNotEmpty) {
+        // Filter out duplicate products by id
+        final uniqueProductsMap = <int, Product>{};
+        for (var product in products) {
+          uniqueProductsMap[product.id] = product;
+        }
+        final uniqueProductsList = uniqueProductsMap.values.toList();
+
+        emit(ProductLoaded(uniqueProductsList));
+      } else {
+        emit(ProductError("لا توجد منتجات متاحة"));
       }
     } on DioException catch (dioError) {
       log('Dio error: ${dioError.message}', error: dioError);

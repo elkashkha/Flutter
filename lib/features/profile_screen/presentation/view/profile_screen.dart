@@ -6,13 +6,6 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(bottom: 70.0),
-      child: SafeArea(
-          child: Scaffold(
-            backgroundColor: Colors.white,
-        body: ProfileScreenBody(),
-      )),
-    );
+    return const ProfileScreenBody();
   }
 }

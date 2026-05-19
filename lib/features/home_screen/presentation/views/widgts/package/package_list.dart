@@ -17,7 +17,7 @@ class PackageList extends StatelessWidget {
       builder: (context, state) {
         if (state is PackagesLoading) {
           return SizedBox(
-            height: screenHeight * 0.38,
+            height: screenHeight * 0.18,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -39,7 +39,7 @@ class PackageList extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          height: screenHeight * 0.18,
+                          height: screenHeight * 0.05,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.grey[400],
@@ -71,7 +71,7 @@ class PackageList extends StatelessWidget {
           );
         } else if (state is PackagesLoaded) {
           return SizedBox(
-            height: screenHeight * 0.38,
+            height: 240,
             child: _ZoomInOutAnimation(
               child: ListView.builder(
                 shrinkWrap: true,
@@ -80,8 +80,11 @@ class PackageList extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final package = state.packages[index];
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: PackageListItem(package: package),
+                    padding: const EdgeInsets.only(right: 12),
+                    child: SizedBox(
+                      width: 150,
+                      child: PackageListItem(package: package),
+                    ),
                   );
                 },
               ),

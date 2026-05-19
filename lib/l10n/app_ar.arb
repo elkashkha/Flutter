@@ -1,4 +1,24 @@
 {
+  "new_item": "جديد",
+  "know_the_specialist": "تعرف على المتخصص",
+  "hair_expert_title": "خبير قص شعر وتصفيف - اكتر من {years} سنوات",
+  "@hair_expert_title": {
+    "placeholders": {
+      "years": {
+        "type": "int"
+      }
+    }
+  },
+  "professional_level": "متخصص",
+  "specialist_desc": "متخصص محترف في قصات الشعر الرجالية الحديثة والكلاسيكية، يتميز بالدقة وفهم أسلوب كل عميل لتقديم تجربة استثنائية.",
+  "years_of_experience": "من الخبرة في صالونات متخصصة ",
+  "read_more": "قراءة المزيد.",
+  "work_gallery": "معرض الاعمال",
+  "no_work_gallery": "لا يوجد معرض اعمال",
+  "before_image": "قبل",
+  "after_image": "بعد",
+  "client_name": "عميل",
+  "no_reviews_available": "لا توجد آراء متاحة",
   "enterEmailToReceiveCode": "أدخل بريدك الإلكتروني لاستقبال رمز التأكيد",
   "verificationCodeWillBeSent": "سيتم إرسال رمز التحقق إلى بريدك الإلكتروني. أدخل البريد الإلكتروني المرتبط بحسابك.",
   "enterYourEmail": "أدخل بريدك الإلكتروني",
@@ -44,6 +64,10 @@
   "passwordResetSuccess": "تم إعادة تعيين كلمة المرور بنجاح",
   "homePage": "الصفحة الرئيسية",
   "welcome_back": "مرحبًا بك من جديد!",
+  "login_title": "تسجيل الدخول",
+  "login_subtitle": "سجّل دخولك للوصول إلى حجوزاتك والاستمتاع بخدماتنا بكل سهولة.",
+  "register_title": "إنشاء الحساب",
+  "register_subtitle": "سجّل دخولك للوصول إلى حجوزاتك والاستمتاع بخدماتنا بكل سهولة.",
   "enter_email": "البريد الإلكتروني",
   "email_required": "الرجاء إدخال البريد الإلكتروني",
   "invalid_email": "أدخل بريد إلكتروني صحيح",
@@ -301,5 +325,12 @@
   "error_select_one_option": "يرجى اختيار خدمة أو باقة أو فريق على الأقل",
   "@error_select_one_option": {
     "description": "Error message when no service, package, or team is selected."
-  }
+  },
+  "booking_summary": "ملخص الحجز",
+  "your_booking_date": "موعد حجزك",
+  "service_or_offer": "الخدمة / العرض",
+  "payment_method_cash": "طريقة الدفع : كاش",
+  "complete_booking": "اتمام الحجز",
+  "choose_service_or_more": "اختر خدمة او اكتر",
+  "confirm_booking": "تأكيد الحجز"
 }

@@ -139,6 +139,7 @@ abstract class Approuter {
             specialistId: data["id"] as int,
             level: data["level"] as String,
             overprice: data["overprice"] as String,
+            specialistName: data["specialistName"] as String? ?? '',
           );
         },
       ),

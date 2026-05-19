@@ -78,6 +78,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final screenHeight = size.height;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BlocListener<UserCubit, UserState>(
       listener: (context, state) {
@@ -108,12 +109,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: AppTheme.white,
+          backgroundColor: isDark ? const Color(0xff151414) : AppTheme.white,
           title: CustomAppBar(
             title: AppLocalizations.of(context)!.edit_profile,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: isDark ? const Color(0xff151414) : Colors.white,
         body: Center(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: size.width * 0.08),
@@ -138,9 +139,10 @@ class _UpdateProfileState extends State<UpdateProfile> {
                       GestureDetector(
                         onTap: _pickImage,
                         child: Container(
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white,
+                            color: isDark ? const Color(0xFF222121) : Colors.white,
+                            border: Border.all(color: isDark ? Colors.grey.shade800 : Colors.transparent),
                           ),
                           padding: EdgeInsets.all(size.width * 0.015),
                           child: Icon(
@@ -177,14 +179,15 @@ class _UpdateProfileState extends State<UpdateProfile> {
                   SizedBox(height: screenHeight * 0.04),
                   MyCustomButton(
                       text: AppLocalizations.of(context)!.update,
+                      backgroundColor: const Color(0xff262626),
                       voidCallback: _updateProfile),
                   SizedBox(height: screenHeight * 0.04),
                   MyCustomButton(
                     voidCallback: () => context.push('/ForgetPasswordBody'),
                     text: AppLocalizations.of(context)!.forgot_password,
-                    backgroundColor: AppTheme.white,
-                    textColor: Colors.black,
-                    borderColor: AppTheme.primary,
+                    backgroundColor: isDark ? const Color(0xFF1E1E1E) : AppTheme.white,
+                    textColor: isDark ? Colors.white : Colors.black,
+                    borderColor: isDark ? Colors.grey.shade800 : AppTheme.primary,
                   ),
                 ],
               ),

@@ -24,8 +24,10 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: BlocBuilder<ReviewsCubit, ReviewsState>(
         builder: (context, state) {
           if (state is ReviewsLoading) {
@@ -45,10 +47,10 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                     children: [
                        Text(
                       localization.add_your_review,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: isDark ? Colors.white : Colors.black,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -56,11 +58,11 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: const Color(0xff151414)),
-                          color: Colors.white,
+                          border: Border.all(color: isDark ? Colors.white24 : const Color(0xff151414)),
+                          color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
                         ),
-                        child: const Icon(Icons.add,
-                            color: Colors.black, size: 18),
+                        child: Icon(Icons.add,
+                            color: isDark ? Colors.white : Colors.black, size: 18),
                       ),
                     ],
                   ),

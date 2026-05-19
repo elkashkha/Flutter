@@ -32,10 +32,15 @@ class CartCubit extends Cubit<CartState> {
     emit(CartLoading());
     try {
       final token = await _getToken();
+      print('🔑 User token: $token');
+
       if (token == null) {
-        emit(CartError('التوكن غير موجود'));
+        emit(CartError('⚠️ التوكن غير موجود'));
         return;
       }
+
+      print('🚀 Sending checkout request...');
+
       final response = await _dio.post(
         'https://apiv2.alkashkhaa.com/public/api/cart/checkout',
         options: Options(
@@ -45,25 +50,41 @@ class CartCubit extends Cubit<CartState> {
           },
         ),
       );
+
+      print('✅ Response Status Code: ${response.statusCode}');
+      print('✅ Response Data: ${response.data}');
+
       if (response.statusCode == 200) {
         final invoiceUrl =
-            response.data["sadad_response"]?["sadad_response"]?["InvoiceURL"];
+        response.data["sadad_response"]?["sadad_response"]?["InvoiceURL"];
 
         emit(CheckoutSuccess(invoiceUrl));
       } else {
-        emit(
-            CartError('فشل في إتمام الشراء: غير متوقع ${response.statusCode}'));
+        emit(CartError('❌ فشل في إتمام الشراء: ${response.statusCode}'));
       }
-    } catch (e) {
+    } catch (e, stack) {
+      print('💥 Checkout Exception: $e');
+      print('📜 StackTrace: $stack');
+
       if (e is DioException) {
-        final errorMessage = e.response?.data?['message'] ?? 'خطأ في السيرفر';
-        print('Error Response: ${e.response?.data}');
+        print('🧾 DioException Type: ${e.type}');
+        print('📡 DioException Response: ${e.response}');
+        print('📦 DioException Data: ${e.response?.data}');
+        print('🌐 DioException Status Code: ${e.response?.statusCode}');
+        print('🧠 DioException Headers: ${e.response?.headers}');
+        print('📤 DioException Request Options: ${e.requestOptions.data}');
+        print('🧭 DioException URL: ${e.requestOptions.uri}');
+
+        final errorMessage = e.response?.data?['message'] ??
+            e.message ??
+            'خطأ غير معروف أثناء تنفيذ الطلب';
         emit(CartError('فشل في إتمام الشراء: $errorMessage'));
       } else {
         emit(CartError('فشل في إتمام الشراء: $e'));
       }
     }
   }
+
 
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();

@@ -21,15 +21,13 @@ class PacageScreen extends StatelessWidget {
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
     final localization = AppLocalizations.of(context)!;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xffFCFCFC),
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: AppTheme.white,
-          title: CustomAppBar(
-            title: localization.packages,
-          ),
+        backgroundColor: isDark ? const Color(0xff151414) : const Color(0xffFCFCFC),
+        appBar: CustomAppBar(
+          title: localization.packages,
         ),
         body: BlocBuilder<PackagesCubit, PackagesState>(
           builder: (context, state) {

@@ -9,6 +9,7 @@ class SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: () {
@@ -18,9 +19,9 @@ class SearchField extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFF151414),
+          color: isDark ? const Color(0xFF1E1E1E) : const Color(0xFFF5F5F5),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFF292828)),
+          border: Border.all(color: isDark ? const Color(0xFF2E2E2E) : const Color(0xFFE0E0E0)),
         ),
         child: Row(
           children: [
@@ -28,12 +29,12 @@ class SearchField extends StatelessWidget {
               child: Text(
                  localization.search_now,
 
-                style: const TextStyle(color: Colors.grey, fontSize: 16),
+                style: const TextStyle(color: Color(0xFFB0AEAE), fontSize: 16),
               ),
             ),
             const Icon(
               Icons.search,
-              color: Colors.grey,
+              color: const Color(0xFFB0AEAE),
             ),
           ],
         ),

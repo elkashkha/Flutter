@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'model.dart';
-part 'get_booking_state.dart';
+import 'get_booking_state.dart';
 
 class GetBookingCubit extends Cubit<GetBookingState> {
   GetBookingCubit() : super(GetBookingInitial());
@@ -22,7 +22,7 @@ class GetBookingCubit extends Cubit<GetBookingState> {
       }
 
       final response = await _dio.get(
-        'https://apiv2.alkashkhaa.com/public/api/bookings',
+          'https://apiv2.alkashkhaa.com/public/api/bookings',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

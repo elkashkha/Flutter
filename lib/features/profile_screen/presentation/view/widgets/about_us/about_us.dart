@@ -21,11 +21,13 @@ class AboutUs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xff151414) : Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: AppTheme.white,
+        backgroundColor: isDark ? const Color(0xff151414) : AppTheme.white,
         title: CustomAppBar(
           title: AppLocalizations.of(context)!.about_us,
         ),
@@ -46,11 +48,12 @@ class AboutUs extends StatelessWidget {
               const SizedBox(height: 20),
               const AboutUsContent(),
               const SizedBox(height: 20),
-              const Text(
+              Text(
                 'لقطات حية من خدماتنا وأجواء الصالون. شاهد كيف نهتم بأدق التفاصيل لضمان تجربة استثنائية لك!',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
+                  color: isDark ? Colors.white70 : Colors.black87,
                 ),
               ),
               const SizedBox(height: 20),
@@ -65,16 +68,18 @@ class AboutUs extends StatelessWidget {
                       child: AboutUsVideo(videoUrl: state.aboutUs.video),
                     );
                   } else if (state is AboutUsError) {
-                    return Center(child: Text(state.message));
+                    return Center(child: Text(state.message, style: TextStyle(color: isDark ? Colors.white70 : Colors.black87)));
                   }
-                  return const Center(child: Text("لم يتم العثور على بيانات."));
+                  return Center(child: Text("لم يتم العثور على بيانات.", style: TextStyle(color: isDark ? Colors.white70 : Colors.black87)));
                 },
               ),
-              const Text(
+              const SizedBox(height: 16),
+              Text(
                 'فريق العمل :',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
+                  color: isDark ? Colors.white70 : Colors.black87,
                 ),
               ),
               const SizedBox(height: 20),
@@ -83,6 +88,7 @@ class AboutUs extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: MyCustomButton(
                   text: 'احجز موعدك الان',
+                  backgroundColor: const Color(0xff262626),
                   voidCallback: () {
                     context.push('/BookingService');
                   },

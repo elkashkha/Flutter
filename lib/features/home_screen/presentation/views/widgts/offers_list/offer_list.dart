@@ -74,7 +74,7 @@ class OfferList extends StatelessWidget {
           );
         } else if (state is OffersLoaded) {
           return SizedBox(
-            height: screenHeight * 0.37,
+            height: screenHeight * 0.32,
             child: _ZoomInOutAnimation(
               child: ListView.builder(
                 shrinkWrap: true,
@@ -83,8 +83,11 @@ class OfferList extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final offer = state.offers[index];
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: OfferlistItem(offer: offer),
+                    padding: const EdgeInsets.only(right: 12),
+                    child: SizedBox(
+                      width: screenHeight * 0.24,
+                      child: OfferlistItem(offer: offer),
+                    ),
                   );
                 },
               ),

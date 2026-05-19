@@ -11,27 +11,71 @@ import '../../../../../../core/widgets/loading.dart';
 import 'product_item.dart';
 
 class ProductList extends StatelessWidget {
-  final int categoryId;
+  final int? categoryId;
 
-  const ProductList({super.key, required this.categoryId});
+  const ProductList({super.key, this.categoryId});
 
   @override
   Widget build(BuildContext context) {
     var localization = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BlocProvider(
-      create: (context) => ProductCubit()..fetchProductsByCategory(categoryId),
+      create: (context) {
+        final cubit = ProductCubit();
+        if (categoryId == null || categoryId == -1 || categoryId == 0) {
+          cubit.fetchAllProducts();
+        } else {
+          cubit.fetchProductsByCategory(categoryId!);
+        }
+        return cubit;
+      },
       child: Scaffold(
+        backgroundColor: isDark ? const Color(0xff0B0B0F) : const Color(0xFF1E1E1E),
         appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: AppTheme.white,
-          title: CustomAppBar(
-            title: AppLocalizations.of(context)!.our_products,
-
+          backgroundColor: isDark ? const Color(0xff0B0B0F) : const Color(0xFF1E1E1E),
+          elevation: 0,
+          centerTitle: true,
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: Text(
+            AppLocalizations.of(context)!.our_products,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
+          leading: Navigator.canPop(context)
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    } else {
+                      context.pop();
+                    }
+                  },
+                )
+              : null,
         ),
-        body: BlocBuilder<ProductCubit, ProductState>(
-          builder: (context, state) {
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          margin: const EdgeInsets.only(top: 10),
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            child: BlocBuilder<ProductCubit, ProductState>(
+              builder: (context, state) {
             if (state is ProductLoading) {
               return const Center(child: CustomDotsTriangleLoader());
             } else if (state is ProductError) {
@@ -47,7 +91,7 @@ class ProductList extends StatelessWidget {
                   crossAxisCount: 2,
                   crossAxisSpacing: 10.0,
                   mainAxisSpacing: 10.0,
-                  mainAxisExtent: 300,
+                  mainAxisExtent: 360,
                 ),
                 itemCount: state.products.length,
                 itemBuilder: (context, index) {
@@ -69,10 +113,12 @@ class ProductList extends StatelessWidget {
                 },
               );
             }
-            return Center(child: Text(localization.no_data_available));
-          },
+              return Center(child: Text(localization.no_data_available));
+            },
+          ),
         ),
       ),
+    )
     );
   }
 }
