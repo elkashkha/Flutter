@@ -18,10 +18,8 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# Visual Studio Code related
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -33,13 +31,39 @@ migrate_working_dir/
 .pub/
 /build/
 
-# Symbolication related
-app.*.symbols
+# Android related
+**/android/local.properties
+**/android/key.properties
+**/android/app/local.properties
+**/android/.gradle/
+**/android/app/build/
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
 
-# Obfuscation related
-app.*.map.json
+# iOS related
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets.zip
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.h
+**/ios/Runner/GeneratedPluginRegistrant.m
+**/ios/Runner/GeneratedPluginRegistrant.swift
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# Web related
+**/web/flutter_bootstrap.js
+
+# Windows related
+**/windows/flutter/ephemeral/
+
+# macOS related
+**/macos/Flutter/ephemeral/
+
+# Linux related
+**/linux/flutter/ephemeral/
